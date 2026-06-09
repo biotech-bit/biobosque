@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BioBosque Digital - TCC IFPA</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <style>
+        :root { --verde: #1a7431; --bg: #f8f9fa; }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg); overflow: hidden; }
+
+        /* TELA INICIAL REFORMULADA E PREVENIDA CONTRA ERROS */
+        #home-page {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            z-index: 25000; text-align: center; color: white;
+            /* Se a imagem local falhar, o CSS usa uma imagem de fundo reserva para o site continuar lindo */
+            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.85)), 
+                        url('Frente do IFPA.jpeg'),
+                        url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=1000');
+            background-size: cover; background-position: center; transition: 0.5s ease-in-out;
+        }
+        .container-logos { display: flex; gap: 15px; margin-bottom: 25px; }
+        .container-logos img { height: 60px; background: white; padding: 6px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .titulo-home { font-size: 2.4rem; font-weight: 800; letter-spacing: 1px; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
+        .subtitulo-home { font-size: 1.1rem; color: #e0e0e0; margin: 5px 0 35px 0; font-weight: 400; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
+        .btn-entrar { background: var(--verde); color: white; border: none; padding: 16px 45px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(26, 116, 49, 0.4); transition: 0.3s; text-transform: uppercase; }
+        .btn-entrar:hover { transform: scale(1.05); background: #155d27; }
+
+        /* TELA DE DETALHES DO QR CODE */
+        #pagina-detalhes { 
+            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
+            background:white; z-index:20000; overflow-y:auto; 
+        }
+        #mapa-detalhe { height: 200px; width: 100%; margin-top: 15px; border-radius: 12px; border: 2px solid var(--verde); }
+
+        /* PAINEL PRINCIPAL */
+        #main-app { display: none; flex-direction: column; height: 100vh; }
+        header { background: white; padding: 12px; border-bottom: 3px solid var(--verde); font-weight: bold; color: var(--verde); text-align: center; }
+        
+        .container { padding: 15px; overflow-y: auto; flex-grow: 1; }
+        #mapa-geral { height: 280px; width: 100%; border-radius: 12px; margin-bottom: 15px; }
+
+        .btn-salvar { background: var(--verde); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; text-transform: uppercase; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 6px; box-sizing: border-box; }
+
+        nav { height: 70px; background: white; display: flex; border-top: 1px solid #eee; }
+        .nav-item { flex: 1; text-align: center; padding: 12px 0; color: #999; font-size: 0.8rem; font-weight: bold; }
+        .nav-item.selected { color: var(--verde); }
+        .nav-item i { font-size: 1.5rem; display: block; margin-bottom: 2px; }
+    </style>
+</head>
+<body>
+
+    <section id="home-page">
+        <div class="container-logos">
+            <img src="ifpa.jfif" alt="Logo IFPA" onerror="this.src='https://via.placeholder.com/60?text=IFPA'">
+            <img src="Biologia.jfif" alt="Logo Biologia" onerror="this.src='https://via.placeholder.com/60?text=Bio'">
+        </div>
+        <h1 class="titulo-home">BIOBOSQUE DIGITAL</h1>
+        <p class="subtitulo-home">Campus Itaituba — Pará</p>
+        <button class="btn-entrar" onclick="acessarSistema()">Acessar Plataforma</button>
+    </section>
+
+    <div id="main-app">
+        <header>🌿 BioBosque - Painel de Controle</header>
+
+        <div class="container">
+            <div id="mapa-geral"></div>
+            
+            <div style="background:white; padding:15px; border-radius:12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                <h3 style="margin:0 0 10px 0; color:var(--verde);">Cadastrar Árvore</h3>
+                <input type="text" id="p-nome" placeholder="Nome da Árvore">
+                <textarea id="p-obs" placeholder="Dados e Observações..." rows="2"></textarea>
+                <input type="file" multiple accept="image/*" onchange="processarFotos(this)" style="margin-top:10px;">
+                <div id="previa" style="display:flex; gap:5px; margin-top:10px; flex-wrap:wrap;"></div>
+                <button class="btn-salvar" onclick="salvarArvore()">SALVAR NO SISTEMA</button>
+            </div>
+
+            <h3 style="margin: 20px 0 10px 0;">Árvores no Local</h3>
+            <div id="lista-plantas"></div>
+        </div>
+
+        <nav>
+            <div class="nav-item selected"><i class="fas fa-leaf"></i>PAINEL</div>
+        </nav>
+    </div>
+
+    <div id="pagina-detalhes">
+        <div id="detalhe-conteudo"></div>
+        <div id="mapa-detalhe"></div>
+        <button class="btn-salvar" onclick="fecharFicha()" style="background:#555; border-radius:0;">VOLTAR</button>
+    </div>
+
+    <div id="modal-qr" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:30000; justify-content:center; align-items:center;" onclick="this.style.display='none'">
+        <div style="background:white; padding:20px; border-radius:15px; text-align:center;" onclick="event.stopPropagation()">
+            <div id="canvas-qr"></div>
+            <h2 id="qr-nome" style="margin: 10px 0 5px 0;"></h2>
+            <p style="margin:0; font-size: 0.9rem; color: #666;">Imprima e fixe no tronco do espécime</p>
+        </div>
+    </div>
+
+<script>
+    var db = JSON.parse(localStorage.getItem('bio_itaituba_final')) || [];
+    var fotosTemporarias = [];
+    var latSel, lngSel;
+
+    var mapaGeral = L.map('mapa-geral').setView([-4.2238, -55.9877], 18);
+    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']}).addTo(mapaGeral);
+
+    mapaGeral.on('click', e => {
+        latSel = e.latlng.lat; lngSel = e.latlng.lng;
+        alert("📍 Localização marcada com sucesso!");
+    });
+
+    function acessarSistema() {
+        document.getElementById('home-page').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('home-page').style.display = 'none';
+            document.getElementById('main-app').style.display = 'flex';
+            mapaGeral.invalidateSize();
+        }, 500);
+    }
+
+    function processarFotos(input) {
+        fotosTemporarias = [];
+        document.getElementById('previa').innerHTML = "";
+        Array.from(input.files).forEach(f => {
+            const r = new FileReader();
+            r.onload = e => {
+                fotosTemporarias.push(e.target.result);
+                document.getElementById('previa').innerHTML += `<img src="${e.target.result}" style="width:40px; height:40px; border-radius:4px; object-fit:cover;">`;
+            };
+            r.readAsDataURL(f);
+        });
+    }
+
+    function salvarArvore() {
+        const nome = document.getElementById('p-nome').value;
+        if(!nome || !latSel) return alert("Erro: Defina o Nome e marque o local no mapa!");
+
+        db.push({
+            id: Date.now(),
+            nome: nome,
+            obs: document.getElementById('p-obs').value,
+            lat: latSel,
+            lng: lngSel,
+            fotos: fotosTemporarias
+        });
+
+        localStorage.setItem('bio_itaituba_final', JSON.stringify(db));
+        alert("✅ Árvore guardada!");
+        location.reload(); 
+    }
+
+    function mostrarLista() {
+        const lista = document.getElementById('lista-plantas');
+        lista.innerHTML = "";
+        db.forEach(item => {
+            L.marker([item.lat, item.lng]).addTo(mapaGeral).bindPopup(item.nome);
+            lista.innerHTML += `
+                <div style="background:white; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left: 5px solid var(--verde);">
