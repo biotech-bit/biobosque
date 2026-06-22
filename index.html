@@ -232,28 +232,28 @@
                 <div class="mural-ifpa">
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">1. Fachada IFPA</span>
-                        <img id="mural-1" src="Fachada IFPA.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
+                        <img id="mural-1" src="Fachada%20IFPA.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-1')">
                     </div>
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">2. Equipe de Campo</span>
-                        <img id="mural-2" src="Equipe de Campo.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
+                        <img id="mural-2" src="Equipe%20de%20Campo.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-2')">
                     </div>
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">3. Entrada do Bosque</span>
-                        <img id="mural-3" src="Entrada do Bosque.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
+                        <img id="mural-3" src="Entrada%20do%20Bosque.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-3')">
                     </div>
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">4. Início da Trilha</span>
-                        <img id="mural-4" src="Início da Trilha.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
+                        <img id="mural-4" src="In%C3%ADcio%20da%20Trilha.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-4')">
                     </div>
                 </div>
 
                 <div class="secao-descricoes-pontos">
-                    <strong>📋 Diretriz de Monitoramento Espacial:</strong> Navegue pelas abas para atualizar as especificações e mídias das 11 espécies nativas e exóticas catalogadas no perímetro do campus. Use este painel para registrar e combater caça irregular, pisoteio por animais invasores e processos erosivos.
+                    <strong>📋 Diretriz de Monitoramento Espacial:</strong> Selecione qualquer árvore na aba de tabelas ou detalhes para emitir relatórios ou realizar vistorias de campo. Use este painel para registrar e combater caça irregular, pisoteio por animais invasores e processos erosivos.
                 </div>
             </div>
         </div>
@@ -326,16 +326,16 @@
 </div>
 
 <script>
-    // --- MATRIZ OFICIAL COMPLETA ATUALIZADA COM AS 11 ÁRVORES CATALOGADAS ---
+    // --- MATRIZ OFICIAL COMPLETA COM AS 11 ÁRVORES CATALOGADAS E LINKS CORRIGIDOS ---
     const dadosArvores = [
-        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Fachada IFPA.jpeg", "Entrada do Bosque.jpeg"] },
-        { id: 2, nome: "Castanheira beira rio", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe de Campo.jpeg", "Início da Trilha.jpeg"] },
-        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: ["Fachada IFPA.jpeg"] },
+        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Fachada%20IFPA.jpeg", "Entrada%20do%20Bosque.jpeg"] },
+        { id: 2, nome: "Castanheira beira rio", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe%20de%20Campo.jpeg", "In%C3%ADcio%20da%20Trilha.jpeg"] },
+        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: ["Fachada%20IFPA.jpeg"] },
         { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] },
         { id: 6, nome: "Cacau Selvagem", cientifico: "Theobroma cacao", familia: "Malvaceae", origem: "Nativa", coord: "-4.219850, -55.999210", fotos: [] },
         { id: 7, nome: "Embaúba", cientifico: "Cecropia peltata", familia: "Urticaceae", origem: "Nativa", coord: "-4.221310, -55.999910", fotos: [] },
-        { id: 8, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", origem: "Nativa", coord: "-4.220410, -55.998950", fotos: [] },
+        { id: 8, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", origem: "Nativa", coord: "-4.220410, -55.998850", fotos: [] },
         { id: 9, nome: "Andiroba", cientifico: "Carapa guianensis", familia: "Meliaceae", origem: "Nativa", coord: "-4.221150, -55.998520", fotos: [] },
         { id: 10, nome: "Olho-de-Cabra", cientifico: "Ormosia coccinea", familia: "Fabaceae", origem: "Nativa", coord: "-4.220910, -55.999350", fotos: [] },
         { id: 11, nome: "Cumaru", cientifico: "Dipteryx odorata", familia: "Fabaceae", origem: "Nativa", coord: "-4.219650, -55.999180", fotos: [] }
@@ -477,7 +477,7 @@
         document.getElementById('lightbox').style.display = 'none';
     }
 
-    // --- ARMAZENAMENTO INDEXEDDB LOCAL ---
+    // --- ARMAZENAMENTO INDEXEDDB LOCAL PARA BACKUP DE UPLOADS NO CELULAR ---
     const dbName = "BioCatalogConfigDB";
     const storeName = "configuracoes";
 
