@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioBosque - IFPA Itaituba</title>
+    <title>BioCatalog Digital - IFPA Itaituba</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -301,7 +301,7 @@
 <body>
 
 <header>
-    <h1>BIOBOSQUE</h1>
+    <h1>BIOCATALOG DIGITAL V8.9</h1>
     <p>Bosque da Ciência — Instituto Federal do Pará (IFPA) Campus Itaituba</p>
 </header>
 
@@ -309,7 +309,7 @@
     <div class="abas-menu">
         <button class="aba-btn ativa" id="btn-inicio" onclick="mudarAba('inicio')">🏠 MAPA E PAINEL FOTOGRÁFICO</button>
         <button class="aba-btn" id="btn-cadastro" onclick="mudarAba('cadastro')">🌱 CADASTRO / EDIÇÃO DE CAMPO</button>
-        <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 TABELA DE ESPECIFICAÇÕES (ARVORE)</button>
+        <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 TABELA DE ESPECIFICAÇÕES (TCC)</button>
         <button class="aba-btn" id="btn-emissao" onclick="mudarAba('emissao')">🖨️ DETALHES E PLACAS QR</button>
     </div>
 
@@ -326,22 +326,22 @@
                 <div class="mural-ifpa">
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">1. Fachada IFPA</span>
-                        <img id="mural-1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <img id="mural-1" src="frente.jpg" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-1')">
                     </div>
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">2. Equipe de Campo</span>
-                        <img id="mural-2" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <img id="mural-2" src="aventureiros.jpg" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-2')">
                     </div>
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">3. Entrada do Bosque</span>
-                        <img id="mural-3" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <img id="mural-3" src="entradada_do_bosque.jpeg" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-3')">
                     </div>
                     <div class="foto-mural-box">
                         <span class="label-foto-mural">4. Início da Trilha</span>
-                        <img id="mural-4" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <img id="mural-4" src="inicio da trilha.jpg" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
                         <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-4')">
                     </div>
                 </div>
@@ -514,7 +514,6 @@
         atualizarSelectPlacas();
         initMapInicio();
         
-        // Verificar se veio ID via link (Leitura de QR Code)
         const params = new URLSearchParams(window.location.search);
         const idUrl = params.get('id');
         if(idUrl) {
@@ -540,7 +539,6 @@
         listaArvoresCompleta.forEach((a, i) => {
             let m = L.marker(a.coordenadas).addTo(mapInicio);
             
-            // Botão HTML customizado para abrir rotas no Google Maps diretamente do balão
             let htmlPopup = `
                 <div style="font-family:sans-serif; font-size:12px; padding:2px;">
                     <strong style="color:var(--verde-escuro);">${a.nomeComum}</strong><br>
@@ -675,11 +673,10 @@
         document.getElementById('placa-ori').innerText = a.origem;
         document.getElementById('placa-coord').innerText = a.coordenadas.join(', ');
 
-        // Formatação de parágrafos ABNT na descrição
         let containerDesc = document.getElementById('placa-descricao-container');
         containerDesc.innerHTML = "";
-        let blocosTexto = a.descricao.split('\n');
-        blocosTexto.forEach(pTexto => {
+        let blocksTexto = a.descricao.split('\n');
+        blocksTexto.forEach(pTexto => {
             if(pTexto.trim() !== "") {
                 let pElement = document.createElement('p');
                 pElement.className = "paragrafo-abnt";
@@ -688,11 +685,10 @@
             }
         });
 
-        // Geração dinâmica e automatizada do QR Code apontando para o seu GitHub Pages
         let qrContainer = document.getElementById('qrcode-canvas');
         qrContainer.innerHTML = "";
         
-        let linkProducao = `https://biotecnologia-bit.github.io/biobosque/?id=${a.id}`;
+        let linkProducao = `https://biotech-bit.github.io/biobosque/?id=${a.id}`;
         
         qrcodeInstance = new QRCode(qrContainer, {
             text: linkProducao,
@@ -703,7 +699,6 @@
             correctLevel: QRCode.CorrectLevel.H
         });
 
-        // Renderização de Mídias
         let midiaContainer = document.getElementById('midias-renderizadas-container');
         midiaContainer.innerHTML = "";
         fotosLightboxAtuais = [];
@@ -732,7 +727,6 @@
         }
     }
 
-    // Gerenciamento do Formulário e Banco IndexedDB
     function salvarDadosFormulario(event) {
         event.preventDefault();
         let idControle = document.getElementById('add-id-controle').value;
@@ -783,7 +777,6 @@
         });
     }
 
-    // Persistência das Fotos do Painel Inicial
     function atualizarFotoMural(event, idImgTarget) {
         let file = event.target.files[0];
         if(!file) return;
@@ -800,12 +793,13 @@
             let resultados = e.target.result;
             resultados.forEach(item => {
                 let el = document.getElementById(item.chave);
-                if(el) el.src = item.valor;
+                if(el && item.chave !== 'mural-1' && item.chave !== 'mural-2' && item.chave !== 'mural-3' && item.chave !== 'mural-4') {
+                    el.src = item.valor;
+                }
             });
         };
     }
 
-    // Funções do Lightbox
     function abrirLightboxUnica(src) {
         fotosLightboxAtuais = [src];
         indiceLightboxAtual = 0;
