@@ -1,167 +1,840 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BioBosque Digital - TCC IFPA</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCatalog Digital - IFPA Itaituba</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
+    
     <style>
-        :root { --verde: #1a7431; --bg: #f8f9fa; }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; background: var(--bg); overflow: hidden; }
-
-        /* TELA INICIAL REFORMULADA E PREVENIDA CONTRA ERROS */
-        #home-page {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 25000; text-align: center; color: white;
-            /* Se a imagem local falhar, o CSS usa uma imagem de fundo reserva para o site continuar lindo */
-            background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.85)), 
-                        url('Frente do IFPA.jpeg'),
-                        url('https://images.unsplash.com/photo-1542273917363-3b1817f69a2d?q=80&w=1000');
-            background-size: cover; background-position: center; transition: 0.5s ease-in-out;
+        :root {
+            --verde-institucional: #008744;
+            --verde-escuro: #005a2b;
+            --branco: #ffffff;
+            --cinza-claro: #f4f4f4;
+            --texto-escuro: #222222;
+            --azul-acao: #007bff;
         }
-        .container-logos { display: flex; gap: 15px; margin-bottom: 25px; }
-        .container-logos img { height: 60px; background: white; padding: 6px; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .titulo-home { font-size: 2.4rem; font-weight: 800; letter-spacing: 1px; margin: 0; text-shadow: 2px 2px 4px rgba(0,0,0,0.6); }
-        .subtitulo-home { font-size: 1.1rem; color: #e0e0e0; margin: 5px 0 35px 0; font-weight: 400; text-shadow: 1px 1px 3px rgba(0,0,0,0.5); }
-        .btn-entrar { background: var(--verde); color: white; border: none; padding: 16px 45px; font-size: 1.1rem; font-weight: bold; border-radius: 50px; cursor: pointer; box-shadow: 0 4px 15px rgba(26, 116, 49, 0.4); transition: 0.3s; text-transform: uppercase; }
-        .btn-entrar:hover { transform: scale(1.05); background: #155d27; }
-
-        /* TELA DE DETALHES DO QR CODE */
-        #pagina-detalhes { 
-            display:none; position:fixed; top:0; left:0; width:100%; height:100%; 
-            background:white; z-index:20000; overflow-y:auto; 
-        }
-        #mapa-detalhe { height: 200px; width: 100%; margin-top: 15px; border-radius: 12px; border: 2px solid var(--verde); }
-
-        /* PAINEL PRINCIPAL */
-        #main-app { display: none; flex-direction: column; height: 100vh; }
-        header { background: white; padding: 12px; border-bottom: 3px solid var(--verde); font-weight: bold; color: var(--verde); text-align: center; }
         
-        .container { padding: 15px; overflow-y: auto; flex-grow: 1; }
-        #mapa-geral { height: 280px; width: 100%; border-radius: 12px; margin-bottom: 15px; }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
-        .btn-salvar { background: var(--verde); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; cursor: pointer; text-transform: uppercase; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 6px; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--cinza-claro);
+            color: var(--texto-escuro);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
 
-        nav { height: 70px; background: white; display: flex; border-top: 1px solid #eee; }
-        .nav-item { flex: 1; text-align: center; padding: 12px 0; color: #999; font-size: 0.8rem; font-weight: bold; }
-        .nav-item.selected { color: var(--verde); }
-        .nav-item i { font-size: 1.5rem; display: block; margin-bottom: 2px; }
+        header {
+            background-color: var(--verde-institucional);
+            color: var(--branco);
+            text-align: center;
+            padding: 12px 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            flex-shrink: 0;
+        }
+
+        header h1 { font-size: 22px; letter-spacing: 1px; }
+        header p { font-size: 12px; opacity: 0.9; }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            height: calc(100vh - 68px);
+            background: var(--branco);
+            overflow: hidden;
+        }
+
+        .abas-menu {
+            display: flex;
+            background: #e9ecef;
+            padding: 6px;
+            flex-shrink: 0;
+            overflow-x: auto;
+            gap: 6px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .aba-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 6px;
+            background: none;
+            border: none;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #495057;
+            border-radius: 5px;
+            white-space: nowrap;
+            text-align: center;
+        }
+
+        .aba-btn.ativa {
+            background-color: var(--verde-institucional);
+            color: var(--branco);
+        }
+
+        .conteudo-aba {
+            display: none;
+            flex: 1;
+            width: 100%;
+            height: 100%;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .conteudo-aba.ativa {
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* 🏠 ABA MONITORAMENTO INICIAL */
+        .layout-inicio {
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            gap: 15px;
+            height: 100%;
+            min-height: 0;
+        }
+
+        .coluna-mapa {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            height: 100%;
+        }
+
+        #map-principal {
+            flex: 1;
+            width: 100%;
+            border-radius: 8px;
+            border: 2px solid var(--verde-institucional);
+            min-height: 380px;
+        }
+
+        .painel-info-mapa {
+            background: #f8f9fa;
+            border: 1px solid #ddd;
+            border-left: 4px solid var(--verde-institucional);
+            padding: 10px 15px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .galeria-inicio {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        .mural-ifpa {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        .foto-mural-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+        }
+
+        .foto-mural {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            background: #2e3133;
+            border-radius: 4px;
+            margin-bottom: 6px;
+            border: 1px solid #999;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        .foto-mural:hover { transform: scale(1.02); }
+
+        .label-foto-mural {
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--verde-escuro);
+            margin-bottom: 4px;
+        }
+
+        .btn-upload-celular {
+            font-size: 11px; padding: 5px; cursor: pointer; background: var(--verde-institucional); color: white; border: none; border-radius: 4px; width: 100%; font-weight: bold;
+        }
+
+        .secao-descricoes-pontos {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-top: 3px solid var(--verde-escuro);
+            border-radius: 6px;
+            padding: 12px;
+            margin-top: 5px;
+        }
+
+        .ponto-item-desc {
+            font-size: 12px;
+            line-height: 1.4;
+            padding: 6px 0;
+            border-bottom: 1px dashed #eee;
+        }
+
+        .tag-mapa-permanente {
+            background: rgba(0, 90, 43, 0.9); color: white; border: 1px solid #ffffff; font-weight: bold; font-size: 11px; padding: 4px 6px; border-radius: 4px;
+        }
+
+        /* FORMULÁRIO COM DESTAQUE DE EDIÇÃO */
+        form { display: flex; flex-direction: column; gap: 10px; }
+        label { font-weight: bold; color: var(--verde-escuro); font-size: 13px; }
+        input, textarea, select { padding: 8px; font-size: 13px; border: 1px solid #ccc; border-radius: 5px; }
+        #map-cadastro { height: 320px; border-radius: 6px; border: 2px solid var(--verde-institucional); }
+        .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 10px; font-size: 14px; font-weight: bold; border-radius: 5px; cursor: pointer; }
+        .btn-editar-sistema { background-color: var(--azul-acao); color: white; border: none; padding: 10px 15px; font-size: 13px; font-weight: bold; border-radius: 5px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; }
+        .btn-gps { background-color: #007bff; color: white; border: none; padding: 6px; border-radius: 4px; cursor: pointer; font-weight: bold; font-size: 12px; }
+        
+        .banner-aviso-edicao { background-color: #fff3cd; color: #856404; padding: 10px; border-radius: 5px; border: 1px solid #ffeeba; margin-bottom: 10px; font-weight: bold; display: none; }
+
+        /* TABELA */
+        .tabela-wrapper { flex: 1; overflow: auto; border: 1px solid #ddd; border-radius: 6px; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; }
+        th, td { padding: 10px; border-bottom: 1px solid #ddd; }
+        th { background-color: var(--verde-institucional); color: white; position: sticky; top: 0; }
+        .linha-clicavel { cursor: pointer; }
+        .linha-clicavel:hover { background-color: #e8f5e9; }
+        .cientifico-italico { font-style: italic; font-weight: bold; }
+
+        .container-midias-arvore {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 10px;
+            margin-top: 12px;
+            background: #f1f3f5;
+            padding: 10px;
+            border-radius: 6px;
+        }
+        .media-item { width: 100%; height: 130px; object-fit: cover; border-radius: 4px; border: 1px solid #bbb; cursor: pointer; transition: transform 0.2s; }
+        .media-item:hover { transform: scale(1.04); }
+
+        /* IMPRESSÃO E FORMATAÇÃO ACADÊMICA */
+        .bloco-impressao { background: white; border: 2px solid #000; padding: 20px; max-width: 700px; margin: 0 auto; }
+        .secao-flex-laudo { display: flex; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; }
+        .coluna-dados-abnt { flex: 1; font-size: 14px; line-height: 1.4; }
+        .termo-destacado-abnt { font-weight: bold; text-transform: uppercase; font-size: 12px; display: inline-block; width: 140px; }
+        .moldura-qr-print { display: flex; flex-direction: column; align-items: center; border: 2px solid #000; padding: 8px; min-width: 140px; }
+        
+        .bloco-descricao-abnt { 
+            margin-top: 15px; 
+            border-top: 1px dashed #000; 
+            padding-top: 15px; 
+        }
+        
+        .paragrafo-abnt { 
+            font-size: 13px; 
+            line-height: 1.6; 
+            text-align: justify !important; 
+            text-indent: 1.5cm !important; 
+            margin-bottom: 12px; 
+            color: #111;
+        }
+
+        /* LIGHTBOX EM TELA CHEIA */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.92);
+            align-items: center;
+            justify-content: center;
+        }
+        .lightbox-conteudo {
+            max-width: 90%;
+            max-height: 82%;
+            object-fit: contain;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 4px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+        .lightbox-btn {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.15);
+            color: #fff;
+            border: none;
+            font-size: 28px;
+            font-weight: bold;
+            padding: 10px 18px;
+            cursor: pointer;
+            border-radius: 50%;
+            user-select: none;
+            transition: background 0.2s;
+        }
+        .lightbox-btn:hover { background: rgba(255, 255, 255, 0.35); }
+        .btn-fechar { top: 20px; right: 20px; font-size: 32px; padding: 5px 15px; }
+        .btn-anterior { left: 20px; top: 50%; transform: translateY(-50%); }
+        .btn-proximo { right: 20px; top: 50%; transform: translateY(-50%); }
+
+        @media print {
+            body * { visibility: hidden; }
+            #emissao, #emissao * { visibility: visible; }
+            #emissao { position: absolute; left: 0; top: 0; width: 100%; }
+            .seletor-impressao-area, .btn-acao, .btn-editar-sistema, .container-midias-arvore { display: none !important; }
+        }
     </style>
 </head>
 <body>
 
-    <section id="home-page">
-        <div class="container-logos">
-            <img src="ifpa.jfif" alt="Logo IFPA" onerror="this.src='https://via.placeholder.com/60?text=IFPA'">
-            <img src="Biologia.jfif" alt="Logo Biologia" onerror="this.src='https://via.placeholder.com/60?text=Bio'">
-        </div>
-        <h1 class="titulo-home">BIOBOSQUE DIGITAL</h1>
-        <p class="subtitulo-home">Campus Itaituba — Pará</p>
-        <button class="btn-entrar" onclick="acessarSistema()">Acessar Plataforma</button>
-    </section>
+<header>
+    <h1>BIOCATALOG DIGITAL V8.9</h1>
+    <p>Bosque da Ciência — Instituto Federal do Pará (IFPA) Campus Itaituba</p>
+</header>
 
-    <div id="main-app">
-        <header>🌿 BioBosque - Painel de Controle</header>
+<div class="container">
+    <div class="abas-menu">
+        <button class="aba-btn ativa" id="btn-inicio" onclick="mudarAba('inicio')">🏠 MAPA E PAINEL FOTOGRÁFICO</button>
+        <button class="aba-btn" id="btn-cadastro" onclick="mudarAba('cadastro')">🌱 CADASTRO / EDIÇÃO DE CAMPO</button>
+        <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 TABELA DE ESPECIFICAÇÕES (TCC)</button>
+        <button class="aba-btn" id="btn-emissao" onclick="mudarAba('emissao')">🖨️ DETALHES E PLACAS QR</button>
+    </div>
 
-        <div class="container">
-            <div id="mapa-geral"></div>
+    <div id="inicio" class="conteudo-aba ativa">
+        <div class="layout-inicio">
+            <div class="coluna-mapa">
+                <div id="map-principal"></div>
+                <div class="painel-info-mapa">
+                    <strong>📋 Diretriz de Monitoramento Espacial:</strong> Selecione qualquer árvore na aba de tabelas ou detalhes para emitir relatórios ou realizar vistorias de campo. Use este painel para registrar e combater caça irregular, pisoteio por animais invasores e processos erosivos.
+                </div>
+            </div>
             
-            <div style="background:white; padding:15px; border-radius:12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <h3 style="margin:0 0 10px 0; color:var(--verde);">Cadastrar Árvore</h3>
-                <input type="text" id="p-nome" placeholder="Nome da Árvore">
-                <textarea id="p-obs" placeholder="Dados e Observações..." rows="2"></textarea>
-                <input type="file" multiple accept="image/*" onchange="processarFotos(this)" style="margin-top:10px;">
-                <div id="previa" style="display:flex; gap:5px; margin-top:10px; flex-wrap:wrap;"></div>
-                <button class="btn-salvar" onclick="salvarArvore()">SALVAR NO SISTEMA</button>
+            <div class="galeria-inicio">
+                <div class="mural-ifpa">
+                    <div class="foto-mural-box">
+                        <span class="label-foto-mural">1. Fachada IFPA</span>
+                        <img id="mural-1" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-1')">
+                    </div>
+                    <div class="foto-mural-box">
+                        <span class="label-foto-mural">2. Equipe de Campo</span>
+                        <img id="mural-2" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-2')">
+                    </div>
+                    <div class="foto-mural-box">
+                        <span class="label-foto-mural">3. Entrada do Bosque</span>
+                        <img id="mural-3" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-3')">
+                    </div>
+                    <div class="foto-mural-box">
+                        <span class="label-foto-mural">4. Início da Trilha</span>
+                        <img id="mural-4" src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%232e3133'/></svg>" class="foto-mural" onclick="abrirLightboxUnica(this.src)">
+                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-4')">
+                    </div>
+                </div>
+
+                <div class="secao-descricoes-pontos">
+                    <h4 style="color: var(--verde-escuro); margin-bottom: 8px; font-size:13px; border-bottom: 2px solid var(--verde-institucional); padding-bottom:4px;">📍 Diagnóstico Operacional dos Pontos</h4>
+                    <div class="ponto-item-desc">Navegue pelas abas para atualizar as especificações e mídias das 11 espécies nativas e exóticas catalogadas no perímetro do campus.</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="cadastro" class="conteudo-aba">
+        <div id="aviso-edicao" class="banner-aviso-edicao">⚠️ Você está editando um espécime existente! Os dados inseridos atualizarão o registro histórico original.</div>
+        <h2 id="titulo-cadastro-aba">🌱 Registrar Novo Monitoramento (Espécimes Adicionais)</h2>
+        <form id="form-cadastro" onsubmit="salvarDadosFormulario(event)">
+            <input type="hidden" id="add-id-controle" value="">
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div><label>Nome Popular:</label><input type="text" id="add-nome" required></div>
+                <div><label>Nome Científico:</label><input type="text" id="add-cientifico" required></div>
+            </div>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+                <div><label>Família Botânica:</label><input type="text" id="add-familia" required></div>
+                <div><label>Origem:</label><select id="add-origem"><option value="Nativa">Nativa</option><option value="Exótica">Exótica</option></select></div>
             </div>
 
-            <h3 style="margin: 20px 0 10px 0;">Árvores no Local</h3>
-            <div id="lista-plantas"></div>
+            <label>Histórico e Alertas de Monitoramento (Dica: Aperte Enter para separar os parágrafos):</label>
+            <textarea id="add-descricao" rows="5" placeholder="Insira a descrição técnica. Cada quebra de linha gerará um parágrafo perfeitamente alinhado e justificado no relatório final." required></textarea>
+
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px; background: #e9ecef; padding: 12px; border-radius: 6px;">
+                <div>
+                    <label>📸 Adicionar Fotos do Espécime:</label>
+                    <input type="file" id="add-fotos" accept="image/*" multiple>
+                </div>
+                <div>
+                    <label>🎥 Adicionar Vídeos de Evidência:</label>
+                    <input type="file" id="add-videos" accept="video/*" multiple>
+                </div>
+            </div>
+
+            <label>Geolocalização Satélite de Campo:</label>
+            <button type="button" class="btn-gps" onclick="capturarGPSManual()">📍 Capturar Ponto GPS do Dispositivo</button>
+            <div id="map-cadastro"></div>
+            <input type="text" id="add-coordenadas" readonly required placeholder="Clique no mapa para fixar a coordenada geográfica">
+
+            <button type="submit" id="btn-salvar-texto" class="btn-acao">Salvar Registro no IndexedDB</button>
+            <button type="button" id="btn-cancelar-edicao" class="btn-acao" style="background:#dc3545; display:none;" onclick="cancelarModoEdicao()">Cancelar Edição</button>
+        </form>
+    </div>
+
+    <div id="catalogo" class="conteudo-aba">
+        <h2 style="color:var(--verde-escuro); margin-bottom:10px;">📋 Matriz de Dados Técnicos Florestais (Clique para ver detalhes e editar)</h2>
+        <div class="tabela-wrapper">
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nome Comum</th>
+                        <th>Nome Científico</th>
+                        <th>Família Botânica</th>
+                        <th>Coordenadas Fixas</th>
+                    </tr>
+                </thead>
+                <tbody id="corpo-tabela-botanica"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="emissao" class="conteudo-aba">
+        <h2>🖨️ Área de Impressão e Exibição Completa de Dados</h2>
+        <div class="seletor-impressao-area" style="background:#f0f2f5; padding:15px; border-radius:6px; margin-bottom:15px;">
+            <label>Selecione a Árvore do Inventário:</label>
+            <select id="select-arvore-placa" onchange="gerarPlacaVisual(this.value)" style="width:100%; margin-top:5px;"></select>
+            <button class="btn-editar-sistema" onclick="acionarEdicaoDaArvoreSelecionada()">✏️ Editar / Atualizar Histórico de Campo desta Árvore</button>
         </div>
 
-        <nav>
-            <div class="nav-item selected"><i class="fas fa-leaf"></i>PAINEL</div>
-        </nav>
-    </div>
+        <div id="painel-impressao-conteudo">
+            <div class="bloco-impressao">
+                <div class="secao-flex-laudo">
+                    <div class="coluna-dados-abnt">
+                        <p><span class="termo-destacado-abnt">Nome Popular:</span> <span id="placa-nome" style="font-weight: bold; font-size: 16px;"></span></p>
+                        <p><span class="termo-destacado-abnt">Nome Científico:</span> <span id="placa-cie" class="cientifico-italico"></span></p>
+                        <p><span class="termo-destacado-abnt">Família:</span> <span id="placa-fam"></span></p>
+                        <p><span class="termo-destacado-abnt">Origem:</span> <span id="placa-ori"></span></p>
+                        <p><span class="termo-destacado-abnt">Localização:</span> <span id="placa-coord"></span></p>
+                    </div>
+                    <div class="moldura-qr-print">
+                        <div id="qrcode-canvas"></div>
+                        <p style="font-size:9px; font-weight:bold; margin-top:5px;">IFPA ITAITUBA</p>
+                    </div>
+                </div>
+                
+                <div class="bloco-descricao-abnt">
+                    <div id="placa-descricao-container"></div>
+                </div>
+            </div>
 
-    <div id="pagina-detalhes">
-        <div id="detalhe-conteudo"></div>
-        <div id="mapa-detalhe"></div>
-        <button class="btn-salvar" onclick="fecharFicha()" style="background:#555; border-radius:0;">VOLTAR</button>
-    </div>
+            <h3 style="margin-top:20px; color:var(--verde-escuro);">🖼️ Imagens e Vídeos Históricos do Monitoramento:</h3>
+            <div id="midias-renderizadas-container" class="container-midias-arvore"></div>
 
-    <div id="modal-qr" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.9); z-index:30000; justify-content:center; align-items:center;" onclick="this.style.display='none'">
-        <div style="background:white; padding:20px; border-radius:15px; text-align:center;" onclick="event.stopPropagation()">
-            <div id="canvas-qr"></div>
-            <h2 id="qr-nome" style="margin: 10px 0 5px 0;"></h2>
-            <p style="margin:0; font-size: 0.9rem; color: #666;">Imprima e fixe no tronco do espécime</p>
+            <button class="btn-acao" style="background:#ffc107; color:black; margin-top:15px;" onclick="window.print()">🖨️ Imprimir Placa de Identificação</button>
         </div>
     </div>
+</div>
+
+<div id="custom-lightbox" class="lightbox-modal">
+    <button class="lightbox-btn btn-fechar" onclick="fecharLightbox()">×</button>
+    <button class="lightbox-btn btn-anterior" onclick="mudarImagemLightbox(-1)">‹</button>
+    <img id="img-lightbox-alvo" src="" class="lightbox-conteudo">
+    <button class="lightbox-btn btn-proximo" onclick="mudarImagemLightbox(1)">›</button>
+</div>
 
 <script>
-    var db = JSON.parse(localStorage.getItem('bio_itaituba_final')) || [];
-    var fotosTemporarias = [];
-    var latSel, lngSel;
+    let mapInicio, mapCadastro, markerCadastro;
+    let db;
+    let qrcodeInstance = null;
+    let fotosLightboxAtuais = [];
+    let indiceLightboxAtual = 0;
+    
+    const especiesBosquePadrao = [
+        { id: 1, nomeComum: "Acácia próximo castanheira", nomeCientifico: "Acacia mangium Willd.", familia: "Fabaceae", origem: "Exótica", coordenadas: [-4.221000, -55.999639], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 2, nomeComum: "Castanheira beira rio", nomeCientifico: "Bertholletia excelsa Bonpl.", familia: "Lecythidaceae", origem: "Nativa", coordenadas: [-4.221500, -55.998806], descricao: "O espécime Bertholletia excelsa localiza-se na porção marginal do ecossistema fluvial.\nApresenta desenvolvimento fustal robusto e excelente sanidade fitossanitária geral.", fotos: [], videos: [] },
+        { id: 3, nomeComum: "Cupu", nomeCientifico: "Theobroma grandiflorum (Mus. ex Spreng.) Schum.", familia: "Malvaceae", origem: "Nativa", coordenadas: [-4.221000, -55.998917], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 4, nomeComum: "Manga", nomeCientifico: "Mangifera indica L.", familia: "Anacardiaceae", origem: "Exótica", coordenadas: [-4.221000, -55.998917], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 5, nomeComum: "Palmeira inajá", nomeCientifico: "Attalea maripa (Aubl.) Mart.", familia: "Arecaceae", origem: "Nativa", coordenadas: [-4.221389, -55.998806], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 6, nomeComum: "Sumaúba", nomeCientifico: "Ceiba pentandra (L.) Gaertn.", familia: "Malvaceae", origem: "Nativa", coordenadas: [-4.220194, -55.999028], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 7, nomeComum: "Embaúba", nomeCientifico: "Cecropia obtusa Trécul", familia: "Urticaceae", origem: "Nativa", coordenadas: [-4.221806, -56.000667], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 8, nomeComum: "Cajá", nomeCientifico: "Spondias mombin L.", familia: "Anacardiaceae", origem: "Nativa", coordenadas: [-4.220861, -55.999000], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 9, nomeComum: "Cacau selvagem", nomeCientifico: "Theobroma speciosum Willd. ex Spreng.", familia: "Malvaceae", origem: "Nativa", coordenadas: [-4.220333, -55.999028], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 10, nomeComum: "Olho-de-Cabra", nomeCientifico: "Ormosia coccinea (Aubl.) Jacks.", familia: "Fabaceae", origem: "Nativa", coordenadas: [-4.221550, -55.999667], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] },
+        { id: 11, nomeComum: "Mogno Africano", nomeCientifico: "Khaya ivorensis A. Juss.", familia: "Meliaceae", origem: "Exótica", coordenadas: [-4.220972, -55.999667], descricao: "Nenhum laudo inserido ainda. Clique em Editar para inserir a descrição real de monitoramento.", fotos: [], videos: [] }
+    ];
 
-    var mapaGeral = L.map('mapa-geral').setView([-4.2238, -55.9877], 18);
-    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3']}).addTo(mapaGeral);
+    let listaArvoresCompleta = [];
 
-    mapaGeral.on('click', e => {
-        latSel = e.latlng.lat; lngSel = e.latlng.lng;
-        alert("📍 Localização marcada com sucesso!");
-    });
+    const request = indexedDB.open("BioCatalogV89Database", 1);
+    request.onupgradeneeded = function(e) {
+        let database = e.target.result;
+        database.createObjectStore("arvores", { keyPath: "id" });
+        database.createObjectStore("config", { keyPath: "chave" });
+    };
+    
+    request.onsuccess = function(e) {
+        db = e.target.result;
+        verificarEAlimentarBanco();
+    };
 
-    function acessarSistema() {
-        document.getElementById('home-page').style.opacity = '0';
+    function verificarEAlimentarBanco() {
+        let tx = db.transaction(["arvores"], "readonly");
+        let store = tx.objectStore("arvores");
+        let req = store.getAll();
+        
+        req.onsuccess = function() {
+            if(req.result.length === 0) {
+                let txWrite = db.transaction(["arvores"], "readwrite");
+                let storeWrite = txWrite.objectStore("arvores");
+                especiesBosquePadrao.forEach(item => storeWrite.put(item));
+                listaArvoresCompleta = especiesBosquePadrao;
+            } else {
+                listaArvoresCompleta = req.result;
+            }
+            inicializarModulosSistema();
+        };
+    }
+
+    function inicializarModulosSistema() {
+        carregarImagensMuralEfetivas();
+        renderizarTabelaTCC();
+        atualizarSelectPlacas();
+        initMapInicio();
+        
+        // Verificar se veio ID via link (Leitura de QR Code)
+        const params = new URLSearchParams(window.location.search);
+        const idUrl = params.get('id');
+        if(idUrl) {
+            abrirDadosPelaTabela(parseInt(idUrl));
+        } else if(listaArvoresCompleta.length > 0) {
+            gerarPlacaVisual(listaArvoresCompleta[0].id);
+        }
+        
+        window.addEventListener('keydown', e => {
+            if(document.getElementById('custom-lightbox').style.display === 'flex') {
+                if(e.key === 'ArrowRight') mudarImagemLightbox(1);
+                if(e.key === 'ArrowLeft') mudarImagemLightbox(-1);
+                if(e.key === 'Escape') fecharLightbox();
+            }
+        });
+    }
+
+    function initMapInicio() {
+        if (mapInicio) return;
+        mapInicio = L.map('map-principal').setView([-4.221032, -55.999737], 17);
+        L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { attribution: '© Google Satélite' }).addTo(mapInicio);
+        
+        listaArvoresCompleta.forEach((a, i) => {
+            let m = L.marker(a.coordenadas).addTo(mapInicio);
+            
+            // Botão HTML customizado para abrir rotas no Google Maps diretamente do balão
+            let htmlPopup = `
+                <div style="font-family:sans-serif; font-size:12px; padding:2px;">
+                    <strong style="color:var(--verde-escuro);">${a.nomeComum}</strong><br>
+                    <span style="font-style:italic;">${a.nomeCientifico}</span><br><br>
+                    <a href="https://www.google.com/maps/search/?api=1&query=${a.coordenadas[0]},${a.coordenadas[1]}" 
+                       target="_blank" 
+                       style="display:inline-block; background:#25d366; color:white; font-weight:bold; padding:5px 8px; text-decoration:none; border-radius:4px; text-align:center;">
+                       🗺️ Traçar Rota GPS
+                    </a>
+                </div>
+            `;
+            
+            m.bindPopup(htmlPopup);
+            m.bindTooltip(`[${i+1}] ${a.nomeComum}`, { permanent: true, direction: 'top', className: 'tag-mapa-permanente', offset: [0, -10] }).openTooltip();
+        });
+    }
+
+    function initMapCadastro() {
+        if (mapCadastro) return;
+        mapCadastro = L.map('map-cadastro').setView([-4.221032, -55.999737], 17);
+        L.tileLayer('https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { attribution: '© Google Satélite' }).addTo(mapCadastro);
+
+        mapCadastro.on('click', function(e) {
+            let lat = e.latlng.lat.toFixed(6);
+            let lon = e.latlng.lng.toFixed(6);
+            document.getElementById('add-coordenadas').value = `${lat}, ${lon}`;
+            if (markerCadastro) markerCadastro.setLatLng(e.latlng);
+            else markerCadastro = L.marker(e.latlng).addTo(mapCadastro);
+        });
+    }
+
+    function capturarGPSManual() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                let lat = pos.coords.latitude.toFixed(6);
+                let lon = pos.coords.longitude.toFixed(6);
+                document.getElementById('add-coordenadas').value = `${lat}, ${lon}`;
+                let latlng = L.latlng(lat, lon);
+                if (markerCadastro) markerCadastro.setLatLng(latlng);
+                else markerCadastro = L.marker(latlng).addTo(mapCadastro);
+                mapCadastro.setView(latlng, 19);
+            });
+        }
+    }
+
+    function mudarAba(abaId) {
+        document.querySelectorAll('.conteudo-aba').forEach(el => el.classList.remove('ativa'));
+        document.querySelectorAll('.aba-btn').forEach(el => el.classList.remove('ativa'));
+        
+        document.getElementById(abaId).classList.add('ativa');
+        document.getElementById('btn-' + abaId).classList.add('ativa');
+
+        if (abaId === 'inicio') { setTimeout(() => { if(mapInicio) mapInicio.invalidateSize(); }, 200); }
+        if (abaId === 'cadastro') { setTimeout(() => { initMapCadastro(); if(mapCadastro) mapCadastro.invalidateSize(); }, 200); }
+    }
+
+    function renderizarTabelaTCC() {
+        let corpo = document.getElementById('corpo-tabela-botanica');
+        corpo.innerHTML = "";
+        listaArvoresCompleta.forEach((a, index) => {
+            corpo.innerHTML += `
+                <tr class="linha-clicavel" onclick="abrirDadosPelaTabela(${a.id})">
+                    <td><b>${index + 1}</b></td>
+                    <td>${a.nomeComum}</td>
+                    <td class="cientifico-italico">${a.nomeCientifico}</td>
+                    <td>${a.familia}</td>
+                    <td>${a.coordenadas.join(', ')}</td>
+                </tr>
+            `;
+        });
+    }
+
+    function abrirDadosPelaTabela(id) {
+        mudarAba('emissao');
+        document.getElementById('select-arvore-placa').value = id;
+        gerarPlacaVisual(id);
+    }
+
+    function atualizarSelectPlacas() {
+        let select = document.getElementById('select-arvore-placa');
+        select.innerHTML = "";
+        listaArvoresCompleta.forEach((a, i) => {
+            select.innerHTML += `<option value="${a.id}">${i+1}. ${a.nomeComum}</option>`;
+        });
+    }
+
+    function acionarEdicaoDaArvoreSelecionada() {
+        let currentId = document.getElementById('select-arvore-placa').value;
+        let arvore = listaArvoresCompleta.find(item => item.id == currentId);
+        if(!arvore) return;
+
+        document.getElementById('add-id-controle').value = arvore.id;
+        document.getElementById('add-nome').value = arvore.nomeComum;
+        document.getElementById('add-cientifico').value = arvore.nomeCientifico;
+        document.getElementById('add-familia').value = arvore.familia;
+        document.getElementById('add-origem').value = arvore.origem;
+        document.getElementById('add-descricao').value = arvore.descricao.startsWith("Nenhum laudo") ? "" : arvore.descricao;
+        document.getElementById('add-coordenadas').value = arvore.coordenadas.join(', ');
+
+        document.getElementById('titulo-cadastro-aba').innerText = `✏️ Atualizar Monitoramento: ${arvore.nomeComum}`;
+        document.getElementById('btn-salvar-texto').innerText = "Atualizar Registro Histórico";
+        document.getElementById('aviso-edicao').style.display = "block";
+        document.getElementById('btn-cancelar-edicao').style.display = "block";
+
+        mudarAba('cadastro');
+
         setTimeout(() => {
-            document.getElementById('home-page').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-            mapaGeral.invalidateSize();
-        }, 500);
+            let latlng = L.latlng(arvore.coordenadas[0], arvore.coordenadas[1]);
+            if(markerCadastro) markerCadastro.setLatLng(latlng);
+            else markerCadastro = L.marker(latlng).addTo(mapCadastro);
+            mapCadastro.setView(latlng, 18);
+        }, 250);
     }
 
-    function processarFotos(input) {
-        fotosTemporarias = [];
-        document.getElementById('previa').innerHTML = "";
-        Array.from(input.files).forEach(f => {
-            const r = new FileReader();
-            r.onload = e => {
-                fotosTemporarias.push(e.target.result);
-                document.getElementById('previa').innerHTML += `<img src="${e.target.result}" style="width:40px; height:40px; border-radius:4px; object-fit:cover;">`;
+    function cancelarModoEdicao() {
+        document.getElementById('form-cadastro').reset();
+        document.getElementById('add-id-controle').value = "";
+        document.getElementById('titulo-cadastro-aba').innerText = "🌱 Registrar Novo Monitoramento (Espécimes Adicionais)";
+        document.getElementById('btn-salvar-texto').innerText = "Salvar Registro no IndexedDB";
+        document.getElementById('aviso-edicao').style.display = "none";
+        document.getElementById('btn-cancelar-edicao').style.display = "none";
+        mudarAba('emissao');
+    }
+
+    function gerarPlacaVisual(id) {
+        let a = listaArvoresCompleta.find(item => item.id == id);
+        if(!a) return;
+
+        document.getElementById('placa-nome').innerText = a.nomeComum;
+        document.getElementById('placa-cie').innerText = a.nomeCientifico;
+        document.getElementById('placa-fam').innerText = a.familia;
+        document.getElementById('placa-ori').innerText = a.origem;
+        document.getElementById('placa-coord').innerText = a.coordenadas.join(', ');
+
+        // Formatação de parágrafos ABNT na descrição
+        let containerDesc = document.getElementById('placa-descricao-container');
+        containerDesc.innerHTML = "";
+        let blocosTexto = a.descricao.split('\n');
+        blocosTexto.forEach(pTexto => {
+            if(pTexto.trim() !== "") {
+                let pElement = document.createElement('p');
+                pElement.className = "paragrafo-abnt";
+                pElement.innerText = pTexto.trim();
+                containerDesc.appendChild(pElement);
+            }
+        });
+
+        // Geração dinâmica e automatizada do QR Code apontando para o seu GitHub Pages
+        let qrContainer = document.getElementById('qrcode-canvas');
+        qrContainer.innerHTML = "";
+        
+        let linkProducao = `https://biotecnologia-bit.github.io/biobosque/?id=${a.id}`;
+        
+        qrcodeInstance = new QRCode(qrContainer, {
+            text: linkProducao,
+            width: 120,
+            height: 120,
+            colorDark: "#000000",
+            colorLight: "#ffffff",
+            correctLevel: QRCode.CorrectLevel.H
+        });
+
+        // Renderização de Mídias
+        let midiaContainer = document.getElementById('midias-renderizadas-container');
+        midiaContainer.innerHTML = "";
+        fotosLightboxAtuais = [];
+
+        if(a.fotos && a.fotos.length > 0) {
+            a.fotos.forEach(fData => {
+                fotosLightboxAtuais.push(fData);
+                let img = document.createElement('img');
+                img.src = fData;
+                img.className = "media-item";
+                img.onclick = () => abrirLightboxMultipla(fData);
+                midiaContainer.appendChild(img);
+            });
+        }
+        if(a.videos && a.videos.length > 0) {
+            a.videos.forEach(vData => {
+                let vid = document.createElement('video');
+                vid.src = vData;
+                vid.className = "media-item";
+                vid.controls = true;
+                midiaContainer.appendChild(vid);
+            });
+        }
+        if(midiaContainer.innerHTML === "") {
+            midiaContainer.innerHTML = "<p style='font-size:12px; color:#666; padding:10px;'>Nenhuma evidência visual anexada a este monitoramento.</p>";
+        }
+    }
+
+    // Gerenciamento do Formulário e Banco IndexedDB
+    function salvarDadosFormulario(event) {
+        event.preventDefault();
+        let idControle = document.getElementById('add-id-controle').value;
+        let coordsStr = document.getElementById('add-coordenadas').value.split(',');
+        let coordsArr = [parseFloat(coordsStr[0]), parseFloat(coordsStr[1])];
+
+        let itemSalvar = {
+            id: idControle ? parseInt(idControle) : Date.now(),
+            nomeComum: document.getElementById('add-nome').value,
+            nomeCientifico: document.getElementById('add-cientifico').value,
+            familia: document.getElementById('add-familia').value,
+            origem: document.getElementById('add-origem').value,
+            descricao: document.getElementById('add-descricao').value,
+            coordenadas: coordsArr,
+            fotos: idControle ? (listaArvoresCompleta.find(x => x.id == idControle).fotos || []) : [],
+            videos: idControle ? (listaArvoresCompleta.find(x => x.id == idControle).videos || []) : []
+        };
+
+        let fileFotos = document.getElementById('add-fotos').files;
+        let fileVideos = document.getElementById('add-videos').files;
+
+        let promessas = [];
+
+        for(let i=0; i<fileFotos.length; i++) {
+            promessas.push(lerArquivoBase64(fileFotos[i]).then(b64 => itemSalvar.fotos.push(b64)));
+        }
+        for(let i=0; i<fileVideos.length; i++) {
+            promessas.push(lerArquivoBase64(fileVideos[i]).then(b64 => itemSalvar.videos.push(b64)));
+        }
+
+        Promise.all(promessas).then(() => {
+            let tx = db.transaction(["arvores"], "readwrite");
+            let store = tx.objectStore("arvores");
+            store.put(itemSalvar);
+
+            tx.oncomplete = function() {
+                alert("Dados persistidos com sucesso no IndexedDB local!");
+                location.reload();
             };
-            r.readAsDataURL(f);
         });
     }
 
-    function salvarArvore() {
-        const nome = document.getElementById('p-nome').value;
-        if(!nome || !latSel) return alert("Erro: Defina o Nome e marque o local no mapa!");
-
-        db.push({
-            id: Date.now(),
-            nome: nome,
-            obs: document.getElementById('p-obs').value,
-            lat: latSel,
-            lng: lngSel,
-            fotos: fotosTemporarias
+    function lerArquivoBase64(file) {
+        return new Promise((resolve) => {
+            let reader = new FileReader();
+            reader.onload = e => resolve(e.target.result);
+            reader.readAsDataURL(file);
         });
-
-        localStorage.setItem('bio_itaituba_final', JSON.stringify(db));
-        alert("✅ Árvore guardada!");
-        location.reload(); 
     }
 
-    function mostrarLista() {
-        const lista = document.getElementById('lista-plantas');
-        lista.innerHTML = "";
-        db.forEach(item => {
-            L.marker([item.lat, item.lng]).addTo(mapaGeral).bindPopup(item.nome);
-            lista.innerHTML += `
-                <div style="background:white; padding:10px; border-radius:8px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center; border-left: 5px solid var(--verde);">
+    // Persistência das Fotos do Painel Inicial
+    function atualizarFotoMural(event, idImgTarget) {
+        let file = event.target.files[0];
+        if(!file) return;
+        lerArquivoBase64(file).then(b64 => {
+            document.getElementById(idImgTarget).src = b64;
+            let tx = db.transaction(["config"], "readwrite");
+            tx.objectStore("config").put({ chave: idImgTarget, valor: b64 });
+        });
+    }
+
+    function carregarImagensMuralEfetivas() {
+        let tx = db.transaction(["config"], "readonly");
+        tx.objectStore("config").getAll().onsuccess = function(e) {
+            let resultados = e.target.result;
+            resultados.forEach(item => {
+                let el = document.getElementById(item.chave);
+                if(el) el.src = item.valor;
+            });
+        };
+    }
+
+    // Funções do Lightbox
+    function abrirLightboxUnica(src) {
+        fotosLightboxAtuais = [src];
+        indiceLightboxAtual = 0;
+        document.getElementById('img-lightbox-alvo').src = src;
+        document.getElementById('custom-lightbox').style.display = 'flex';
+        document.querySelector('.btn-anterior').style.display = 'none';
+        document.querySelector('.btn-proximo').style.display = 'none';
+    }
+
+    function abrirLightboxMultipla(srcSelected) {
+        indiceLightboxAtual = fotosLightboxAtuais.indexOf(srcSelected);
+        document.getElementById('img-lightbox-alvo').src = srcSelected;
+        document.getElementById('custom-lightbox').style.display = 'flex';
+        document.querySelector('.btn-anterior').style.display = 'block';
+        document.querySelector('.btn-proximo').style.display = 'block';
+    }
+
+    function fecharLightbox() {
+        document.getElementById('custom-lightbox').style.display = 'none';
+    }
+
+    function mudarImagemLightbox(direcao) {
+        if(fotosLightboxAtuais.length <= 1) return;
+        indiceLightboxAtual += direcao;
+        if(indiceLightboxAtual >= fotosLightboxAtuais.length) indiceLightboxAtual = 0;
+        if(indiceLightboxAtual < 0) indiceLightboxAtual = fotosLightboxAtuais.length - 1;
+        document.getElementById('img-lightbox-alvo').src = fotosLightboxAtuais[indiceLightboxAtual];
+    }
+</script>
+
+</body>
+</html>
