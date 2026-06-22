@@ -26,7 +26,7 @@
             height: 100vh;
             display: flex;
             flex-direction: column;
-            overflow: hidden; /* Evita rolagem dupla */
+            overflow: hidden;
         }
 
         header {
@@ -35,7 +35,7 @@
             text-align: center;
             padding: 10px 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-            flex-shrink: 0; /* Impede o header de encolher */
+            flex-shrink: 0;
         }
 
         header h1 { font-size: 20px; letter-spacing: 1px; }
@@ -46,7 +46,7 @@
             display: flex;
             flex-direction: column;
             width: 100vw;
-            height: calc(100vh - 60px); /* Ajuste dinâmico baseado no header */
+            height: calc(100vh - 60px);
             background: var(--branco);
             overflow: hidden;
         }
@@ -56,13 +56,13 @@
             background: #e9ecef;
             padding: 5px;
             flex-shrink: 0;
-            overflow-x: auto; /* Permite rolagem horizontal em telas pequenas */
+            overflow-x: auto;
             gap: 5px;
         }
 
         .aba-btn {
             flex: 1;
-            min-width: 120px; /* Largura mínima para botões no celular */
+            min-width: 120px;
             padding: 10px 5px;
             background: none;
             border: none;
@@ -86,7 +86,7 @@
             width: 100%;
             height: 100%;
             padding: 10px;
-            overflow-y: auto; /* Permite rolagem vertical apenas dentro do conteúdo da aba */
+            overflow-y: auto;
         }
 
         .conteudo-aba.ativa {
@@ -94,7 +94,6 @@
             flex-direction: column;
         }
 
-        /* 🏠 ABA MONITORAMENTO INICIAL */
         .layout-inicio {
             display: grid;
             grid-template-columns: 1fr;
@@ -102,7 +101,6 @@
             height: 100%;
         }
 
-        /* Ajuste para desktop */
         @media (min-width: 768px) {
             .layout-inicio {
                 grid-template-columns: 1.2fr 1fr;
@@ -146,7 +144,7 @@
             width: 100%;
             height: 120px;
             object-fit: cover;
-            background: #2e3133; /* Fundo cinza padrão */
+            background: #2e3133;
             border-radius: 4px;
             margin-bottom: 5px;
             border: 1px solid #999;
@@ -160,7 +158,6 @@
             margin-bottom: 3px;
         }
 
-        /* Botão estilizado para input file */
         .btn-upload-celular {
             font-size: 10px; padding: 4px; cursor: pointer; background: var(--verde-institucional); color: white; border: none; border-radius: 3px; width: 100%; text-align: center;
         }
@@ -174,12 +171,10 @@
             line-height: 1.4;
         }
 
-        /* Tags fixas no mapa */
         .tag-mapa-permanente {
             background: rgba(0, 135, 68, 0.85); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 2px 4px; border-radius: 3px; white-space: nowrap;
         }
 
-        /* 📋 ABA CATÁLOGO (TABELA) */
         .tabela-wrapper { flex: 1; overflow: auto; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; min-width: 600px;}
         th, td { padding: 8px; border-bottom: 1px solid #ddd; }
@@ -188,7 +183,6 @@
         .linha-clicavel:hover { background-color: #e8f5e9; }
         .cientifico-italico { font-style: italic; font-weight: bold;}
 
-        /* 🖨️ ABA EMISSÃO (PLACAS E IMPRESSÃO) */
         .bloco-impressao { background: white; border: 1px solid #000; padding: 15px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;}
         .secao-flex-laudo { display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 15px;}
         .coluna-dados-abnt { flex: 1; font-size: 12px; line-height: 1.4;}
@@ -203,7 +197,6 @@
 
         .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 10px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px;}
 
-        /* Lightbox (Visualização de Imagem Cheia) */
         .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; cursor: pointer;}
         .lightbox img { max-width: 90%; max-height: 90%; border: 3px solid white;}
 
@@ -268,7 +261,7 @@
 
     <div id="cadastro" class="conteudo-aba">
         <h2 style="color:var(--verde-escuro); margin-bottom:10px;">🌱 Gerenciamento de Espécimes</h2>
-        <p style="font-size:12px; color:#666;">Use a aba 'TABELA' para selecionar uma árvore existente para edição, ou use o formulário abaixo para adicionar um novo ponto (Funcionalidade Requer Banco de Dados Ativo).</p>
+        <p style="font-size:12px; color:#666;">Use a aba 'TABELA' para selecionar uma árvore existente para edição, ou use o formulário abaixo para adicionar um novo ponto.</p>
         <button class="btn-acao" style="background:#ccc; color:#666; cursor:not-allowed;">+ Adicionar Novo Ponto GPS</button>
     </div>
 
@@ -321,8 +314,7 @@
             </div>
 
             <h3 style="margin-top:15px; color:var(--verde-escuro); font-size:14px;">🖼️ Galeria de Monitoramento (Evidências Fotográficas):</h3>
-            <div id="container-midias-placa" class="container-midias">
-                </div>
+            <div id="container-midias-placa" class="container-midias"></div>
 
             <button class="btn-acao" style="background:#ffc107; color:black;" onclick="window.print()">🖨️ Imprimir Laudo / Placa de Identificação</button>
         </div>
@@ -334,16 +326,21 @@
 </div>
 
 <script>
-    // --- DADOS TÉCNICOS (MATRIZ TCC) ---
+    // --- MATRIZ OFICIAL COMPLETA ATUALIZADA COM AS 11 ÁRVORES CATALOGADAS ---
     const dadosArvores = [
         { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Fachada IFPA.jpeg", "Entrada do Bosque.jpeg"] },
         { id: 2, nome: "Castanheira beira rio", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe de Campo.jpeg", "Início da Trilha.jpeg"] },
         { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: ["Fachada IFPA.jpeg"] },
         { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
-        { id: 5, nome: "Açaí", cientifico: "Euterpe oleracea", familia: "Arecaceae", origem: "Nativa", coord: "-4.221200, -55.998900", fotos: [] }
+        { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] },
+        { id: 6, nome: "Cacau Selvagem", cientifico: "Theobroma cacao", familia: "Malvaceae", origem: "Nativa", coord: "-4.219850, -55.999210", fotos: [] },
+        { id: 7, nome: "Embaúba", cientifico: "Cecropia peltata", familia: "Urticaceae", origem: "Nativa", coord: "-4.221310, -55.999910", fotos: [] },
+        { id: 8, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", origem: "Nativa", coord: "-4.220410, -55.998950", fotos: [] },
+        { id: 9, nome: "Andiroba", cientifico: "Carapa guianensis", familia: "Meliaceae", origem: "Nativa", coord: "-4.221150, -55.998520", fotos: [] },
+        { id: 10, nome: "Olho-de-Cabra", cientifico: "Ormosia coccinea", familia: "Fabaceae", origem: "Nativa", coord: "-4.220910, -55.999350", fotos: [] },
+        { id: 11, nome: "Cumaru", cientifico: "Dipteryx odorata", familia: "Fabaceae", origem: "Nativa", coord: "-4.219650, -55.999180", fotos: [] }
     ];
 
-    // --- INICIALIZAÇÃO ---
     let mapInicio;
     let qrcode;
 
@@ -351,14 +348,13 @@
         initMap();
         povoarTabela();
         povoarSelect();
-        carregarImagensSalvas(); // Carrega imagens do IndexedDB se houver
+        carregarImagensSalvas();
 
         if (dadosArvores.length > 0) {
-            gerarPlaca(dadosArvores[0].id); // Gera a primeira placa por padrão
+            gerarPlaca(dadosArvores[0].id);
         }
     });
 
-    // --- SISTEMA DE ABAS ---
     function mudarAba(abaId) {
         document.querySelectorAll('.conteudo-aba').forEach(aba => aba.classList.remove('ativa'));
         document.querySelectorAll('.aba-btn').forEach(btn => btn.classList.remove('ativa'));
@@ -367,43 +363,38 @@
         document.getElementById('btn-' + abaId).classList.add('ativa');
 
         if (abaId === 'inicio') {
-            setTimeout(() => mapInicio.invalidateSize(), 100); // Corrige renderização do mapa
+            setTimeout(() => mapInicio.invalidateSize(), 150);
         }
     }
 
-    // --- MAPA LEAFLET (ABA INÍCIO) ---
     function initMap() {
-        mapInicio = L.map('map-principal').setView([-4.2210, -55.9992], 17);
+        mapInicio = L.map('map-principal').setView([-4.2208, -55.9991], 17);
         
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap'
         }).addTo(mapInicio);
 
-        // Satélite Google (melhor visualização do bosque)
         L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{
             maxZoom: 20,
             subdomains:['mt0','mt1','mt2','mt3'],
             attribution: '&copy; Google Satélite'
         }).addTo(mapInicio);
 
-        // Adicionar Marcadores Fixos
-        dadosArvores.forEach((arvore, index) => {
+        dadosArvores.forEach((arvore) => {
             const coords = arvore.coord.split(', ').map(Number);
             const marker = L.marker(coords).addTo(mapInicio);
             
-            // Tag Permanente
-            marker.bindTooltip(`[${index + 1}] ${arvore.nome}`, {
+            marker.bindTooltip(`[${arvore.id}] ${arvore.nome}`, {
                 permanent: true,
                 direction: 'top',
                 className: 'tag-mapa-permanente',
                 offset: [0, -10]
             }).openTooltip();
 
-            marker.bindPopup(`<b>${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br><button onclick="abrirDadosPelaTabela(${arvore.id})" style="padding:2px 5px; font-size:10px; cursor:pointer;">Ver Detalhes</button>`);
+            marker.bindPopup(`<b>[${arvore.id}] ${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br><button onclick="abrirDadosPelaTabela(${arvore.id})" style="padding:4px 8px; font-size:10px; cursor:pointer; background:#008744; color:white; border:none; border-radius:3px;">Ver Detalhes / QR</button>`);
         });
     }
 
-    // --- TABELA (ABA CATÁLOGO) ---
     function povoarTabela() {
         const corpo = document.getElementById('corpo-tabela');
         dadosArvores.forEach(a => {
@@ -427,7 +418,6 @@
         gerarPlaca(id);
     }
 
-    // --- PLACAS E QR CODE (ABA EMISSÃO) ---
     function povoarSelect() {
         const select = document.getElementById('select-arvore-placa');
         dadosArvores.forEach(a => {
@@ -442,18 +432,15 @@
         const arvore = dadosArvores.find(a => a.id == id);
         if (!arvore) return;
 
-        // Atualizar Textos
         document.getElementById('placa-nome').innerText = arvore.nome;
         document.getElementById('placa-cie').innerText = arvore.cientifico;
         document.getElementById('placa-fam').innerText = arvore.familia;
         document.getElementById('placa-ori').innerText = arvore.origem;
         document.getElementById('placa-coord').innerText = arvore.coord;
 
-        // Gerar QR Code
         const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = ""; // Limpa anterior
+        qrContainer.innerHTML = "";
         
-        // Link fake para produção (aponta para o ID na URL)
         const link = `https://biotech-bit.github.io/biobosque/?id=${arvore.id}`;
         
         qrcode = new QRCode(qrContainer, {
@@ -465,9 +452,8 @@
             correctLevel : QRCode.CorrectLevel.H
         });
 
-        // Povoar Galeria da Placa
         const midiaContainer = document.getElementById('container-midias-placa');
-        midiaContainer.innerHTML = ""; // Limpa anterior
+        midiaContainer.innerHTML = "";
         
         if (arvore.fotos.length > 0) {
             arvore.fotos.forEach(src => {
@@ -478,11 +464,10 @@
                 midiaContainer.appendChild(img);
             });
         } else {
-            midiaContainer.innerHTML = "<p style='font-size:11px; color:#999; padding:10px;'>Nenhuma foto de monitoramento cadastrada no TCC para este espécime.</p>";
+            midiaContainer.innerHTML = "<p style='font-size:11px; color:#999; padding:10px;'>Nenhuma foto de monitoramento cadastrada para este espécime.</p>";
         }
     }
 
-    // --- LIGHTBOX ---
     function abrirLightbox(src) {
         document.getElementById('lightbox-img').src = src;
         document.getElementById('lightbox').style.display = 'flex';
@@ -492,65 +477,46 @@
         document.getElementById('lightbox').style.display = 'none';
     }
 
-    // ============================================================
-    // =   SISTEMA DE ARMAZENAMENTO LOCAL (INDEXEDDB) PARA FOTOS  =
-    // ============================================================
+    // --- ARMAZENAMENTO INDEXEDDB LOCAL ---
     const dbName = "BioCatalogConfigDB";
     const storeName = "configuracoes";
 
-    // Inicializa Banco de Dados
     function initDB() {
         return new Promise((resolve, reject) => {
             const request = indexedDB.open(dbName, 1);
-            
             request.onupgradeneeded = function(event) {
                 const db = event.target.result;
                 db.createObjectStore(storeName, { keyPath: "chave" });
             };
-            
-            request.onsuccess = function(event) {
-                resolve(event.target.result);
-            };
-            
-            request.onerror = function(event) {
-                reject("Erro ao abrir IndexedDB");
-            };
+            request.onsuccess = function(event) { resolve(event.target.result); };
+            request.onerror = function() { reject("Erro no IndexedDB"); };
         });
     }
 
-    // Salva imagem no DB
     async function salvarImagemLocal(chave, base64Url) {
         const db = await initDB();
         const transaction = db.transaction([storeName], "readwrite");
-        const store = transaction.objectStore(storeName);
-        store.put({ chave: chave, valor: base64Url });
+        transaction.objectStore(storeName).put({ chave: chave, valor: base64Url });
     }
 
-    // Recupera imagens salvas ao carregar
     async function carregarImagensSalvas() {
         try {
             const db = await initDB();
             const transaction = db.transaction([storeName], "readonly");
             const store = transaction.objectStore(storeName);
-            
-            //IDs das 4 fotos do mural
             const chaves = ['mural-1', 'mural-2', 'mural-3', 'mural-4'];
             
             chaves.forEach(chave => {
                 const request = store.get(chave);
                 request.onsuccess = function() {
                     if (request.result) {
-                        // Se houver imagem salva localmente no IndexedDB, ela substitui a padrão do GitHub
                         document.getElementById(chave).src = request.result.valor;
                     }
                 };
             });
-        } catch (e) {
-            console.log("IndexedDB não suportado ou erro:", e);
-        }
+        } catch (e) { console.log(e); }
     }
 
-    // Função gatilho do input file (Ação do Celular/Campo)
     function atualizarFotoMural(event, idImgTarget) {
         const file = event.target.files[0];
         if (!file) return;
@@ -558,9 +524,7 @@
         const reader = new FileReader();
         reader.onload = function(e) {
             const base64Url = e.target.result;
-            // 1. Atualiza na tela imediatamente
             document.getElementById(idImgTarget).src = base64Url;
-            // 2. Persiste no IndexedDB (Configuração local do aparelho)
             salvarImagemLocal(idImgTarget, base64Url);
         };
         reader.readAsDataURL(file);
