@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.9 - Versão Definitiva Restaurada</title>
+    <title>BioCatalog Digital V9.9 - Versão Definitiva Completa</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -123,59 +123,81 @@
 
         .objetivos-texto { font-size: 14px; line-height: 1.6; color: #495057; text-align: justify; }
 
-        /* CARROSSEL RESTAURADO */
+        /* CARROSSEL PRINCIPAL */
         .carrossel-container {
-            width: 100%; position: relative; border-radius: 8px; overflow: hidden; background: #111;
+            width: 100%; position: relative; border-radius: 8px; overflow: hidden; background: #111; box-shadow: var(--sombra-padrao);
         }
-        .slides-wrapper { width: 100%; height: 350px; position: relative; }
+        .slides-wrapper { width: 100%; height: 380px; position: relative; }
         
         .meu-slide { display: none; width: 100%; height: 100%; }
         .meu-slide img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
         
         .legenda-slide {
-            color: var(--branco); font-size: 13px; font-weight: 600; padding: 10px; position: absolute; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.75); text-align: center;
+            color: var(--branco); font-size: 13px; font-weight: 600; padding: 12px; position: absolute; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.75); text-align: center;
         }
         .anterior, .proximo {
-            cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 16px; color: white; font-weight: bold; font-size: 18px; background-color: rgba(0,0,0,0.5); border-radius: 4px; user-select: none; z-index: 10;
+            cursor: pointer; position: absolute; top: 50%; transform: translateY(-50%); padding: 16px; color: white; font-weight: bold; font-size: 22px; background-color: rgba(0,0,0,0.6); border-radius: 4px; user-select: none; z-index: 10; transition: 0.2s;
         }
+        .anterior:hover, .proximo:hover { background-color: var(--verde-institucional); }
         .anterior { left: 10px; } .proximo { right: 10px; }
-        .pontinhos-container { text-align: center; padding: 10px; background: #222; }
-        .ponto { cursor: pointer; height: 10px; width: 10px; margin: 0 4px; background-color: #777; border-radius: 50%; display: inline-block; }
-        .ponto.active { background-color: var(--branco); }
-        .fade { animation: fadeEffect 0.5s; }
-        @keyframes fadeEffect { from { opacity: 0.5; } to { opacity: 1; } }
+        .pontinhos-container { text-align: center; padding: 10px; background: #1a1a1a; }
+        .ponto { cursor: pointer; height: 10px; width: 10px; margin: 0 5px; background-color: #555; border-radius: 50%; display: inline-block; transition: 0.3s; }
+        .ponto.active { background-color: var(--branco); transform: scale(1.2); }
+        .fade { animation: fadeEffect 0.4s; }
+        @keyframes fadeEffect { from { opacity: 0.6; } to { opacity: 1; } }
 
-        /* Links Oficiais */
+        /* Links e Redes Sociais */
         .canais-comunidade {
             margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: var(--sombra-padrao); text-align: center;
         }
-        .botoes-canais { display: flex; gap: 15px; margin-top: 10px; flex-wrap: wrap; }
-        .btn-canal { flex: 1; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; text-align: center; min-width: 120px; }
+        .botoes-canais { display: flex; gap: 15px; margin-top: 12px; flex-wrap: wrap; }
+        .btn-canal { flex: 1; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; text-align: center; min-width: 120px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
         .btn-portal { background-color: #008744; }
         .btn-web { background-color: #005a2b; }
         .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
-        /* Formulários e Tabelas */
-        .formulario-grupo { margin-bottom: 12px; display: flex; flex-direction: column; gap: 6px; }
-        .formulario-grupo label { font-size: 14px; font-weight: 600; }
-        .formulario-grupo input, .formulario-grupo select { padding: 10px; font-size: 14px; border-radius: 6px; border: 1px solid var(--cinza-borda); background: var(--cinza-claro); width: 100%; }
+        /* Formulários e Inputs */
+        .formulario-grupo { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
+        .formulario-grupo label { font-size: 14px; font-weight: 600; color: #333; }
+        .formulario-grupo input, .formulario-grupo select { padding: 12px; font-size: 14px; border-radius: 6px; border: 1px solid var(--cinza-borda); background: var(--cinza-claro); width: 100%; }
         
-        #map-principal { width: 100%; height: 450px; border-radius: 8px; border: 1px solid var(--cinza-borda); }
+        #map-principal { width: 100%; height: 470px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
         
-        .tabela-wrapper { overflow-x: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; }
-        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; }
-        th, td { padding: 12px; border-bottom: 1px solid var(--cinza-borda); text-align: left; }
-        th { background-color: var(--verde-institucional); color: white; }
+        /* Tabelas */
+        .tabela-wrapper { overflow-x: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; background: white; }
+        th, td { padding: 14px; border-bottom: 1px solid var(--cinza-borda); text-align: left; }
+        th { background-color: var(--verde-institucional); color: white; font-weight: 600; }
+        tr:hover { background-color: #f8fafd; }
 
-        .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 12px; font-weight: bold; font-size: 14px; border-radius: 6px; cursor: pointer; width: 100%; transition: background 0.2s; }
-        .btn-acao:hover { background-color: var(--verde-escuro); }
-        .btn-gps-camera { background-color: #0056b3; margin-bottom: 12px;}
-        .preview-foto-capturada { width: 100%; max-height: 250px; object-fit: cover; border-radius: 6px; display: none; margin-top: 10px; }
+        .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 14px; font-weight: bold; font-size: 14px; border-radius: 6px; cursor: pointer; width: 100%; transition: background 0.2s, transform 0.1s; }
+        .btn-acao:active { transform: scale(0.99); }
+        .btn-gps-camera { background-color: #0056b3; margin-bottom: 15px;}
+        .btn-gps-camera:hover { background-color: #004085; }
+        .preview-foto-capturada { width: 100%; max-height: 280px; object-fit: cover; border-radius: 6px; display: none; margin-top: 12px; border: 2px dashed var(--verde-institucional); }
 
-        /* Lightbox Cinema */
-        .lightbox-cinema { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; }
-        .lightbox-cinema img { max-width: 90%; max-height: 85%; border: 3px solid white; border-radius: 4px; }
-        .fechar-cinema { position: absolute; top: 20px; right: 20px; color: white; font-size: 35px; cursor: pointer; font-weight: bold; }
+        /* 📱 LIGHTBOX ESTILO CELULAR (PASSAR FOTOS) */
+        .lightbox-celular { display: none; position: fixed; z-index: 10000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .lightbox-celular img { max-width: 92%; max-height: 80vh; border: 2px solid white; border-radius: 6px; object-fit: contain; }
+        .lb-btn { position: absolute; color: white; font-size: 36px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 18px; border-radius: 50%; cursor: pointer; user-select: none; z-index: 10010; }
+        .lb-fechar { top: 20px; right: 20px; border-radius: 8px; font-size: 30px; }
+        .lb-anterior { left: 20px; top: 50%; transform: translateY(-50%); }
+        .lb-proximo { right: 20px; top: 50%; transform: translateY(-50%); }
+        .lb-legenda { position: absolute; bottom: 30px; color: white; font-size: 15px; background: rgba(0,0,0,0.7); padding: 8px 16px; border-radius: 20px; text-align: center; }
+
+        /* Laudos e Impressão */
+        .bloco-laudo { border: 2px solid #333; padding: 20px; border-radius: 6px; background: white; margin-top: 15px; }
+        .flex-laudo { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .dados-laudo p { margin-bottom: 8px; font-size: 14px; }
+        .dados-laudo strong { text-transform: uppercase; color: #555; font-size: 12px; }
+        #qrcode { padding: 5px; background: white; border: 1px solid #ccc; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #emissao, #emissao * { visibility: visible; }
+            #emissao { position: absolute; left: 0; top: 0; width: 100%; }
+            .abas-menu, header, .btn-acao, select { display: none !important; }
+        }
     </style>
 </head>
 <body>
@@ -205,16 +227,16 @@
 
                 <div class="carrossel-container">
                     <div class="slides-wrapper">
-                        <div class="meu-slide fade"><img src="Equipe%20de%20Campo.jpeg" onclick="abrirLightbox(0)"><div class="legenda-slide">Equipe de Campo</div></div>
-                        <div class="meu-slide fade"><img src="final%20da%20trilha.jpeg" onclick="abrirLightbox(1)"><div class="legenda-slide">Final da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="In%C3%ADcio%20da%20Trilha.jpeg" onclick="abrirLightbox(2)"><div class="legenda-slide">Início da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="mapa%20da%20trilha.png" onclick="abrirLightbox(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightbox(4)"><div class="legenda-slide">Trilha Guiada</div></div>
-                        <div class="meu-slide fade"><img src="acompanhamento%20tecnico.jpg" onclick="abrirLightbox(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
-                        <div class="meu-slide fade"><img src="ambienta%C3%A7ao.jpg" onclick="abrirLightbox(6)"><div class="legenda-slide">Ambientação</div></div>
-                        <div class="meu-slide fade"><img src="conhecendo%20o%20bosque.jpg" onclick="abrirLightbox(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
-                        <div class="meu-slide fade"><img src="Dentro%20do%20bosque.jpg" onclick="abrirLightbox(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
-                        <div class="meu-slide fade"><img src="Entrada%20do%20Bosque.jpeg" onclick="abrirLightbox(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Equipe%20de%20Campo.jpg" onclick="abrirLightboxCelular(0)"><div class="legenda-slide">Equipe de Campo</div></div>
+                        <div class="meu-slide fade"><img src="final%20da%20trilha.jpg" onclick="abrirLightboxCelular(1)"><div class="legenda-slide">Final da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="In%C3%ADcio%20da%20Trilha.jpg" onclick="abrirLightboxCelular(2)"><div class="legenda-slide">Início da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="mapa%20da%20trilha.jpg" onclick="abrirLightboxCelular(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCelular(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                        <div class="meu-slide fade"><img src="acompanhamento%20tecnico.jpg" onclick="abrirLightboxCelular(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
+                        <div class="meu-slide fade"><img src="ambienta%C3%A7ao.jpg" onclick="abrirLightboxCelular(6)"><div class="legenda-slide">Ambientação</div></div>
+                        <div class="meu-slide fade"><img src="conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCelular(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Dentro%20do%20bosque.jpg" onclick="abrirLightboxCelular(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
+                        <div class="meu-slide fade"><img src="entrada%20ao%20bosque.jpeg" onclick="abrirLightboxCelular(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
                     </div>
                     <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
                     <div class="pontinhos-container" id="container-pontinhos"></div>
@@ -240,15 +262,17 @@
         <div class="layout-grid-responsivo">
             <div class="secao-card">
                 <h2>📍 Captura em Campo</h2>
-                <button class="btn-acao btn-gps-camera" onclick="document.getElementById('input-camera').click()">📸 ACIONAR CÂMERA & GPS</button>
-                <input type="file" id="input-camera" accept="image/*" capture="environment" style="display:none;" onchange="processarFoto(event)">
-                <img id="preview-foto" class="preview-foto-capturada">
+                <button class="btn-acao btn-gps-camera" onclick="acionarMidiaDispositivo()">📸 ACIONAR CÂMERA & GPS LOCAL</button>
+                <input type="file" id="input-camera" accept="image/*" capture="environment" style="display:none;" onchange="exibirFotoLocal(event)">
+                <img id="preview-foto" class="preview-foto-capturada" alt="Preview da Captura">
             </div>
             <div class="secao-card">
-                <h2>📋 Dados do Espécime</h2>
-                <div class="formulario-grupo"><label>Nome Popular:</label><input type="text" id="campo-nome"></div>
-                <div class="formulario-grupo"><label>Nome Científico:</label><input type="text" id="campo-cientifico"></div>
-                <button class="btn-acao" onclick="alert('Salvo com sucesso no Arvoreto temporário!')">💾 SALVAR ARBORETO</button>
+                <h2>📋 Inventário do Espécime</h2>
+                <div class="formulario-grupo"><label>Coordenadas Obtidas:</label><input type="text" id="reg-coords" placeholder="Buscando via GPS..." readonly></div>
+                <div class="formulario-grupo"><label>Nome Popular:</label><input type="text" id="reg-nome" placeholder="Ex: Samaúma"></div>
+                <div class="formulario-grupo"><label>Nome Científico:</label><input type="text" id="reg-cientifico" placeholder="Ex: Ceiba pentandra"></div>
+                <div class="formulario-grupo"><label>Família Botânica:</label><input type="text" id="reg-familia" placeholder="Ex: Malvaceae"></div>
+                <button class="btn-acao" onclick="salvarNovoRegistro()">💾 SALVAR NO ARBORETO</button>
             </div>
         </div>
     </div>
@@ -258,82 +282,224 @@
             <h2>📊 Matriz de Dados Técnicos</h2>
             <div class="tabela-wrapper">
                 <table>
-                    <thead><tr><th>ID</th><th>Nome Popular</th><th>Nome Científico</th><th>Coordenadas</th></tr></thead>
+                    <thead><tr><th>ID</th><th>Nome Popular</th><th>Nome Científico</th><th>Família</th><th>Coordenadas</th></tr></thead>
                     <tbody id="corpo-tabela">
-                        <tr><td>1</td><td>Sumaúba</td><td>Ceiba pentandra</td><td>-4.2746, -55.9851</td></tr>
-                        <tr><td>2</td><td>Castanheira do Pará</td><td>Bertholletia excelsa</td><td>-4.2758, -55.9857</td></tr>
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
         </div>
     </div>
 
     <div id="emissao" class="conteudo-aba">
-        <div class="secao-card">
-            <h2>🖨️ Placas e Laudos</h2>
-            <p>Selecione um indivíduo mapeado para gerar e imprimir o laudo oficial com QR Code.</p>
+        <div class="layout-grid-responsivo">
+            <div class="secao-card">
+                <h2>Selecione o Indivíduo</h2>
+                <select id="seletor-laudos" onchange="atualizarLaudoOpcao(this.value)" style="width:100%; padding:12px; margin-bottom:15px; border-radius:6px;"></select>
+                
+                <div class="bloco-laudo">
+                    <div class="flex-laudo">
+                        <div class="dados-laudo">
+                            <p><strong>Nome Popular:</strong> <span id="ld-nome"></span></p>
+                            <p><strong>Nome Científico:</strong> <span id="ld-cie" style="font-style:italic;"></span></p>
+                            <p><strong>Família:</strong> <span id="ld-fam"></span></p>
+                            <p><strong>Localização:</strong> <span id="ld-coord"></span></p>
+                        </div>
+                        <div id="qrcode"></div>
+                    </div>
+                </div>
+                <button class="btn-acao" style="background:#ffc107; color:black; margin-top:15px;" onclick="window.print()">🖨️ IMPRIMIR LAUDO TÉCNICO</button>
+            </div>
         </div>
     </div>
 </div>
 
-<div id="lightbox-cinema" class="lightbox-cinema" onclick="this.style.display='none'">
-    <span class="fechar-cinema">&times;</span>
-    <img id="img-cinema">
+<div id="lb-modal" class="lightbox-celular">
+    <button class="lb-btn lb-fechar" onclick="fecharLightboxCelular()">&times;</button>
+    <button class="lb-btn lb-anterior" onclick="navegarLightbox(-1)">&#10094;</button>
+    <img id="lb-img" src="" alt="Imagem Expandida">
+    <button class="lb-btn lb-proximo" onclick="navegarLightbox(1)">&#10095;</button>
+    <div id="lb-legenda" class="lb-legenda"></div>
 </div>
 
 <script>
-    let slideIndex = 1;
-    const fotosArray = ["Equipe%20de%20Campo.jpeg","final%20da%20trilha.jpeg","In%C3%ADcio%20da%20Trilha.jpeg","mapa%20da%20trilha.png","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","Entrada%20do%20Bosque.jpeg"];
+    // Banco de Dados Unificado Real
+    let dadosArvores = [
+        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.2746, -55.9851" },
+        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.2758, -55.9857" },
+        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", coord: "-4.2751, -55.9849" },
+        { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", coord: "-4.2753, -55.9854" },
+        { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.2755, -55.9852" }
+    ];
 
+    const fotosArray = ["Equipe%20de%20Campo.jpg","final%20da%20trilha.jpg","In%C3%ADcio%20da%20Trilha.jpg","mapa%20da%20trilha.jpg","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","entrada%20ao%20bosque.jpeg"];
+    const legendasArray = ["Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha", "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque", "Dentro do Bosque", "Entrada ao Bosque"];
+
+    let slideIndex = 1;
+    let lightboxIndex = 0;
+    let mapaLeaflet;
+
+    document.addEventListener("DOMContentLoaded", function() {
+        inicializarPontosCarrossel();
+        mostrarSlides(slideIndex);
+        inicializarMapaGlobal();
+        atualizarInterfaceDados();
+        
+        // Passagem automática opcional a cada 6 segundos
+        setInterval(() => mudarSlide(1), 6000);
+    });
+
+    // Controle de Alternância de Abas
     function mudarAba(abaId) {
         document.querySelectorAll('.conteudo-aba').forEach(a => a.classList.remove('ativa'));
         document.querySelectorAll('.aba-btn').forEach(b => b.classList.remove('ativa'));
         document.getElementById(abaId).classList.add('ativa');
         document.getElementById('btn-' + abaId).classList.add('ativa');
+        if (abaId === 'inicio' && mapaLeaflet) {
+            setTimeout(() => mapaLeaflet.invalidateSize(), 250);
+        }
     }
 
+    // Carrossel de Imagens
+    function inicializarPontosCarrossel() {
+        const container = document.getElementById('container-pontinhos');
+        container.innerHTML = "";
+        for(let i = 1; i <= fotosArray.length; i++) {
+            container.innerHTML += `<span class="ponto" onclick="slideAtual(${i})"></span>`;
+        }
+    }
     function mudarSlide(n) { mostrarSlides(slideIndex += n); }
     function slideAtual(n) { mostrarSlides(slideIndex = n); }
-
     function mostrarSlides(n) {
         let slides = document.getElementsByClassName("meu-slide");
         let pontos = document.getElementsByClassName("ponto");
-        if (n > slides.length) {slideIndex = 1}
-        if (n < 1) {slideIndex = slides.length}
+        if (n > slides.length) { slideIndex = 1; }
+        if (n < 1) { slideIndex = slides.length; }
         for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
-        for (let i = 0; i < pontos.length; i++) { pontos[i].className = pontos[i].className.replace(" active", ""); }
-        if(slides[slideIndex-1]) slides[slideIndex-1].style.display = "block";
-        if(pontos[slideIndex-1]) pontos[slideIndex-1].className += " active";
+        for (let i = 0; i < pontos.length; i++) { pontos[i].classList.remove("active"); }
+        if (slides[slideIndex-1]) slides[slideIndex-1].style.display = "block";
+        if (pontos[slideIndex-1]) pontos[slideIndex-1].classList.add("active");
     }
 
-    function abrirLightbox(index) {
-        document.getElementById('img-cinema').src = fotosArray[index];
-        document.getElementById('lightbox-cinema').style.display = 'flex';
+    // 📱 LIGHTBOX INTEGRADO ESTILO CELULAR (PASSAR PARA O LADO)
+    function abrirLightboxCelular(index) {
+        lightboxIndex = index;
+        renderizarLightboxConteudo();
+        document.getElementById('lb-modal').style.display = 'flex';
+    }
+    function fecharLightboxCelular() {
+        document.getElementById('lb-modal').style.display = 'none';
+    }
+    function navegarLightbox(direcao) {
+        lightboxIndex += direcao;
+        if (lightboxIndex >= fotosArray.length) lightboxIndex = 0;
+        if (lightboxIndex < 0) lightboxIndex = fotosArray.length - 1;
+        renderizarLightboxConteudo();
+    }
+    function renderizarLightboxConteudo() {
+        document.getElementById('lb-img').src = fotosArray[lightboxIndex];
+        document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
     }
 
-    function processarFoto(e) {
+    // Mapa Leaflet Geospacial
+    function inicializarMapaGlobal() {
+        mapaLeaflet = L.map('map-principal').setView([-4.2754, -55.9852], 17);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: 'OpenStreetMap' }).addTo(mapaLeaflet);
+        
+        // Marcadores Iniciais do TCC
+        dadosArvores.forEach(arvore => {
+            L.marker(arvore.coord.split(', ').map(Number))
+             .addTo(mapaLeaflet)
+             .bindPopup(`<b>${arvore.nome}</b><br>${arvore.cientifico}`);
+        });
+    }
+
+    // Coleta em Campo: Ativação da Câmera e GPS integrado
+    function acionarMidiaDispositivo() {
+        document.getElementById('input-camera').click();
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(pos => {
+                document.getElementById('reg-coords').value = `${pos.coords.latitude.toFixed(5)}, ${pos.coords.longitude.toFixed(5)}`;
+            }, () => {
+                document.getElementById('reg-coords').value = "-4.27541, -55.98523 (Padrão Campus)";
+            });
+        }
+    }
+    function exibirFotoLocal(event) {
         const reader = new FileReader();
-        reader.onload = function(){
+        reader.onload = function() {
             const preview = document.getElementById('preview-foto');
             preview.src = reader.result;
             preview.style.display = 'block';
         }
-        reader.readAsDataURL(e.target.files[0]);
+        reader.readAsDataURL(event.target.files[0]);
     }
 
-    window.onload = function() {
-        // Gerar pontos dinâmicos do carrossel
-        const container = document.getElementById('container-pontinhos');
-        for(let i=1; i<=fotosArray.length; i++) {
-            container.innerHTML += `<span class="ponto" onclick="slideAtual(${i})"></span>`;
-        }
-        mostrarSlides(slideIndex);
+    // Salvar novos espécimes dinamicamente
+    function salvarNovoRegistro() {
+        const nome = document.getElementById('reg-nome').value;
+        const cie = document.getElementById('reg-cientifico').value;
+        const fam = document.getElementById('reg-familia').value;
+        let coord = document.getElementById('reg-coords').value;
 
-        // Inicializar mapa Leaflet com segurança
-        const map = L.map('map-principal').setView([-4.2754, -55.9852], 17);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
-        L.marker([-4.2754, -55.9852]).addTo(map).bindPopup('IFPA Campus Itaituba').openPopup();
-    };
+        if(!nome || !cie) { alert("Por favor, preencha Nome Popular e Nome Científico!"); return; }
+        if(!coord) { coord = "-4.2754, -55.9852"; }
+
+        const novoId = dadosArvores.length + 1;
+        dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coord });
+        
+        // Adiciona marcador imediatamente no mapa
+        L.marker(coord.split(', ').map(Number)).addTo(mapaLeaflet).bindPopup(`<b>${nome}</b><br>${cie}`);
+        
+        atualizarInterfaceDados();
+        alert("Espécime registrado e plotado com sucesso!");
+        
+        // Limpar formulário
+        document.getElementById('reg-nome').value = "";
+        document.getElementById('reg-cientifico').value = "";
+        document.getElementById('reg-familia').value = "";
+    }
+
+    // Atualização das tabelas e seletores
+    function atualizarInterfaceDados() {
+        const corpo = document.getElementById('corpo-tabela');
+        const seletor = document.getElementById('seletor-laudos');
+        corpo.innerHTML = "";
+        seletor.innerHTML = "";
+
+        dadosArvores.forEach(a => {
+            corpo.innerHTML += `<tr><td>${a.id}</td><td>${a.nome}</td><td><i>${a.cientifico}</i></td><td>${a.familia}</td><td>${a.coord}</td></tr>`;
+            seletor.innerHTML += `<option value="${a.id}">${a.id}. ${a.nome}</option>`;
+        });
+        if(dadosArvores.length > 0) actualizarLaudoOpcao(dadosArvores[0].id);
+    }
+
+    // Emissão de Laudos com QR Code Dinâmico
+    function actualizarLaudoOpcao(id) {
+        const item = dadosArvores.find(a => a.id == id);
+        if(!item) return;
+
+        document.getElementById('ld-nome').textContent = item.nome;
+        document.getElementById('ld-cie').textContent = item.cientifico;
+        document.getElementById('ld-fam').textContent = item.familia || "Não Informada";
+        document.getElementById('ld-coord').textContent = item.coord;
+
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = "";
+        new QRCode(qrContainer, {
+            text: `BioCatalog ID: ${item.id}\nEspécie: ${item.cientifico}\nCoords: ${item.coord}`,
+            width: 90,
+            height: 90
+        });
+    }
+
+    // Eventos do teclado no Lightbox (Setas e ESC)
+    document.addEventListener('keydown', function(e) {
+        if (document.getElementById('lb-modal').style.display === 'flex') {
+            if (e.key === 'Escape') fecharLightboxCelular();
+            if (e.key === 'ArrowRight') navegarLightbox(1);
+            if (e.key === 'ArrowLeft') navegarLightbox(-1);
+        }
+    });
 </script>
 
 </body>
