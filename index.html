@@ -91,7 +91,10 @@
         .btn-acao:hover { background-color: var(--verde-escuro); }
         .btn-gps-camera { background-color: #0056b3; margin-bottom: 15px; }
         .btn-gps-camera:hover { background-color: #004085; }
-        .preview-foto-capturada { width: 100%; max-height: 280px; object-fit: cover; border-radius: 6px; display: none; margin-top: 12px; border: 2px dashed var(--verde-institucional); }
+        
+        /* Area de Evidência Capturada */
+        .container-evidencia { width: 100%; display: none; margin-top: 15px; text-align: center; background: #f8f9fa; padding: 10px; border-radius: 6px; border: 2px dashed var(--verde-institucional); }
+        .preview-media-capturada { width: 100%; max-height: 280px; object-fit: contain; border-radius: 4px; background: #000; }
 
         /* Lightbox */
         .lightbox-celular { display: none; position: fixed; z-index: 10000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
@@ -174,12 +177,15 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>📍 Captura Georreferenciada</h2>
-                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque no botão para foto/GPS ou <b>clique direto no mapa abaixo</b> para fixar um ponto manualmente.</p>
-                    <button class="btn-acao btn-gps-camera" onclick="dispararColetaCampo()">📸 TIRAR FOTO & CAPTURAR GPS</button>
+                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque abaixo para registrar a evidência ou <b>clique direto no mapa</b> para fixar um ponto manualmente.</p>
+                    <button class="btn-acao btn-gps-camera" onclick="dispararColetaCampo()">📸 COLETAR EVIDÊNCIA & GPS</button>
                     
-                    <input type="file" id="input-camera" accept="image/*" capture="environment" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none;">
+                    <input type="file" id="input-camera" accept="image/*,video/*" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none;">
                     
-                    <img id="preview-foto" class="preview-foto-capturada" alt="Preview">
+                    <div id="container-evidencia" class="container-evidencia">
+                        <span style="font-size: 11px; font-weight: bold; color: var(--verde-institucional); display: block; margin-bottom: 5px;">✔️ EVIDÊNCIA CARREGADA COM SUCESSO</span>
+                        <div id="espaco-preview"></div>
+                    </div>
                 </div>
                 <div id="map-cadastro"></div>
             </div>
@@ -265,6 +271,9 @@
         inicializarMapasSatellites();
         atualizarInterface();
         
+        // Ativa o leitor do input de arquivo/câmera
+        document.getElementById('input-camera').addEventListener('change', processarMidiaDispositivo);
+
         setInterval(() => mudarSlide(1), 5000);
     });
 
@@ -386,6 +395,10 @@
         document.getElementById('titulo-formulario').innerHTML = "📋 Dados de Inventário";
         document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
         
+        // Oculta a evidência após salvar
+        document.getElementById('container-evidencia').style.display = 'none';
+        document.getElementById('espaco-preview').innerHTML = '';
+
         if(marcadorCadastro) {
             mapaCadastro.removeLayer(marcadorCadastro);
             marcadorCadastro = null;
@@ -469,7 +482,6 @@
     }
 
     function dispararColetaCampo() {
-        // Aciona o clique no input corrigido de forma segura
         document.getElementById('input-camera').click();
         
         if (navigator.geolocation) {
@@ -484,15 +496,28 @@
         }
     }
 
-    function processarFotoDispositivo(e) {
-        if(e.target.files && e.target.files[0]) {
+    // CORREÇÃO: Função mapeia o tipo de arquivo carregado e renderiza como Imagem ou Vídeo na tela
+    function processarMidiaDispositivo(e) {
+        const arquivo = e.target.files[0];
+        if(arquivo) {
             const reader = new FileReader();
             reader.onload = function() {
-                const preview = document.getElementById('preview-foto');
-                preview.src = reader.result;
-                preview.style.display = 'block';
+                const espacoPreview = document.getElementById('espaco-preview');
+                espacoPreview.innerHTML = ""; // Limpa visualizações anteriores
+                
+                if(arquivo.type.startsWith('video/')) {
+                    // Se for um vídeo carregado
+                    espacoPreview.innerHTML = `<video src="${reader.result}" class="preview-media-capturada" controls autoplay muted loop></video>`;
+                } else {
+                    // Se for uma foto tirada ou da galeria
+                    espacoPreview.innerHTML = `<img src="${reader.result}" class="preview-media-capturada" alt="Evidência">`;
+                }
+                
+                // Exibe o painel de evidências na interface
+                document.getElementById('container-evidencia').style.shadow = 'block';
+                document.getElementById('container-evidencia').style.display = 'block';
             }
-            reader.readAsDataURL(e.target.files[0]);
+            reader.readAsDataURL(arquivo);
         }
     }
 
