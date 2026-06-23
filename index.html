@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.7 - Cartão Postal Inteiro</title>
+    <title>BioCatalog Digital V9.8 - Galeria de Cinema</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -142,7 +142,7 @@
 
         .objetivos-texto { font-size: 13px; line-height: 1.6; color: #495057; text-align: justify; }
 
-        /* CARROSSEL PREMIUM - IMAGENS 100% INTEIRAS */
+        /* CARROSSEL PREMIUM - FOTOS INTEIRAS */
         .carrossel-container {
             width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #1a1a1a;
         }
@@ -151,8 +151,6 @@
         @media (min-width: 992px) { .slides-wrapper { height: 380px; } }
         
         .meu-slide { display: none; width: 100%; height: 100%; background: #1a1a1a; }
-        
-        /* ALTERAÇÃO CRÍTICA: object-fit contain garante a exibição da foto inteira sem cortes */
         .meu-slide img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: transform 0.2s; }
         .meu-slide img:hover { transform: scale(1.01); }
         
@@ -176,19 +174,17 @@
         .btn-bio { background-color: var(--verde-escuro); }
         .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
-        /* Formulário */
+        /* Formulários e Tabelas */
         .formulario-grupo { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
         .formulario-grupo label { font-size: 13px; font-weight: 600; color: var(--texto-escuro); }
         .formulario-grupo input, .formulario-grupo select { padding: 10px; font-size: 13px; border-radius: 6px; border: 1px solid var(--cinza-borda); background: var(--cinza-claro); width: 100%; }
         .status-gps { font-size: 12px; font-weight: bold; padding: 10px; border-radius: 6px; margin-bottom: 12px; text-align: center; }
 
-        /* Mapas */
         #map-principal { width: 100%; height: 320px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
         @media (min-width: 992px) { #map-principal { height: 520px; position: sticky; top: 15px; } }
         .secao-descricoes-pontos { background: var(--verde-suave); border-left: 4px solid var(--verde-institucional); border-radius: 4px; padding: 12px; font-size: 12px; color: var(--verde-escuro); margin-top: 10px; }
         .tag-mapa-permanente { background: rgba(0, 135, 68, 0.9); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 3px 6px; border-radius: 4px; }
         
-        /* Tabelas */
         .tabela-wrapper { overflow-x: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; background: white; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 600px; }
         th, td { padding: 10px 12px; border-bottom: 1px solid var(--cinza-borda); }
@@ -196,7 +192,6 @@
         .linha-clicavel:hover { background-color: #f1f8f5; cursor: pointer; }
         .cientifico-italico { font-style: italic; font-weight: 600; color: #1e7e34;}
 
-        /* Impressão */
         .bloco-impressao { border: 1px solid #000; padding: 20px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; background: white;}
         .secao-flex-laudo { display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 480px) { .secao-flex-laudo { flex-direction: row; justify-content: space-between; } }
@@ -211,12 +206,17 @@
         .btn-acao:hover { background-color: var(--verde-escuro); }
         .btn-gps-camera { background-color: #0056b3; margin-bottom: 10px;}
         .btn-gps-camera:hover { background-color: #004085; }
-
         .preview-foto-capturada { width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; border: 1px dashed var(--cinza-borda); display: none; margin: 10px 0; cursor: pointer; }
         
-        /* LIGHTBOX PREMIUM */
-        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; backdrop-filter: blur(6px); cursor: pointer;}
-        .lightbox img { max-width: 95%; max-height: 90%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 25px rgba(0,0,0,0.7); object-fit: contain; }
+        /* LIGHTBOX CINEMATOGRÁFICO COM NAVEGAÇÃO DE SETAS */
+        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .lightbox img { max-width: 90%; max-height: 85%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 30px rgba(0,0,0,0.8); object-fit: contain; }
+        
+        .lightbox-btn { position: absolute; color: white; font-size: 35px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; user-select: none; transition: background 0.2s; }
+        .lightbox-btn:hover { background: rgba(255,255,255,0.25); }
+        .lb-fechar { top: 20px; right: 20px; font-size: 30px; }
+        .lb-anterior { left: 20px; top: 50%; transform: translateY(-50%); }
+        .lb-proximo { right: 20px; top: 50%; transform: translateY(-50%); }
 
         @media print {
             body * { visibility: hidden; }
@@ -229,7 +229,7 @@
 <body>
 
 <header>
-    <h1>BIOCATALOG DIGITAL V9.7</h1>
+    <h1>BIOCATALOG DIGITAL V9.8</h1>
     <p>Monitoramento Florestal Multiplataforma — IFPA Campus Itaituba</p>
 </header>
 
@@ -253,20 +253,19 @@
 
                 <div class="carrossel-container">
                     <div class="slides-wrapper">
-                        <div class="meu-slide fade"><img src="foto1.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Vista Panorâmica do Bosque</div></div>
-                        <div class="meu-slide fade"><img src="foto2.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Fachada Principal IFPA</div></div>
-                        <div class="meu-slide fade"><img src="foto3.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Trilha Ecológica Central</div></div>
-                        <div class="meu-slide fade"><img src="foto4.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Equipe de Catalogação Flora</div></div>
-                        <div class="meu-slide fade"><img src="foto5.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Indivíduo de Sumaúma</div></div>
-                        <div class="meu-slide fade"><img src="foto6.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Castanheira Centenária</div></div>
-                        <div class="meu-slide fade"><img src="foto7.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Placas de Monitoramento Instaladas</div></div>
-                        <div class="meu-slide fade"><img src="foto8.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Coleta de Amostras Botânicas</div></div>
-                        <div class="meu-slide fade"><img src="foto9.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Sinalização de Campo</div></div>
-                        <div class="meu-slide fade"><img src="foto10.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Biodiversidade Amazônica Local</div></div>
+                        <div class="meu-slide fade"><img src="Equipe de Campo.jpg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
+                        <div class="meu-slide fade"><img src="final da trilha.jpg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Início da Trilha.jpg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="mapa da trilha.jpg" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Trilha guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                        <div class="meu-slide fade"><img src="acompanhamento tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
+                        <div class="meu-slide fade"><img src="ambientaçao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
+                        <div class="meu-slide fade"><img src="conhecendo o bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Dentro do bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
+                        <div class="meu-slide fade"><img src="entrada ao bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
                     </div>
                     <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
-                    <div class="pontinhos-container" id="container-pontinhos">
-                        </div>
+                    <div class="pontinhos-container" id="container-pontinhos"></div>
                 </div>
 
                 <div class="secao-card">
@@ -297,7 +296,7 @@
                     <input type="file" id="input-camera-oculto" accept="image/*" capture="environment" style="display:none;" onchange="processarFotoCampo(event)">
 
                     <div id="status-gps-painel" class="status-gps" style="display:none;">Aguardando...</div>
-                    <img id="preview-foto" class="preview-foto-capturada" onclick="abrirLightbox(this.src)">
+                    <img id="preview-foto" class="preview-foto-capturada" onclick="abrirLightboxSimples(this.src)">
                 </div>
             </div>
 
@@ -394,21 +393,39 @@
     </div>
 </div>
 
-<div id="lightbox" class="lightbox" onclick="fecharLightbox()"><img id="lightbox-img" src=""></div>
+<div id="lightbox" class="lightbox">
+    <button class="lightbox-btn lb-fechar" onclick="fecharLightbox()">&times;</button>
+    <button class="lightbox-btn lb-anterior" onclick="navegarLightbox(-1)">&#10094;</button>
+    <img id="lightbox-img" src="">
+    <button class="lightbox-btn lb-proximo" onclick="navegarLightbox(1)">&#10095;</button>
+</div>
 
 <script>
-    // ==========================================
-    // 🌳 BANCO DE DADOS FIXO DAS SUAS ÁRVORES REAIS 🌳
-    // ==========================================
+    // Banco de Dados Fixo das Árvores
     const dadosArvores = [
-        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["foto5.jpeg"] },
-        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["foto6.jpeg"] },
+        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Dentro do bosque.jpg"] },
+        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["final da trilha.jpg"] },
         { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: [] },
         { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] }
     ];
 
+    // Lista ordenada de fotos da página inicial para a navegação do filme (Lightbox)
+    const listaFotosCartaoPostal = [
+        "Equipe de Campo.jpg",
+        "final da trilha.jpg",
+        "Início da Trilha.jpg",
+        "mapa da trilha.jpg",
+        "Trilha guiada.jpg",
+        "acompanhamento tecnico.jpg",
+        "ambientaçao.jpg",
+        "conhecendo o bosque.jpg",
+        "Dentro do bosque.jpg",
+        "entrada ao bosque.jpeg"
+    ];
+
     let mapInicio, camadaMarcadores, qrcode, indiceSlide = 1, fotoTemporariaBase64 = "";
+    let indiceFotoLightboxAtual = 0;
 
     document.addEventListener("DOMContentLoaded", function() {
         gerarPontinhosCarrossel();
@@ -430,19 +447,49 @@
         }
     }
 
-    // CONTROLE DO LIGHTBOX (ABRIR E FECHAR)
-    function abrirLightbox(src) {
-        if (!src || src.includes("data:image/svg+xml")) return; 
+    // CONTROLES DO LIGHTBOX CINEMATOGRÁFICO
+    function abrirLightboxCinema(index) {
+        indiceFotoLightboxAtual = index;
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightbox-img');
+        
+        lbImg.src = listaFotosCartaoPostal[indiceFotoLightboxAtual];
+        lb.style.display = 'flex';
+        
+        // Exibe as setas de navegação
+        document.querySelector('.lb-anterior').style.display = "block";
+        document.querySelector('.lb-proximo').style.display = "block";
+    }
+
+    function abrirLightboxSimples(src) {
         const lb = document.getElementById('lightbox');
         const lbImg = document.getElementById('lightbox-img');
         lbImg.src = src;
         lb.style.display = 'flex';
+        
+        // Esconde as setas já que é foto única externa
+        document.querySelector('.lb-anterior').style.display = "none";
+        document.querySelector('.lb-proximo').style.display = "none";
+    }
+
+    function navegarLightbox(direcao) {
+        indiceFotoLightboxAtual += direcao;
+        if (indiceFotoLightboxAtual >= listaFotosCartaoPostal.length) indiceFotoLightboxAtual = 0;
+        if (indiceFotoLightboxAtual < 0) indiceFotoLightboxAtual = listaFotosCartaoPostal.length - 1;
+        
+        document.getElementById('lightbox-img').src = listaFotosCartaoPostal[indiceFotoLightboxAtual];
     }
 
     function fecharLightbox() {
         document.getElementById('lightbox').style.display = 'none';
     }
 
+    // Fechar ao clicar no fundo escuro
+    document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) fecharLightbox();
+    });
+
+    // CARROSSEL SLIDES
     function mudarSlide(n) { mostrarSlides(indiceSlide += n); }
     function slideAtual(n) { mostrarSlides(indiceSlide = n); }
     function mostrarSlides(n) {
@@ -457,11 +504,6 @@
         if (pontos[indiceSlide-1]) pontos[indiceSlide-1].className += " active";
     }
 
-    function tratarErroImagem(img) {
-        img.onerror = null;
-        img.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100'><rect width='100%' height='100%' fill='%23e9ecef'/><text x='50%' y='50%' font-size='10' fill='%236c757d' text-anchor='middle' dominant-baseline='middle'>Atualizando Imagem</text></svg>";
-    }
-
     function mudarAba(abaId) {
         document.querySelectorAll('.conteudo-aba').forEach(aba => aba.classList.remove('ativa'));
         document.querySelectorAll('.aba-btn').forEach(btn => btn.classList.remove('ativa'));
@@ -472,8 +514,8 @@
 
     function initMap() {
         mapInicio = L.map('map-principal').setView([-4.2208, -55.9991], 17);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '&copy; OS' }).addTo(mapInicio);
-        L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'], attribution: '&copy; Google' }).addTo(mapInicio);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInicio);
+        L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }).addTo(mapInicio);
         
         camadaMarcadores = L.layerGroup().addTo(mapInicio);
         plotarMarcadoresNoMapa();
@@ -610,8 +652,7 @@
             arvore.fotos.forEach(src => {
                 const img = document.createElement('img');
                 img.src = src; img.className = "media-item";
-                img.onerror = function() { tratarErroImagem(this); };
-                img.onclick = () => abrirLightbox(src);
+                img.onclick = () => abrirLightboxSimples(src);
                 midiaContainer.appendChild(img);
             });
         } else {
