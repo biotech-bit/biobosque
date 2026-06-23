@@ -133,7 +133,7 @@
                     <ul class="lista-objetivos">
                         <li><b>Mapeamento Dinâmico:</b> Georreferenciar espécimes arbóreos nativos e introduzidos dentro do perímetro do bosque.</li>
                         <li><b>Visibilidade Institucional:</b> Democratizar o acesso a dados taxonômicos para a comunidade acadêmica e externa.</li>
-                        <li><b>Apoio à Conservação:</b> Subsidiar estudos ecológicos e o desenvolvimento de ações práticas de preservação na Amazônia Tapajônica.</li>
+                        <li><b>Apoio à Conservação:</b> Subsidiar estudos ecológicos e o desenvolvimento de ações práticas de preservação na Amazônia Tapajônica através de levantamentos bibliográficos estruturados.</li>
                     </ul>
                 </div>
 
@@ -188,7 +188,7 @@
                 <div class="formulario-grupo"><label>Nome Popular:</label><input type="text" id="reg-nome" placeholder="Ex: Sumaúba"></div>
                 <div class="formulario-grupo"><label>Nome Científico:</label><input type="text" id="reg-cientifico" placeholder="Ex: Ceiba pentandra"></div>
                 <div class="formulario-grupo"><label>Família Botânica:</label><input type="text" id="reg-familia" placeholder="Ex: Malvaceae"></div>
-                <div class="formulario-grupo"><label>Características / Observações:</label><textarea id="reg-caract" rows="3" placeholder="Ex: Indivíduo centenário localizado próximo à trilha principal."></textarea></div>
+                <div class="formulario-grupo"><label>Descrição Taxonômica e Usos Históricos:</label><textarea id="reg-caract" rows="4" placeholder="Ex: Árvore pioneira, vital para regeneração de áreas degradadas e fauna local."></textarea></div>
                 <button class="btn-acao" id="btn-salvar" onclick="salvarItemArboreto()">💾 COMPILAR REGISTRO NO ARBORETO</button>
             </div>
         </div>
@@ -199,7 +199,7 @@
             <h2>📊 Matriz de Dados Técnicos (Clique em uma linha para editar)</h2>
             <div class="tabela-wrapper">
                 <table>
-                    <thead><tr><th>ID</th><th>Nome Popular</th><th>Nome Científico</th><th>Família</th><th>Características</th><th>Coordenadas</th></tr></thead>
+                    <thead><tr><th>ID</th><th>Nome Popular</th><th>Nome Científico</th><th>Família</th><th>Descrição e Usos Bibliográficos</th><th>Coordenadas</th></tr></thead>
                     <tbody id="corpo-tabela"></tbody>
                 </table>
             </div>
@@ -217,7 +217,7 @@
                         <p><strong>Nome Científico:</strong> <span id="ld-cie" style="font-style:italic;"></span></p>
                         <p><strong>Família:</strong> <span id="ld-fam"></span></p>
                         <p><strong>Localização:</strong> <span id="ld-coord"></span></p>
-                        <p><strong>Notas:</strong> <span id="ld-notas"></span></p>
+                        <p><strong>Notas de Pesquisa:</strong> <span id="ld-notas"></span></p>
                     </div>
                     <div id="qrcode"></div>
                 </div>
@@ -236,18 +236,18 @@
 </div>
 
 <script>
-    // BANCO DE DADOS CONSOLIDADO COM AS COORDENADAS CORRIGIDAS (TERRA FIRMA - BOSQUE IFPA)
+    // BANCO DE DADOS UNIFICADO: Cruzamento das coordenadas geográficas com as fichas técnicas bibliográficas
     let dadosArvores = [
-        { id: 1, nome: "Castanheira beira rio", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22150, -55.99881", notas: "Localizada próxima à margem do rio." },
-        { id: 2, nome: "Cupu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Indivíduo jovem em desenvolvimento." },
-        { id: 3, nome: "Acácia próxima castanheira", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Perto do exemplar de Castanheira." },
-        { id: 4, nome: "Manga", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore frutífera consolidada." },
-        { id: 5, nome: "Palmeira inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Espécime característico de sub-bosque." },
-        { id: 6, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Gigante da floresta com copa proeminente." },
-        { id: 7, nome: "Embaúba", cientifico: "Cecropia peltata", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Espécie pioneira de rápido crescimento." },
-        { id: 8, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Indivíduo mapeado na trilha de monitoramento." },
-        { id: 9, nome: "Cacau selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso." },
-        { id: 10, nome: "Castanha", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Matriz monitorada para fins de preservação." }
+        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, amplamente utilizada para recuperação de solos degradados, fixação de nitrogênio e proteção de encostas." },
+        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso. Antecessora silvestre do cacau comercial, possui altíssimo valor para a preservação da biodiversidade genética regional." },
+        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial (polpas, sucos e geleias), além de alimentar a fauna local." },
+        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical. Apresenta pseudofruto rico em Vitamina C e castanha de elevado valor comercial e nutricional no mercado nacional." },
+        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei cuja semente possui extraordinário valor nutricional, comercial e ecológico." },
+        { id: 6, nome: "Cupuaçu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Fruta clássica da Amazônia com polpa extremamente aromática. Usada intensivamente na culinária regional e pela indústria de cosméticos." },
+        { id: 7, nome: "Embaúba", cientifico: "Cecropia peltata", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Espécie pioneira de rápido crescimento, vital para o início da regeneração natural de clareiras e áreas degradadas. Possui forte associação com formigas." },
+        { id: 8, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Espécime característico do estrato inferior e sub-bosque amazônico. Seus frutos são intensamente consumidos pela fauna nativa." },
+        { id: 9, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Gigante imponente da floresta com sapopemas (raízes tabulares) proeminentes. Funciona como verdadeiro reservatório de água no ecossistema." },
+        { id: 10, nome: "Manga", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22150, -55.99881", notas: "Árvore frutífera introduzida e amplamente consolidada na região, oferecendo sombreamento denso e excelente produção de frutos." }
     ];
 
     const fotosArray = ["Equipe%20de%20Campo.jpeg","final%20da%20trilha.jpeg","In%C3%ADcio%20da%20Trilha.jpeg","mapa%20da%20trilha.png","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","Entrada%20do%20Bosque.jpeg"];
@@ -291,7 +291,6 @@
         mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
 
-        // NOVO: Ouvinte de clique para posicionamento manual direto no mapa de cadastro
         mapaCadastro.on('click', function(e) {
             const lat = e.latlng.lat.toFixed(5);
             const lng = e.latlng.lng.toFixed(5);
@@ -308,12 +307,11 @@
             m.bindPopup(`
                 <b>${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br>
                 <span style="font-size:11px; color:#666;">Coord: ${arvore.coord}</span><br>
-                <a href="#" onclick="event.preventDefault(); editarArvore(${arvore.id});" style="color:var(--verde-institucional); font-weight:bold; font-size:12px; display:inline-block; margin-top:5px;">✏️ Editar Árvore</a>
+                <a href="#" onclick="event.preventDefault(); editarArvore(${arvore.id});" style="color:var(--verde-institucional); font-weight:bold; font-size:12px; display:inline-block; margin-top:5px;">✏️ Ver / Editar Ficha</a>
             `);
         });
     }
 
-    // Função unificada para setar o marcador de cadastro e preencher o input
     function definirCoordenadasFormulario(lat, lng) {
         document.getElementById('reg-coords').value = `${lat}, ${lng}`;
         if (marcadorCadastro) {
@@ -339,8 +337,8 @@
         document.getElementById('reg-caract').value = arvore.notas;
         document.getElementById('reg-coords').value = arvore.coord;
 
-        document.getElementById('titulo-formulario').innerHTML = `✏️ Editando: ${arvore.nome} (ID: ${arvore.id})`;
-        document.getElementById('btn-salvar').innerHTML = "💾 SALVAR ALTERAÇÕES";
+        document.getElementById('titulo-formulario').innerHTML = `✏️ Ficha Técnica: ${arvore.nome} (ID: ${arvore.id})`;
+        document.getElementById('btn-salvar').innerHTML = "💾 SALVAR ALTERAÇÕES NA FICHA";
 
         const coordsArr = arvore.coord.split(', ').map(Number);
         definirCoordenadasFormulario(coordsArr[0], coordsArr[1]);
@@ -359,7 +357,7 @@
         const carat = document.getElementById('reg-caract').value;
         let coords = document.getElementById('reg-coords').value;
 
-        if (!nome || !cie) { alert("Preencha Nome Popular e Científico!"); return; }
+        if (!nome || !cie) { alert("Preencha o Nome Popular e o Científico!"); return; }
         if (!coords) coords = "-4.22100, -55.99900";
 
         if (idExistente) {
@@ -370,15 +368,15 @@
                 dadosArvores[index].familia = fam;
                 dadosArvores[index].coord = coords;
                 dadosArvores[index].notas = carat;
-                alert("Registro de árvore atualizado com sucesso!");
+                alert("Ficha catalográfica atualizada com sucesso!");
             }
         } else {
             const novoId = dadosArvores.length + 1;
             dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coords, notas: carat });
-            alert("Novo espécime computado com sucesso!");
+            alert("Novo espécime bibliográfico computado!");
         }
         
-        // Reseta o formulário
+        // Reset do formulário
         document.getElementById('reg-id').value = "";
         document.getElementById('reg-nome').value = "";
         document.getElementById('reg-cientifico').value = "";
@@ -403,8 +401,8 @@
         corpo.innerHTML = ""; seletor.innerHTML = "";
 
         dadosArvores.forEach(a => {
-            corpo.innerHTML += `<tr onclick="editarArvore(${a.id})"><td>${a.id}</td><td>${a.nome}</td><td><i>${a.cientifico}</i></td><td>${a.familia}</td><td>${a.notas}</td><td>${a.coord}</td></tr>`;
-            seletor.innerHTML += `<option value="${a.id}">${a.id}. ${a.nome}</option>`;
+            corpo.innerHTML += `<tr onclick="editarArvore(${a.id})"><td><b>${String(a.id).padStart(2, '0')}</b></td><td>${a.nome}</td><td><i>${a.cientifico}</i></td><td>${a.familia}</td><td>${a.notas}</td><td>${a.coord}</td></tr>`;
+            seletor.innerHTML += `<option value="${a.id}">${String(a.id).padStart(2, '0')}. ${a.nome}</option>`;
         });
         if(dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
     }
@@ -421,7 +419,7 @@
 
         const containerQr = document.getElementById('qrcode');
         containerQr.innerHTML = "";
-        new QRCode(containerQr, { text: `ID: ${item.id} | Pos: ${item.coord}`, width: 95, height: 95 });
+        new QRCode(containerQr, { text: `ID: ${item.id} | Nome: ${item.nome} | Científico: ${item.cientifico} | Família: ${item.familia}`, width: 95, height: 95 });
     }
 
     function inicializarPontosCarrossel() {
@@ -479,7 +477,7 @@
                 definirCoordenadasFormulario(lat, lng);
                 mapaCadastro.setView([lat, lng], 19);
             }, () => {
-                alert("Não foi possível obter a localização via satélite. Por favor, clique diretamente no mapa para marcar o ponto.");
+                alert("Não foi possível obter a localização em tempo real via GPS. Utilize os dados de satélite da pesquisa bibliográfica ou clique manualmente no mapa.");
             }, { enableHighAccuracy: true, timeout: 7000 });
         }
     }
