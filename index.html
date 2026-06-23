@@ -2,58 +2,72 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog v6.0 - Sistema de Inventário</title>
+    <title>BioCatalog Digital | Sistema Integrado</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        /* Estilos da versão 6 preservados */
+        /* Mantenha o seu CSS atual aqui. Ele está funcionando muito bem! */
         body { font-family: sans-serif; background: #f1f3f5; }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; padding: 20px; }
         .aba { display: none; }
-        .ativa { display: block; }
-        .secao-card { background: white; border-radius: 8px; padding: 20px; border: 1px solid #dee2e6; margin-bottom: 20px; }
+        .aba.ativa { display: block; }
+        .secao-card { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="abas-menu">
-        <button onclick="mudarAba('inicio')">Início</button>
+        <button onclick="mudarAba('inicio')">Mapa</button>
         <button onclick="mudarAba('cadastro')">Cadastro</button>
         <button onclick="mudarAba('catalogo')">Catálogo</button>
-    </div>
-
-    <div id="inicio" class="aba ativa">
-        <div class="secao-card">
-            <h2>Bem-vindo ao BioCatalog v6.0</h2>
-            <p>Sistema de Inventário Florestal - IFPA Itaituba</p>
         </div>
-    </div>
 
-    <div id="cadastro" class="aba">
+    <div id="cadastro" class="aba ativa">
         <div class="secao-card">
-            <h2>Captura em Campo</h2>
-            <input type="file" id="input-camera" accept="image/*" capture="environment">
-            <button onclick="salvarDados()">Salvar Registro</button>
-        </div>
-    </div>
-
-    <div id="catalogo" class="aba">
-        <div class="secao-card">
-            <h2>Matriz de Dados</h2>
-            <div id="corpo-tabela"></div>
+            <h2>Captura em Tempo Real</h2>
+            <button onclick="document.getElementById('input-camera').click()">📸 Tirar Foto</button>
+            <input type="file" id="input-camera" accept="image/*" capture="environment" style="display:none" onchange="processarFoto(event)">
+            <img id="preview-foto" style="max-width:200px; display:none;">
+            <input type="text" id="reg-nome" placeholder="Nome da Planta">
+            <button onclick="salvarPlanta()">Salvar no Banco</button>
         </div>
     </div>
 </div>
 
 <script>
-    function mudarAba(abaId) {
-        document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
-        document.getElementById(abaId).classList.add('ativa');
+    // 1. CARREGAMENTO: Recupera do navegador o que foi salvo antes
+    let dadosArvores = JSON.parse(localStorage.getItem('banco_bio') || "[]");
+
+    // 2. FUNÇÃO DE SALVAMENTO: Grava permanentemente
+    function salvarPlanta() {
+        const novaPlanta = {
+            id: Date.now(),
+            nome: document.getElementById('reg-nome').value,
+            foto: document.getElementById('preview-foto').src,
+            data: new Date().toLocaleDateString()
+        };
+
+        dadosArvores.push(novaPlanta);
+        localStorage.setItem('banco_bio', JSON.stringify(dadosArvores)); // A Mágica!
+        
+        alert("Planta salva com sucesso!");
+        atualizarLista();
     }
 
-    function salvarDados() {
-        // Lógica da v6
-        alert("Registro salvo no sistema!");
+    function processarFoto(e) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            document.getElementById('preview-foto').src = event.target.result;
+            document.getElementById('preview-foto').style.display = 'block';
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    }
+
+    function mudarAba(id) {
+        document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
+        document.getElementById(id).classList.add('ativa');
     }
 </script>
 </body>
