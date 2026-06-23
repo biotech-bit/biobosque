@@ -3,25 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioBosque</title>
+    <title>BioCatalog Digital V8.9</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
     
     <style>
         :root {
-            --verde-institucional: #008744; /* Verde IFPA */
+            --verde-institucional: #008744; /* Verde Oficial IFPA */
             --verde-escuro: #005a2b;
+            --verde-suave: #e8f5e9;
             --branco: #ffffff;
-            --cinza-claro: #f4f4f4;
-            --texto-escuro: #222222;
+            --cinza-claro: #f8f9fa;
+            --cinza-borda: #dee2e6;
+            --texto-escuro: #212529;
+            --sombra-padrao: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--cinza-claro);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f1f3f5;
             color: var(--texto-escuro);
             height: 100vh;
             display: flex;
@@ -30,23 +33,24 @@
         }
 
         header {
-            background-color: var(--verde-institucional);
+            background: linear-gradient(135deg, var(--verde-institucional), var(--verde-escuro));
             color: var(--branco);
             text-align: center;
-            padding: 10px 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            padding: 12px 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
             flex-shrink: 0;
+            z-index: 10;
         }
 
-        header h1 { font-size: 20px; letter-spacing: 1px; }
-        header p { font-size: 11px; opacity: 0.9; }
+        header h1 { font-size: 22px; font-weight: 700; letter-spacing: 0.5px; }
+        header p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
 
         .container {
             flex: 1;
             display: flex;
             flex-direction: column;
             width: 100vw;
-            height: calc(100vh - 60px);
+            height: calc(100vh - 65px);
             background: var(--branco);
             overflow: hidden;
         }
@@ -54,30 +58,38 @@
         .abas-menu {
             display: flex;
             background: #e9ecef;
-            padding: 5px;
+            padding: 6px;
             flex-shrink: 0;
             overflow-x: auto;
-            gap: 5px;
+            gap: 6px;
+            border-bottom: 1px solid var(--cinza-borda);
         }
 
         .aba-btn {
             flex: 1;
-            min-width: 120px;
-            padding: 10px 5px;
-            background: none;
-            border: none;
+            min-width: 130px;
+            padding: 12px 8px;
+            background: var(--branco);
+            border: 1px solid var(--cinza-borda);
             font-size: 11px;
-            font-weight: bold;
+            font-weight: 600;
             cursor: pointer;
             color: #495057;
-            border-radius: 5px;
+            border-radius: 6px;
             white-space: nowrap;
             text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .aba-btn:hover {
+            background-color: var(--cinza-claro);
         }
 
         .aba-btn.ativa {
             background-color: var(--verde-institucional);
             color: var(--branco);
+            border-color: var(--verde-institucional);
+            box-shadow: 0 2px 4px rgba(0,135,68,0.2);
         }
 
         .conteudo-aba {
@@ -85,126 +97,267 @@
             flex: 1;
             width: 100%;
             height: 100%;
-            padding: 10px;
+            padding: 15px;
             overflow-y: auto;
         }
 
         .conteudo-aba.ativa {
             display: flex;
             flex-direction: column;
+            animation: fadeIn 0.3s ease;
         }
 
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(2px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Layout Inicial Reformulado */
         .layout-inicio {
             display: grid;
             grid-template-columns: 1fr;
-            gap: 10px;
+            gap: 20px;
             height: 100%;
         }
 
-        @media (min-width: 768px) {
-            .layout-inicio {
-                grid-template-columns: 1.2fr 1fr;
-            }
+        @media (min-width: 992px) {
+            .layout-inicio { grid-template-columns: 1.2fr 1fr; }
+        }
+
+        .coluna-apresentacao {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Seção sobre o Bosque */
+        .secao-introducao {
+            background: var(--branco);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--cinza-borda);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .secao-introducao h2 {
+            color: var(--verde-institucional);
+            font-size: 18px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid var(--verde-suave);
+            padding-bottom: 4px;
+        }
+
+        .objetivos-texto {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #495057;
+            text-align: justify;
+        }
+
+        /* Estrutura do Carrossel / Slide */
+        .carrossel-container {
+            width: 100%;
+            position: relative;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--sombra-padrao);
+            border: 1px solid var(--cinza-borda);
+            background: #000;
+        }
+
+        .slides-wrapper {
+            width: 100%;
+            height: 240px;
+        }
+
+        @media (min-width: 768px) { .slides-wrapper { height: 300px; } }
+
+        .meu-slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .meu-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .legenda-slide {
+            color: var(--branco);
+            font-size: 12px;
+            font-weight: 600;
+            padding: 8px 16px;
+            position: absolute;
+            bottom: 35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 90, 43, 0.85);
+            border-radius: 20px;
+            backdrop-filter: blur(4px);
+            white-space: nowrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .anterior, .proximo {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            width: auto;
+            padding: 12px;
+            margin-top: -22px;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            transition: 0.2s ease;
+            user-select: none;
+            background-color: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+        .anterior { left: 5px; }
+        .proximo { right: 5px; }
+        .anterior:hover, .proximo:hover { background-color: var(--verde-institucional); }
+
+        .pontinhos-container {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            z-index: 5;
+        }
+        .ponto {
+            cursor: pointer;
+            height: 10px;
+            width: 10px;
+            margin: 0 4px;
+            background-color: rgba(255,255,255,0.5);
+            border-radius: 50%;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+        .ponto.active, .ponto:hover {
+            background-color: var(--branco);
+            transform: scale(1.2);
+        }
+
+        .fade {
+            animation-name: fadeEffect;
+            animation-duration: 0.8s;
+        }
+        @keyframes fadeEffect {
+            from { opacity: 0.5; } 
+            to { opacity: 1; }
+        }
+
+        /* Seção Conecte-se / Redes Sociais */
+        .redes-sociais-container {
+            background: var(--cinza-claro);
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--cinza-borda);
+            text-align: center;
+        }
+        .redes-sociais-container h3 {
+            font-size: 14px;
+            color: var(--texto-escuro);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+        .botoes-redes {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-rede {
+            flex: 1;
+            min-width: 140px;
+            padding: 10px 15px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 11px;
+            color: white;
+            border-radius: 20px;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .btn-rede:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .btn-ifpa { background-color: var(--verde-institucional); }
+        .btn-bio { background-color: var(--verde-escuro); }
+        .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+
+        /* Coluna do Mapa */
+        .coluna-mapa {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            height: 100%;
         }
 
         #map-principal {
-            height: 300px;
+            flex: 1;
+            min-height: 300px;
             border-radius: 8px;
-            border: 2px solid var(--verde-institucional);
-        }
-
-        @media (min-width: 768px) {
-            #map-principal { height: 100%; }
-        }
-
-        .galeria-inicio {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-        }
-
-        .mural-ifpa {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .foto-mural-box {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            background: #f8f9fa;
-            padding: 5px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .foto-mural {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            background: #2e3133;
-            border-radius: 4px;
-            margin-bottom: 5px;
-            border: 1px solid #999;
-            cursor: pointer;
-        }
-
-        .label-foto-mural {
-            font-size: 11px;
-            font-weight: bold;
-            color: var(--verde-escuro);
-            margin-bottom: 3px;
-        }
-
-        .btn-upload-celular {
-            font-size: 10px; padding: 4px; cursor: pointer; background: var(--verde-institucional); color: white; border: none; border-radius: 3px; width: 100%; text-align: center;
+            border: 1px solid var(--cinza-borda);
+            box-shadow: var(--sombra-padrao);
         }
 
         .secao-descricoes-pontos {
-            background: #fff;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            padding: 10px;
-            font-size: 11px;
-            line-height: 1.4;
+            background: var(--verde-suave);
+            border-left: 4px solid var(--verde-institucional);
+            border-radius: 4px;
+            padding: 12px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: var(--verde-escuro);
         }
 
         .tag-mapa-permanente {
-            background: rgba(0, 135, 68, 0.85); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 2px 4px; border-radius: 3px; white-space: nowrap;
+            background: rgba(0, 135, 68, 0.9); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 3px 6px; border-radius: 4px; box-shadow: var(--sombra-padrao);
         }
 
-        .tabela-wrapper { flex: 1; overflow: auto; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 12px; min-width: 600px;}
-        th, td { padding: 8px; border-bottom: 1px solid #ddd; }
-        th { background-color: var(--verde-institucional); color: white; position: sticky; top: 0; }
-        .linha-clicavel { cursor: pointer; }
-        .linha-clicavel:hover { background-color: #e8f5e9; }
-        .cientifico-italico { font-style: italic; font-weight: bold;}
+        /* Tabelas e Abas secundárias */
+        .tabela-wrapper { flex: 1; overflow: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; box-shadow: var(--sombra-padrao); }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 650px; background: white;}
+        th, td { padding: 12px; border-bottom: 1px solid var(--cinza-borda); }
+        th { background-color: var(--verde-institucional); color: white; position: sticky; top: 0; font-weight: 600; z-index: 1; }
+        .linha-clicavel { transition: background 0.2s ease; cursor: pointer; }
+        .linha-clicavel:hover { background-color: #f1f8f5; }
+        .cientifico-italico { font-style: italic; font-weight: 600; color: #1e7e34;}
 
-        .bloco-impressao { background: white; border: 1px solid #000; padding: 15px; max-width: 600px; margin: 0 auto; display: flex; flex-direction: column; gap: 10px;}
-        .secao-flex-laudo { display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 15px;}
-        .coluna-dados-abnt { flex: 1; font-size: 12px; line-height: 1.4;}
-        .termo-destacado-abnt { font-weight: bold; text-transform: uppercase;}
+        /* Emissão de Placas */
+        .bloco-impressao { background: white; border: 1px solid #000; padding: 20px; max-width: 620px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px;}
+        .secao-flex-laudo { display: flex; flex-direction: row; justify-content: space-between; align-items: flex-start; gap: 20px;}
+        .coluna-dados-abnt { flex: 1; font-size: 13px; line-height: 1.5;}
+        .termo-destacado-abnt { font-weight: bold; text-transform: uppercase; color: #333; font-size: 11px;}
         
-        .moldura-qr-print { border: 2px solid #000; padding: 5px; text-align: center; }
-        
-        .paragrafo-abnt { font-size: 12px; line-height: 1.5; text-align: justify; text-indent: 1.25cm; margin-bottom: 10px;}
+        .moldura-qr-print { border: 1px solid #000; padding: 8px; text-align: center; background: #fff; }
+        .paragrafo-abnt { font-size: 12px; line-height: 1.6; text-align: justify; text-indent: 1.25cm; margin-bottom: 10px;}
 
-        .container-midias { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px;}
-        .media-item { width: 80px; height: 80px; object-fit: cover; border: 1px solid #ccc; cursor: pointer;}
+        .container-midias { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;}
+        .media-item { width: 85px; height: 85px; object-fit: cover; border: 1px solid var(--cinza-borda); border-radius: 4px; cursor: pointer; transition: transform 0.2s; }
+        .media-item:hover { transform: scale(1.05); }
 
-        .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 10px; font-weight: bold; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px;}
+        .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 12px; font-weight: bold; font-size: 13px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); transition: all 0.2s; }
+        .btn-acao:hover { background-color: var(--verde-escuro); transform: translateY(-1px); }
 
         .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; cursor: pointer;}
-        .lightbox img { max-width: 90%; max-height: 90%; border: 3px solid white;}
+        .lightbox img { max-width: 90%; max-height: 90%; border: 3px solid white; border-radius: 4px; box-shadow: 0 5px 25px rgba(0,0,0,0.5);}
 
         @media print {
             body * { visibility: hidden; }
             #emissao, #emissao * { visibility: visible; }
             #emissao { position: absolute; left: 0; top: 0; width: 100%; }
-            .abas-menu, header, .btn-acao, .seletor-impressao-area, .container-midias { display: none !important; }
+            .abas-menu, header, .btn-acao, .seletor-impressao-area, .container-midias, h2, h3 { display: none !important; }
             .bloco-impressao { border: none; padding: 0; }
         }
     </style>
@@ -212,7 +365,7 @@
 <body>
 
 <header>
-    <h1>BIOBOSQUE</h1>
+    <h1>BIOCATALOG DIGITAL V8.9</h1>
     <p>Bosque da Ciência — Instituto Federal do Pará (IFPA) Campus Itaituba</p>
 </header>
 
@@ -220,53 +373,80 @@
     <div class="abas-menu">
         <button class="aba-btn ativa" id="btn-inicio" onclick="mudarAba('inicio')">🏠 MAPA E PAINEL FOTOGRÁFICO</button>
         <button class="aba-btn" id="btn-cadastro" onclick="mudarAba('cadastro')">🌱 CADASTRO / EDIÇÃO DE CAMPO</button>
-        <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 TABELA DE ESPECIFICAÇÕES (ARVORE)</button>
+        <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 TABELA DE ESPECIFICAÇÕES (TCC)</button>
         <button class="aba-btn" id="btn-emissao" onclick="mudarAba('emissao')">🖨️ DETALHES E PLACAS QR</button>
     </div>
 
     <div id="inicio" class="conteudo-aba ativa">
         <div class="layout-inicio">
-            <div id="map-principal"></div>
             
-            <div class="galeria-inicio">
-                <div class="mural-ifpa">
-                    <div class="foto-mural-box">
-                        <span class="label-foto-mural">1. Fachada IFPA</span>
-                        <img id="mural-1" src="Fachada IFPA.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
-                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-1')">
+            <div class="coluna-apresentacao">
+                <div class="secao-introducao">
+                    <h2>Sobre o Bosque da Ciência</h2>
+                    <p class="objetivos-texto">
+                        O projeto <strong>BioCatálogo Digital</strong> tem como objetivo catalogar, mapear e preservar as espécies arbóreas nativas e exóticas presentes no perímetro do campus. Através do monitoramento espacial e do registro científico, buscamos promover a educação ambiental, apoiar pesquisas acadêmicas do IFPA e monitorar o ecossistema contra degradações fustais e pisoteio.
+                    </p>
+                </div>
+
+                <div class="carrossel-container">
+                    <div class="slides-wrapper">
+                        <div class="meu-slide fade">
+                            <img src="Fachada IFPA.jpeg" onerror="tratarErroImagem(this)">
+                            <div class="legenda-slide">1. Fachada IFPA</div>
+                        </div>
+                        <div class="meu-slide fade">
+                            <img src="Equipe de Campo.jpeg" onerror="tratarErroImagem(this)">
+                            <div class="legenda-slide">2. Equipe de Campo</div>
+                        </div>
+                        <div class="meu-slide fade">
+                            <img src="Entrada do Bosque.jpeg" onerror="tratarErroImagem(this)">
+                            <div class="legenda-slide">3. Entrada do Bosque</div>
+                        </div>
+                        <div class="meu-slide fade">
+                            <img src="inicio_da_trilha.jpeg" onerror="tratarErroImagem(this)">
+                            <div class="legenda-slide">4. Início da Trilha</div>
+                        </div>
                     </div>
-                    <div class="foto-mural-box">
-                        <span class="label-foto-mural">2. Equipe de Campo</span>
-                        <img id="mural-2" src="Equipe de Campo.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
-                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-2')">
-                    </div>
-                    <div class="foto-mural-box">
-                        <span class="label-foto-mural">3. Entrada do Bosque</span>
-                        <img id="mural-3" src="Entrada do Bosque.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
-                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-3')">
-                    </div>
-                    <div class="foto-mural-box">
-                        <span class="label-foto-mural">4.  Início da Trilha</span>
-                        <img id="mural-4" src="Início da Trilha.jpeg" class="foto-mural" onclick="abrirLightbox(this.src)">
-                        <input type="file" accept="image/*" class="btn-upload-celular" onchange="atualizarFotoMural(event, 'mural-4')">
+
+                    <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a>
+                    <a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
+                    
+                    <div class="pontinhos-container">
+                        <span class="ponto" onclick="slideAtual(1)"></span>
+                        <span class="ponto" onclick="slideAtual(2)"></span>
+                        <span class="ponto" onclick="slideAtual(3)"></span>
+                        <span class="ponto" onclick="slideAtual(4)"></span>
                     </div>
                 </div>
 
-                <div class="secao-descricoes-pontos">
-                    <strong>📋 Diretriz de Monitoramento Espacial:</strong> Selecione qualquer árvore na aba de tabelas ou detalhes para emitir relatórios ou realizar vistorias de campo. Use este painel para registrar e combater caça irregular, pisoteio por animais invasores e processos erosivos.
+                <div class="redes-sociais-container">
+                    <h3>Canais Oficiais e Comunidade</h3>
+                    <div class="botoes-redes">
+                        <a href="https://itaituba.ifpa.edu.br" target="_blank" class="btn-rede btn-ifpa">Site IFPA</a>
+                        <a href="https://biotech-bit.github.io/biobosque/" target="_blank" class="btn-rede btn-bio">BioBosque Web</a>
+                        <a href="https://www.instagram.com/biobosque_22" target="_blank" class="btn-rede btn-instagram">Instagram</a>
+                    </div>
                 </div>
             </div>
+
+            <div class="coluna-mapa">
+                <div id="map-principal"></div>
+                <div class="secao-descricoes-pontos">
+                    <strong>📋 Diretriz Florestal:</strong> Use o mapa interativo para conferir a distribuição espacial dos espécimes arbóreos. Navegue pela aba "TABELA" para consultar fichas de inventário e emitir laudos com QR Code integrados.
+                </div>
+            </div>
+
         </div>
     </div>
 
     <div id="cadastro" class="conteudo-aba">
-        <h2 style="color:var(--verde-escuro); margin-bottom:10px;">🌱 Gerenciamento de Espécimes</h2>
-        <p style="font-size:12px; color:#666;">Use a aba 'TABELA' para selecionar uma árvore existente para edição, ou use o formulário abaixo para adicionar um novo ponto.</p>
-        <button class="btn-acao" style="background:#ccc; color:#666; cursor:not-allowed;">+ Adicionar Novo Ponto GPS</button>
+        <h2 style="color:var(--verde-escuro); margin-bottom:12px;">🌱 Gerenciamento de Espécimes</h2>
+        <p style="font-size:13px; color:#666;">Use a aba 'TABELA' para selecionar uma árvore existente para edição, ou use o formulário abaixo para adicionar um novo ponto.</p>
+        <button class="btn-acao" style="background:#dee2e6; color:#6c757d; cursor:not-allowed; box-shadow:none;">+ Adicionar Novo Ponto GPS</button>
     </div>
 
     <div id="catalogo" class="conteudo-aba">
-        <h2 style="color:var(--verde-escuro); margin-bottom:10px;">📋 Matriz de Dados Técnicos Florestais (TCC)</h2>
+        <h2 style="color:var(--verde-escuro); margin-bottom:12px;">📋 Matriz de Dados Técnicos Florestais (TCC)</h2>
         <div class="tabela-wrapper">
             <table>
                 <thead>
@@ -285,18 +465,18 @@
     </div>
 
     <div id="emissao" class="conteudo-aba">
-        <h2>🖨️ Área de Emissão de Relatórios e Placas QR</h2>
+        <h2 style="color:var(--verde-escuro); margin-bottom:12px;">🖨️ Área de Emissão de Relatórios e Placas QR</h2>
         
-        <div class="seletor-impressao-area" style="background:#f0f2f5; padding:10px; border-radius:5px; margin-bottom:10px; display:flex; gap:10px; align-items:center;">
-            <label style="font-size:12px; font-weight:bold;">Selecione a Árvore:</label>
-            <select id="select-arvore-placa" onchange="gerarPlaca(this.value)" style="flex:1; padding:5px; font-size:12px;"></select>
+        <div class="seletor-impressao-area" style="background:#f1f3f5; padding:12px; border-radius:6px; margin-bottom:12px; display:flex; gap:10px; align-items:center; border:1px solid var(--cinza-borda);">
+            <label style="font-size:13px; font-weight:bold;">Selecione a Árvore:</label>
+            <select id="select-arvore-placa" onchange="gerarPlaca(this.value)" style="flex:1; padding:6px; font-size:13px; border-radius:4px; border:1px solid var(--cinza-borda);"></select>
         </div>
 
         <div id="painel-impressao-conteudo">
             <div class="bloco-impressao">
                 <div class="secao-flex-laudo">
                     <div class="coluna-dados-abnt">
-                        <p><span class="termo-destacado-abnt">Nome Popular:</span> <span id="placa-nome" style="font-weight: bold; font-size: 14px;"></span></p>
+                        <p><span class="termo-destacado-abnt">Nome Popular:</span> <span id="placa-nome" style="font-weight: bold; font-size: 15px; color:var(--verde-escuro);"></span></p>
                         <p><span class="termo-destacado-abnt">Nome Científico:</span> <span id="placa-cie" class="cientifico-italico"></span></p>
                         <p><span class="termo-destacado-abnt">Família:</span> <span id="placa-fam"></span></p>
                         <p><span class="termo-destacado-abnt">Origem:</span> <span id="placa-ori"></span></p>
@@ -304,19 +484,19 @@
                     </div>
                     <div class="moldura-qr-print">
                         <div id="qrcode"></div>
-                        <p style="font-size:8px; font-weight:bold; margin-top:3px;">IFPA ITAITUBA</p>
+                        <p style="font-size:9px; font-weight:bold; margin-top:4px; color:#333;">IFPA ITAITUBA</p>
                     </div>
                 </div>
                 
-                <div style="border-top: 1px dashed #000; margin-top: 10px; padding-top: 10px;">
+                <div style="border-top: 1px dashed #000; margin-top: 12px; padding-top: 12px;">
                     <p class="paragrafo-abnt">O espécime vegetal catalogado acima faz parte do inventário florestal do Bosque da Ciência do IFPA Campus Itaituba. Este registro atesta a localização georreferenciada e as especificações botânicas para fins de preservação, estudo acadêmico e monitoramento ambiental contra degradação fustal e pisoteio.</p>
                 </div>
             </div>
 
-            <h3 style="margin-top:15px; color:var(--verde-escuro); font-size:14px;">🖼️ Galeria de Monitoramento (Evidências Fotográficas):</h3>
+            <h3 style="margin-top:20px; color:var(--verde-escuro); font-size:14px; font-weight: 600;">🖼️ Galeria de Monitoramento (Evidências Fotográficas):</h3>
             <div id="container-midias-placa" class="container-midias"></div>
 
-            <button class="btn-acao" style="background:#ffc107; color:black;" onclick="window.print()">🖨️ Imprimir Laudo / Placa de Identificação</button>
+            <button class="btn-acao" style="background:#ffc107; color:black; font-weight: 700;" onclick="window.print()">🖨️ Imprimir Laudo / Placa de Identificação</button>
         </div>
     </div>
 </div>
@@ -326,10 +506,10 @@
 </div>
 
 <script>
-    // --- MATRIZ COM AS ÁRVORES CATALOGADAS E LINKS ADAPTADOS ---
+    // --- MATRIZ DE DADOS PADRONIZADA ---
     const dadosArvores = [
         { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Fachada IFPA.jpeg", "Entrada do Bosque.jpeg"] },
-        { id: 2, nome: "Castanheira beira rio", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe de Campo.jpeg", "Início da Trilha.jpeg"] },
+        { id: 2, nome: "Castanheira beira rio", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe de Campo.jpeg", "inicio_da_trilha.jpeg"] },
         { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: ["Fachada IFPA.jpeg"] },
         { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] },
@@ -343,17 +523,61 @@
 
     let mapInicio;
     let qrcode;
+    let indiceSlide = 1;
 
     document.addEventListener("DOMContentLoaded", function() {
         initMap();
         povoarTabela();
         povoarSelect();
-        carregarImagensSalvas();
+        mostrarSlides(indiceSlide);
 
         if (dadosArvores.length > 0) {
             gerarPlaca(dadosArvores[0].id);
         }
+
+        // Rotação automática do Carrossel (A cada 4.5 segundos)
+        setInterval(() => {
+            mudarSlide(1);
+        }, 4500);
     });
+
+    // SISTEMA DE CARROSSEL (SLIDE)
+    function mudarSlide(n) {
+        mostrarSlides(indiceSlide += n);
+    }
+
+    function slideAtual(n) {
+        mostrarSlides(indiceSlide = n);
+    }
+
+    function mostrarSlides(n) {
+        let i;
+        let slides = document.getElementsByClassName("meu-slide");
+        let pontos = document.getElementsByClassName("ponto");
+        
+        if (!slides.length) return;
+        
+        if (n > slides.length) { indiceSlide = 1; }    
+        if (n < 1) { indiceSlide = slides.length; }
+        
+        for (i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";  
+        }
+        for (i = 0; i < pontos.length; i++) {
+            pontos[i].className = pontos[i].className.replace(" active", "");
+        }
+        
+        slides[indiceSlide-1].style.display = "block";  
+        if (pontos[indiceSlide-1]) {
+            pontos[indiceSlide-1].className += " active";
+        }
+    }
+
+    // FALLBACK SE ALGUMA IMAGEM NÃO CARREGAR NO GITHUB PAGES
+    function tratarErroImagem(imagem) {
+        imagem.onerror = null; 
+        imagem.src = "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><rect width='100%' height='100%' fill='%23e9ecef'/><text x='50%' y='50%' font-family='sans-serif' font-size='10' fill='%236c757d' dominant-baseline='middle' text-anchor='middle'>Imagem em Atualização</text></svg>";
+    }
 
     function mudarAba(abaId) {
         document.querySelectorAll('.conteudo-aba').forEach(aba => aba.classList.remove('ativa'));
@@ -391,7 +615,7 @@
                 offset: [0, -10]
             }).openTooltip();
 
-            marker.bindPopup(`<b>[${arvore.id}] ${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br><button onclick="abrirDadosPelaTabela(${arvore.id})" style="padding:4px 8px; font-size:10px; cursor:pointer; background:#008744; color:white; border:none; border-radius:3px;">Ver Detalhes / QR</button>`);
+            marker.bindPopup(`<b>[${arvore.id}] ${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br><button onclick="abrirDadosPelaTabela(${arvore.id})" style="padding:6px 10px; font-size:11px; font-weight:600; cursor:pointer; background:#008744; color:white; border:none; border-radius:4px;">Ver Detalhes / QR</button>`);
         });
     }
 
@@ -403,10 +627,10 @@
             linha.onclick = () => abrirDadosPelaTabela(a.id);
             linha.innerHTML = `
                 <td><b>${a.id}</b></td>
-                <td>${a.nome}</td>
+                <td><strong>${a.nome}</strong></td>
                 <td class="cientifico-italico">${a.cientifico}</td>
                 <td>${a.familia}</td>
-                <td>${a.coord}</td>
+                <td style="color:#666; font-family:monospace;">${a.coord}</td>
             `;
             corpo.appendChild(linha);
         });
@@ -445,8 +669,8 @@
         
         qrcode = new QRCode(qrContainer, {
             text: link,
-            width: 90,
-            height: 90,
+            width: 95,
+            height: 95,
             colorDark : "#000000",
             colorLight : "#ffffff",
             correctLevel : QRCode.CorrectLevel.H
@@ -460,11 +684,12 @@
                 const img = document.createElement('img');
                 img.src = src;
                 img.className = "media-item";
+                img.onerror = function() { tratarErroImagem(this); };
                 img.onclick = () => abrirLightbox(src);
                 midiaContainer.appendChild(img);
             });
         } else {
-            midiaContainer.innerHTML = "<p style='font-size:11px; color:#999; padding:10px;'>Nenhuma foto de monitoramento cadastrada para este espécime.</p>";
+            midiaContainer.innerHTML = "<p style='font-size:12px; color:#777; padding:5px; font-style:italic;'>Nenhuma foto cadastrada para este espécime.</p>";
         }
     }
 
@@ -475,59 +700,6 @@
 
     function fecharLightbox() {
         document.getElementById('lightbox').style.display = 'none';
-    }
-
-    // --- ARMAZENAMENTO INDEXEDDB LOCAL ---
-    const dbName = "BioCatalogConfigDB";
-    const storeName = "configuracoes";
-
-    function initDB() {
-        return new Promise((resolve, reject) => {
-            const request = indexedDB.open(dbName, 1);
-            request.onupgradeneeded = function(event) {
-                const db = event.target.result;
-                db.createObjectStore(storeName, { keyPath: "chave" });
-            };
-            request.onsuccess = function(event) { resolve(event.target.result); };
-            request.onerror = function() { reject("Erro no IndexedDB"); };
-        });
-    }
-
-    async function salvarImagemLocal(chave, base64Url) {
-        const db = await initDB();
-        const transaction = db.transaction([storeName], "readwrite");
-        transaction.objectStore(storeName).put({ chave: chave, valor: base64Url });
-    }
-
-    async function carregarImagensSalvas() {
-        try {
-            const db = await initDB();
-            const transaction = db.transaction([storeName], "readonly");
-            const store = transaction.objectStore(storeName);
-            const chaves = ['mural-1', 'mural-2', 'mural-3', 'mural-4'];
-            
-            chaves.forEach(chave => {
-                const request = store.get(chave);
-                request.onsuccess = function() {
-                    if (request.result) {
-                        document.getElementById(chave).src = request.result.valor;
-                    }
-                };
-            });
-        } catch (e) { console.log(e); }
-    }
-
-    function atualizarFotoMural(event, idImgTarget) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const base64Url = e.target.result;
-            document.getElementById(idImgTarget).src = base64Url;
-            salvarImagemLocal(idImgTarget, base64Url);
-        };
-        reader.readAsDataURL(file);
     }
 </script>
 
