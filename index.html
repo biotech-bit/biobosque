@@ -1,244 +1,57 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>BioBosque Digital - TCC Final</title>
+// --- CONFIGURAÇÃO INICIAL E BANCO ---
+var map = L.map('mapa').setView([-4.2238, -55.9877], 18);
+L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }).addTo(map);
+
+var db = JSON.parse(localStorage.getItem('bio_vTCC_PRO')) || [];
+var lat, lng;
+
+// Captura clique no mapa
+map.on('click', e => { 
+    lat = e.latlng.lat; 
+    lng = e.latlng.lng; 
+    alert("📍 Localização capturada!"); 
+});
+
+// Função para salvar com segurança
+function salvar() {
+    const nome = document.getElementById('p-nome').value;
+    if(!nome || !lat) {
+        alert("⚠️ ATENÇÃO: Marque a localização no mapa e digite o nome!");
+        return;
+    }
+
+    const novaArvore = {
+        id: Date.now(),
+        nome: nome,
+        esp: document.getElementById('p-esp').value,
+        fam: document.getElementById('p-fam').value,
+        ord: document.getElementById('p-ord').value,
+        cla: document.getElementById('p-cla').value,
+        obs: document.getElementById('p-obs').value,
+        lat: lat,
+        lng: lng
+    };
+
+    db.push(novaArvore);
+    localStorage.setItem('bio_vTCC_PRO', JSON.stringify(db));
+    alert("✅ Árvore catalogada com sucesso!");
     
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    // Limpa campos e recarrega lista
+    document.querySelectorAll('input, textarea').forEach(i => i.value = "");
+    render();
+}
 
-    <style>
-        :root { --verde: #1a7431; --bg: #f8f9fa; }
-        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; overflow: hidden; background: var(--bg); }
+// Renderiza os pontos no mapa e a lista
+function render() {
+    map.eachLayer(l => { if(l instanceof L.Marker) map.removeLayer(l); });
+    const list = document.getElementById('lista-plantas');
+    list.innerHTML = "";
 
-        /* TELA INICIAL */
-        #home-page {
-            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            z-index: 9999; text-align: center; color: white;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.9)), url('Frente do IFPA.jpeg');
-            background-size: cover; background-position: center; transition: 0.8s;
-        }
-        .logos img { height: 50px; margin: 5px; background: white; padding: 5px; border-radius: 8px; }
+    db.forEach(item => {
+        L.marker([item.lat, item.lng]).addTo(map).bindPopup(item.nome);
+        list.innerHTML += `<div class="card-arvore"><b>${item.nome}</b><br><i>${item.esp}</i></div>`;
+    });
+}
 
-        /* APP PRINCIPAL */
-        #main-app { display: none; height: 100vh; flex-direction: column; }
-        header { background: white; padding: 12px; border-bottom: 3px solid var(--verde); font-weight: bold; color: var(--verde); text-align: center; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        
-        .container { padding: 15px; overflow-y: auto; flex-grow: 1; display: none; }
-        .active { display: block; }
-        #mapa { height: 100%; width: 100%; }
-
-        /* CARDS DO BANCO DE DADOS (ALINHADOS) */
-        .card-arvore { 
-            background: white; border-radius: 12px; padding: 12px; margin-bottom: 12px; 
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); border: 1px solid #eee;
-            display: flex; flex-direction: column; gap: 10px;
-        }
-        .card-topo { display: flex; align-items: center; gap: 12px; cursor: pointer; }
-        .img-mini { width: 80px; height: 80px; border-radius: 8px; object-fit: cover; background: #eee; flex-shrink: 0; }
-        .info-resumo { flex-grow: 1; overflow: hidden; }
-        .info-resumo b { color: var(--verde); font-size: 1.1rem; display: block; text-transform: uppercase; }
-        .info-resumo i { font-size: 0.85rem; color: #555; }
-        .info-resumo span { font-size: 0.75rem; color: #888; display: block; margin-top: 2px; }
-
-        /* BOTÕES PEQUENOS */
-        .acoes { display: flex; gap: 8px; border-top: 1px solid #f0f0f0; padding-top: 8px; }
-        .btn-acao { 
-            flex: 1; padding: 6px; border-radius: 6px; border: none; font-size: 0.7rem; 
-            font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
-        }
-        .btn-qr { background: #e3f2fd; color: #1976d2; }
-        .btn-edit { background: #fff3e0; color: #ef6c00; }
-        .btn-del { background: #ffebee; color: #c62828; }
-
-        .btn-salvar { background: var(--verde); color: white; border: none; padding: 15px; width: 100%; border-radius: 10px; font-weight: bold; margin-top: 10px; }
-        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-top: 6px; box-sizing: border-box; }
-
-        /* PÁGINA DE DETALHES */
-        #pagina-detalhes { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:11000; overflow-y:auto; }
-        
-        /* MENU */
-        nav { height: 75px; background: white; display: flex; border-top: 1px solid #eee; }
-        .nav-item { flex: 1; text-align: center; padding: 12px 0; color: #999; cursor: pointer; font-size: 0.7rem; }
-        .nav-item.selected { color: var(--verde); font-weight: bold; }
-        .nav-item i { font-size: 1.4rem; display: block; margin-bottom: 2px; }
-
-        /* MODAL QR */
-        #modal-qr { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.85); z-index:12000; justify-content:center; align-items:center; }
-        .qr-card { background: white; padding: 20px; border-radius: 15px; text-align: center; }
-    </style>
-</head>
-<body>
-
-    <section id="home-page">
-        <div class="logos">
-            <img src="ifpa.jfif">
-            <img src="Biologia.jfif">
-        </div>
-        <h1 style="font-size: 2.2rem; margin:10px 0;">BIOBOSQUE DIGITAL</h1>
-        <button class="btn-salvar" style="width:220px; border-radius:50px;" onclick="entrar()">ENTRAR</button>
-    </section>
-
-    <div id="main-app">
-        <header>🌿 Gerenciamento BioBosque</header>
-
-        <div id="aba-mapa" class="container active" style="padding:0;"><div id="mapa"></div></div>
-
-        <div id="aba-coleta" class="container">
-            <div style="background:white; padding:15px; border-radius:12px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
-                <h3 style="margin-top:0; color:var(--verde);">Nova Catalogação</h3>
-                <input type="text" id="p-nome" placeholder="Nome Popular">
-                <input type="text" id="p-esp" placeholder="Nome Científico">
-                <input type="text" id="p-fam" placeholder="Família">
-                <input type="text" id="p-ord" placeholder="Ordem">
-                <input type="text" id="p-cla" placeholder="Classe">
-                <textarea id="p-obs" placeholder="Descrição da planta..." rows="3"></textarea>
-                <input type="file" multiple accept="image/*" onchange="compactar(this)" style="margin-top:10px;">
-                <div id="previa" style="display:flex; gap:8px; margin-top:10px; flex-wrap:wrap;"></div>
-                <button class="btn-salvar" onclick="salvar()">SALVAR NO BANCO</button>
-            </div>
-        </div>
-
-        <div id="aba-dados" class="container">
-            <h3 style="margin-bottom:15px;">📖 Banco de Dados</h3>
-            <div id="lista-plantas"></div>
-        </div>
-
-        <nav>
-            <div class="nav-item selected" id="n1" onclick="tab('aba-mapa','n1')"><i class="fas fa-map"></i>MAPA</div>
-            <div class="nav-item" id="n2" onclick="tab('aba-coleta','n2')"><i class="fas fa-plus-circle"></i>COLETAR</div>
-            <div class="nav-item" id="n3" onclick="tab('aba-dados','n3')"><i class="fas fa-database"></i>DADOS</div>
-        </nav>
-    </div>
-
-    <div id="pagina-detalhes">
-        <div id="detalhe-corpo"></div>
-        <button class="btn-salvar" onclick="fecharDetalhes()" style="background:#555; border-radius:0;">VOLTAR</button>
-    </div>
-
-    <div id="modal-qr" onclick="fecharQR()">
-        <div class="qr-card" onclick="event.stopPropagation()">
-            <div id="canvas-qr"></div>
-            <h3 id="qr-label" style="margin-top:10px; color:var(--verde);"></h3>
-            <button class="btn-acao btn-del" style="width:100%; margin-top:10px; padding:10px;" onclick="fecharQR()">FECHAR</button>
-        </div>
-    </div>
-
-<script>
-    var map = L.map('mapa').setView([-4.2238, -55.9877], 18);
-    L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', { maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }).addTo(map);
-
-    var db = JSON.parse(localStorage.getItem('bio_vTCC_PRO')) || [];
-    var fotosArr = []; var lat, lng;
-
-    function entrar() {
-        document.getElementById('home-page').style.display = 'none';
-        document.getElementById('main-app').style.display = 'flex';
-        setTimeout(() => map.invalidateSize(), 300);
-    }
-
-    function tab(id, nav) {
-        document.querySelectorAll('.container').forEach(c => c.classList.remove('active'));
-        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('selected'));
-        document.getElementById(id).classList.add('active');
-        document.getElementById(nav).classList.add('selected');
-        if(id === 'aba-mapa') setTimeout(() => map.invalidateSize(), 100);
-    }
-
-    map.on('click', e => { lat = e.latlng.lat; lng = e.latlng.lng; alert("📍 Localização Capturada!"); tab('aba-coleta','n2'); });
-
-    function compactar(input) {
-        fotosArr = []; document.getElementById('previa').innerHTML = "";
-        if (input.files) {
-            Array.from(input.files).forEach(f => {
-                const r = new FileReader();
-                r.onload = (e) => {
-                    const img = new Image();
-                    img.src = e.target.result;
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = 400; canvas.height = 400;
-                        canvas.getContext('2d').drawImage(img, 0, 0, 400, 400);
-                        const b64 = canvas.toDataURL('image/jpeg', 0.6);
-                        fotosArr.push(b64);
-                        document.getElementById('previa').innerHTML += `<img src="${b64}" style="width:40px; height:40px; border-radius:5px; object-fit:cover;">`;
-                    };
-                };
-                r.readAsDataURL(f);
-            });
-        }
-    }
-
-    function salvar() {
-        const nome = document.getElementById('p-nome').value;
-        if(!nome || !lat) return alert("Erro: Marque no mapa e dê um nome!");
-        db.push({ id: Date.now(), nome, esp: document.getElementById('p-esp').value, fam: document.getElementById('p-fam').value, ord: document.getElementById('p-ord').value, cla: document.getElementById('p-cla').value, obs: document.getElementById('p-obs').value, lat, lng, fotos: fotosArr });
-        localStorage.setItem('bio_vTCC_PRO', JSON.stringify(db));
-        alert("✅ Árvore Registrada!");
-        limpar(); render(); tab('aba-dados', 'n3');
-    }
-
-    function render() {
-        map.eachLayer(l => { if(l instanceof L.Marker) map.removeLayer(l); });
-        const list = document.getElementById('lista-plantas'); list.innerHTML = "";
-
-        db.forEach(item => {
-            L.marker([item.lat, item.lng]).addTo(map).bindPopup(item.nome);
-            list.innerHTML += `
-                <div class="card-arvore">
-                    <div class="card-topo" onclick="verDetalhes(${item.id})">
-                        <img src="${item.fotos[0] || ''}" class="img-mini">
-                        <div class="info-resumo">
-                            <b>${item.nome}</b>
-                            <i>${item.esp || 'Sem nome científico'}</i>
-                            <span>Família: ${item.fam || '-'}</span>
-                        </div>
-                    </div>
-                    <div class="acoes">
-                        <button class="btn-acao btn-qr" onclick="gerarQR(${item.id})"><i class="fas fa-qrcode"></i> QR</button>
-                        <button class="btn-acao btn-edit" onclick="alert('Funcionalidade de editar em breve')"><i class="fas fa-edit"></i> EDITAR</button>
-                        <button class="btn-acao btn-del" onclick="excluir(${item.id})"><i class="fas fa-trash"></i> APAGAR</button>
-                    </div>
-                </div>`;
-        });
-    }
-
-    function verDetalhes(id) {
-        const item = db.find(x => x.id == id);
-        document.getElementById('detalhe-corpo').innerHTML = `
-            <img src="${item.fotos[0] || ''}" style="width:100%; height:250px; object-fit:cover;">
-            <div style="padding:20px;">
-                <h2 style="color:var(--verde); margin:0;">${item.nome}</h2>
-                <p><i>${item.esp}</i></p>
-                <hr border="0" style="border-top:1px solid #eee;">
-                <p><b>Família:</b> ${item.fam}<br><b>Ordem:</b> ${item.ord}<br><b>Classe:</b> ${item.cla}</p>
-                <p><b>Descrição:</b><br>${item.obs}</p>
-                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-top:20px;">
-                    ${item.fotos.map(f => `<img src="${f}" style="width:80px; border-radius:8px;">`).join('')}
-                </div>
-            </div>`;
-        document.getElementById('pagina-detalhes').style.display = 'block';
-    }
-
-    function gerarQR(id) {
-        const item = db.find(x => x.id == id);
-        const canvas = document.getElementById('canvas-qr');
-        canvas.innerHTML = "";
-        document.getElementById('qr-label').innerText = item.nome;
-        document.getElementById('modal-qr').style.display = 'flex';
-        setTimeout(() => { new QRCode(canvas, { text: "BIOBOSQUE: " + item.nome + " | " + item.esp, width: 180, height: 180 }); }, 200);
-    }
-
-    function fecharDetalhes() { document.getElementById('pagina-detalhes').style.display = 'none'; }
-    function fecharQR() { document.getElementById('modal-qr').style.display = 'none'; }
-    function excluir(id) { if(confirm("Deseja apagar este registro?")) { db = db.filter(x => x.id != id); localStorage.setItem('bio_vTCC_PRO', JSON.stringify(db)); render(); } }
-    function limpar() { document.querySelectorAll('input, textarea').forEach(i => i.value = ""); fotosArr = []; document.getElementById('previa').innerHTML = ""; }
-
-    window.onload = render;
-</script>
-</body>
-</html>
+// Inicializa
+window.onload = render;
