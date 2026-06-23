@@ -43,7 +43,7 @@
         .secao-card { background: var(--branco); border-radius: 8px; padding: 20px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
         .secao-card h2 { color: var(--verde-institucional); font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid var(--verde-suave); padding-bottom: 6px; }
 
-        /* CARROSSEL CORRIGIDO COM EXTEÇÕES REAIS */
+        /* CARROSSEL RESTAURADO E TOTALMENTE CORRIGIDO */
         .carrossel-container { width: 100%; position: relative; border-radius: 8px; overflow: hidden; background: #111; box-shadow: var(--sombra-padrao); }
         .slides-wrapper { width: 100%; height: 380px; position: relative; }
         .meu-slide { display: none; width: 100%; height: 100%; }
@@ -87,7 +87,7 @@
         .btn-gps-camera:hover { background-color: #004085; }
         .preview-foto-capturada { width: 100%; max-height: 280px; object-fit: cover; border-radius: 6px; display: none; margin-top: 12px; border: 2px dashed var(--verde-institucional); }
 
-        /* 📱 LIGHTBOX COM RECURSO DE PASSAR FOTOS PARA O LADO */
+        /* LIGHTBOX CINEMA */
         .lightbox-celular { display: none; position: fixed; z-index: 10000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .lightbox-celular img { max-width: 92%; max-height: 80vh; border: 2px solid white; border-radius: 6px; object-fit: contain; }
         .lb-btn { position: absolute; color: white; font-size: 36px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 18px; border-radius: 50%; cursor: pointer; user-select: none; z-index: 10010; transition: 0.2s; }
@@ -126,16 +126,16 @@
 
                 <div class="carrossel-container">
                     <div class="slides-wrapper">
-                        <div class="meu-slide fade"><img src="Equipe de Campo.jpg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
-                        <div class="meu-slide fade"><img src="final da trilha.jpg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Início da Trilha.jpg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="mapa da trilha.jpg" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Trilha guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
-                        <div class="meu-slide fade"><img src="acompanhamento tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
-                        <div class="meu-slide fade"><img src="ambientaçao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
-                        <div class="meu-slide fade"><img src="conhecendo o bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
-                        <div class="meu-slide fade"><img src="Dentro do bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
-                        <div class="meu-slide fade"><img src="entrada ao bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Equipe%20de%20Campo.jpeg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
+                        <div class="meu-slide fade"><img src="final%20da%20trilha.jpeg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="In%C3%ADcio%20da%20Trilha.jpeg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="mapa%20da%20trilha.png" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                        <div class="meu-slide fade"><img src="acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
+                        <div class="meu-slide fade"><img src="ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
+                        <div class="meu-slide fade"><img src="conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Dentro%20do%20bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Entrada%20do%20Bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
                     </div>
                     <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
                     <div class="pontinhos-container" id="container-pontinhos"></div>
@@ -230,8 +230,8 @@
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.27555, -55.98521", notas: "Comum em áreas de sub-bosque secundário." }
     ];
 
-    // Array Corrigido de Arquivos do Repositório
-    const fotosArray = ["Equipe de Campo.jpg","final da trilha.jpg","Início da Trilha.jpg","mapa da trilha.jpg","Trilha guiada.jpg","acompanhamento tecnico.jpg","ambientaçao.jpg","conhecendo o bosque.jpg","Dentro do bosque.jpg","entrada ao bosque.jpeg"];
+    // Array Corrigido e Sincronizado com o HTML
+    const fotosArray = ["Equipe de Campo.jpeg","final da trilha.jpeg","Início da Trilha.jpeg","mapa da trilha.png","Trilha guiada.jpg","acompanhamento tecnico.jpg","ambientaçao.jpg","conhecendo o bosque.jpg","Dentro do bosque.jpg","Entrada do Bosque.jpeg"];
     const legendasArray = ["Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha", "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque", "Dentro do Bosque", "Entrada ao Bosque"];
 
     let slideIndex = 1;
@@ -244,7 +244,7 @@
         inicializarMapasSatellites();
         atualizarInterface();
         
-        setInterval(() => mudarSlide(1), 5000); // Rotação Automática do Carrossel
+        setInterval(() => mudarSlide(1), 5000);
     });
 
     function mudarAba(abaId) {
@@ -259,7 +259,6 @@
         }, 200);
     }
 
-    // Configuração dos Mapas Híbridos com Satélite Google Direct link
     function inicializarMapasSatellites() {
         const urlSat = 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
         const subdomains = ['mt0','mt1','mt2','mt3'];
@@ -283,7 +282,6 @@
         });
     }
 
-    // Controle do Carrossel Geral
     function inicializarPontosCarrossel() {
         const container = document.getElementById('container-pontinhos');
         container.innerHTML = "";
@@ -304,7 +302,6 @@
         if (pontos[slideIndex-1]) pontos[slideIndex-1].classList.add("active");
     }
 
-    // NAVEGAÇÃO COMPLETA DO LIGHTBOX (Avançar e Voltar Fotos)
     function abrirLightboxCinema(index) {
         lightboxIndex = index;
         carregarConteudoLightbox();
@@ -324,7 +321,6 @@
         document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
     }
 
-    // Captura GPS Realtime e Câmera Integrada
     function dispararColetaCampo() {
         document.getElementById('input-camera').click();
         if (navigator.geolocation) {
@@ -406,7 +402,6 @@
         new QRCode(containerQr, { text: `ID: ${item.id} | Pos: ${item.coord}`, width: 95, height: 95 });
     }
 
-    // Teclado Eventos para Galeria
     document.addEventListener('keydown', function(e) {
         if (document.getElementById('lb-modal').style.display === 'flex') {
             if (e.key === 'Escape') fecharLightboxCinema();
