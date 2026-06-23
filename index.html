@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.9 - Inicial Folder Fix</title>
+    <title>BioCatalog Digital V9.9 - Codified Path Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -142,7 +142,7 @@
 
         .objetivos-texto { font-size: 13px; line-height: 1.6; color: #495057; text-align: justify; }
 
-        /* CARROSSEL PREMIUM - CAMINHOS COM MAIÚSCULAS AJUSTADOS */
+        /* CARROSSEL PREMIUM - CAMINHOS CODIFICADOS CONTRA ERROS NO GIT */
         .carrossel-container {
             width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #1a1a1a;
         }
@@ -253,16 +253,16 @@
 
                 <div class="carrossel-container">
                     <div class="slides-wrapper">
-                        <div class="meu-slide fade"><img src="Inicial/Equipe de Campo.jpg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/final da trilha.jpg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Início da Trilha.jpg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/mapa da trilha.jpg" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Trilha guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Acompanhamento tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Ambientaçao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Conhecendo o bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Dentro do bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/entrada ao bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Equipe%20de%20Campo.jpg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/final%20da%20trilha.jpg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/In%C3%ADcio%20da%20Trilha.jpg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/mapa%20da%20trilha.jpg" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Dentro%20do%20bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/entrada%20ao%20bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
                     </div>
                     <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
                     <div class="pontinhos-container" id="container-pontinhos"></div>
@@ -402,25 +402,25 @@
 
 <script>
     const dadosArvores = [
-        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Inicial/Dentro do bosque.jpg"] },
-        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Inicial/final da trilha.jpg"] },
+        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Inicial/Dentro%20do%20bosque.jpg"] },
+        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Inicial/final%20da%20trilha.jpg"] },
         { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: [] },
         { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] }
     ];
 
-    // Lista corrigida para coincidir com a pasta Inicial maiúscula e seus arquivos
+    // Lista unificada e codificada com caminhos compatíveis com o Git
     const listaFotosCartaoPostal = [
-        "Inicial/Equipe de Campo.jpg",
-        "Inicial/final da trilha.jpg",
-        "Inicial/Início da Trilha.jpg",
-        "Inicial/mapa da trilha.jpg",
-        "Inicial/Trilha guiada.jpg",
-        "Inicial/Acompanhamento tecnico.jpg",
-        "Inicial/Ambientaçao.jpg",
-        "Inicial/Conhecendo o bosque.jpg",
-        "Inicial/Dentro do bosque.jpg",
-        "Inicial/entrada ao bosque.jpeg"
+        "Inicial/Equipe%20de%20Campo.jpg",
+        "Inicial/final%20da%20trilha.jpg",
+        "Inicial/In%C3%ADcio%20da%20Trilha.jpg",
+        "Inicial/mapa%20da%20trilha.jpg",
+        "Inicial/Trilha%20guiada.jpg",
+        "Inicial/Acompanhamento%20tecnico.jpg",
+        "Inicial/Ambienta%C3%A7ao.jpg",
+        "Inicial/Conhecendo%20o%20bosque.jpg",
+        "Inicial/Dentro%20do%20bosque.jpg",
+        "Inicial/entrada%20ao%20bosque.jpeg"
     ];
 
     let mapInicio, camadaMarcadores, qrcode, indiceSlide = 1, fotoTemporariaBase64 = "";
