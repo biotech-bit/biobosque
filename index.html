@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.6 - Galeria Fixada</title>
+    <title>BioCatalog Digital V9.7 - Cartão Postal Inteiro</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -142,30 +142,32 @@
 
         .objetivos-texto { font-size: 13px; line-height: 1.6; color: #495057; text-align: justify; }
 
-        /* Carrossel Interativo */
+        /* CARROSSEL PREMIUM - IMAGENS 100% INTEIRAS */
         .carrossel-container {
-            width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #000;
+            width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #1a1a1a;
         }
-        .slides-wrapper { width: 100%; height: 200px; }
-        @media (min-width: 576px) { .slides-wrapper { height: 260px; } }
-        @media (min-width: 992px) { .slides-wrapper { height: 320px; } }
+        .slides-wrapper { width: 100%; height: 240px; }
+        @media (min-width: 576px) { .slides-wrapper { height: 320px; } }
+        @media (min-width: 992px) { .slides-wrapper { height: 380px; } }
         
-        .meu-slide { display: none; width: 100%; height: 100%; }
-        .meu-slide img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: opacity 0.2s; }
-        .meu-slide img:hover { opacity: 0.9; }
+        .meu-slide { display: none; width: 100%; height: 100%; background: #1a1a1a; }
+        
+        /* ALTERAÇÃO CRÍTICA: object-fit contain garante a exibição da foto inteira sem cortes */
+        .meu-slide img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: transform 0.2s; }
+        .meu-slide img:hover { transform: scale(1.01); }
         
         .legenda-slide {
-            color: var(--branco); font-size: 11px; font-weight: 600; padding: 6px 12px; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 90, 43, 0.85); border-radius: 20px; backdrop-filter: blur(4px); text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+            color: var(--branco); font-size: 11px; font-weight: 600; padding: 6px 14px; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 90, 43, 0.85); border-radius: 20px; backdrop-filter: blur(4px); text-align: center; max-width: 85%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
         }
         .anterior, .proximo {
-            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 12px; margin-top: -22px; color: white; font-weight: bold; font-size: 16px; background-color: rgba(0,0,0,0.3); border-radius: 4px; user-select: none; z-index: 6;
+            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 12px; margin-top: -22px; color: white; font-weight: bold; font-size: 16px; background-color: rgba(0,0,0,0.4); border-radius: 4px; user-select: none; z-index: 6;
         }
         .anterior { left: 5px; } .proximo { right: 5px; }
         .pontinhos-container { position: absolute; bottom: 10px; width: 100%; text-align: center; z-index: 5; }
-        .ponto { cursor: pointer; height: 8px; width: 8px; margin: 0 4px; background-color: rgba(255,255,255,0.5); border-radius: 50%; display: inline-block; }
+        .ponto { cursor: pointer; height: 8px; width: 8px; margin: 0 3px; background-color: rgba(255,255,255,0.4); border-radius: 50%; display: inline-block; }
         .ponto.active { background-color: var(--branco); transform: scale(1.2); }
-        .fade { animation-name: fadeEffect; animation-duration: 0.6s; }
-        @keyframes fadeEffect { from { opacity: 0.6; } to { opacity: 1; } }
+        .fade { animation-name: fadeEffect; animation-duration: 0.5s; }
+        @keyframes fadeEffect { from { opacity: 0.7; } to { opacity: 1; } }
 
         /* Redes Sociais */
         .botoes-redes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
@@ -182,7 +184,7 @@
 
         /* Mapas */
         #map-principal { width: 100%; height: 320px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
-        @media (min-width: 992px) { #map-principal { height: 500px; position: sticky; top: 15px; } }
+        @media (min-width: 992px) { #map-principal { height: 520px; position: sticky; top: 15px; } }
         .secao-descricoes-pontos { background: var(--verde-suave); border-left: 4px solid var(--verde-institucional); border-radius: 4px; padding: 12px; font-size: 12px; color: var(--verde-escuro); margin-top: 10px; }
         .tag-mapa-permanente { background: rgba(0, 135, 68, 0.9); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 3px 6px; border-radius: 4px; }
         
@@ -212,9 +214,9 @@
 
         .preview-foto-capturada { width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; border: 1px dashed var(--cinza-borda); display: none; margin: 10px 0; cursor: pointer; }
         
-        /* LIGHTBOX DE EXPANSÃO (Abre qualquer foto ao clicar) */
-        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; backdrop-filter: blur(5px); cursor: pointer;}
-        .lightbox img { max-width: 90%; max-height: 85%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 20px rgba(0,0,0,0.5); object-fit: contain; }
+        /* LIGHTBOX PREMIUM */
+        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.9); align-items: center; justify-content: center; backdrop-filter: blur(6px); cursor: pointer;}
+        .lightbox img { max-width: 95%; max-height: 90%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 25px rgba(0,0,0,0.7); object-fit: contain; }
 
         @media print {
             body * { visibility: hidden; }
@@ -227,7 +229,7 @@
 <body>
 
 <header>
-    <h1>BIOCATALOG DIGITAL V9.6</h1>
+    <h1>BIOCATALOG DIGITAL V9.7</h1>
     <p>Monitoramento Florestal Multiplataforma — IFPA Campus Itaituba</p>
 </header>
 
@@ -251,15 +253,20 @@
 
                 <div class="carrossel-container">
                     <div class="slides-wrapper">
-                        <div class="meu-slide fade"><img src="Fachada IFPA.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Fachada IFPA Campus Itaituba</div></div>
-                        <div class="meu-slide fade"><img src="Equipe de Campo.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Equipe de Campo em Atividade</div></div>
-                        <div class="meu-slide fade"><img src="Entrada do Bosque.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Entrada do Bosque da Ciência</div></div>
-                        <div class="meu-slide fade"><img src="inicio_da_trilha.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Início da Trilha de Amostragem</div></div>
+                        <div class="meu-slide fade"><img src="foto1.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Vista Panorâmica do Bosque</div></div>
+                        <div class="meu-slide fade"><img src="foto2.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Fachada Principal IFPA</div></div>
+                        <div class="meu-slide fade"><img src="foto3.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Trilha Ecológica Central</div></div>
+                        <div class="meu-slide fade"><img src="foto4.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Equipe de Catalogação Flora</div></div>
+                        <div class="meu-slide fade"><img src="foto5.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Indivíduo de Sumaúma</div></div>
+                        <div class="meu-slide fade"><img src="foto6.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Castanheira Centenária</div></div>
+                        <div class="meu-slide fade"><img src="foto7.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Placas de Monitoramento Instaladas</div></div>
+                        <div class="meu-slide fade"><img src="foto8.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Coleta de Amostras Botânicas</div></div>
+                        <div class="meu-slide fade"><img src="foto9.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Sinalização de Campo</div></div>
+                        <div class="meu-slide fade"><img src="foto10.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Biodiversidade Amazônica Local</div></div>
                     </div>
                     <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
-                    <div class="pontinhos-container">
-                        <span class="ponto" onclick="slideAtual(1)"></span><span class="ponto" onclick="slideAtual(2)"></span><span class="ponto" onclick="slideAtual(3)"></span><span class="ponto" onclick="slideAtual(4)"></span>
-                    </div>
+                    <div class="pontinhos-container" id="container-pontinhos">
+                        </div>
                 </div>
 
                 <div class="secao-card">
@@ -391,29 +398,41 @@
 
 <script>
     // ==========================================
-    // 🌳 INSIRA SUAS ÁRVORES REAIS AQUI ABAIXO 🌳
+    // 🌳 BANCO DE DADOS FIXO DAS SUAS ÁRVORES REAIS 🌳
     // ==========================================
     const dadosArvores = [
-        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Fachada IFPA.jpeg", "Entrada do Bosque.jpeg"] },
-        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe de Campo.jpeg", "inicio_da_trilha.jpeg"] },
-        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: ["Fachada IFPA.jpeg"] },
+        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["foto5.jpeg"] },
+        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["foto6.jpeg"] },
+        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: [] },
         { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] }
-        // Se você tiver mais registros, basta continuar adicionando seguindo essa mesma estrutura padrão (vírgula no final da linha de cima)
     ];
 
     let mapInicio, camadaMarcadores, qrcode, indiceSlide = 1, fotoTemporariaBase64 = "";
 
     document.addEventListener("DOMContentLoaded", function() {
+        gerarPontinhosCarrossel();
         initMap();
         renderizarGradeDados();
         mostrarSlides(indiceSlide);
-        setInterval(() => mudarSlide(1), 4500);
+        setInterval(() => mudarSlide(1), 5000);
     });
 
-    // FUNÇÕES DO LIGHTBOX
+    function gerarPontinhosCarrossel() {
+        const container = document.getElementById('container-pontinhos');
+        const numSlides = document.getElementsByClassName("meu-slide").length;
+        container.innerHTML = "";
+        for (let i = 1; i <= numSlides; i++) {
+            const span = document.createElement('span');
+            span.className = "ponto";
+            span.onclick = () => slideAtual(i);
+            container.appendChild(span);
+        }
+    }
+
+    // CONTROLE DO LIGHTBOX (ABRIR E FECHAR)
     function abrirLightbox(src) {
-        if (!src || src.includes("data:image/svg+xml")) return; // ignora placeholders vazios
+        if (!src || src.includes("data:image/svg+xml")) return; 
         const lb = document.getElementById('lightbox');
         const lbImg = document.getElementById('lightbox-img');
         lbImg.src = src;
@@ -592,7 +611,7 @@
                 const img = document.createElement('img');
                 img.src = src; img.className = "media-item";
                 img.onerror = function() { tratarErroImagem(this); };
-                img.onclick = () => abrirLightbox(src); // Ativa clique na galeria de laudos
+                img.onclick = () => abrirLightbox(src);
                 midiaContainer.appendChild(img);
             });
         } else {
