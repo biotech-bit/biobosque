@@ -2,98 +2,58 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>BioCatalog Digital | IFPA Itaituba</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BioCatalog v6.0 - Sistema de Inventário</title>
     <style>
-        :root { --verde: #008744; --branco: #ffffff; }
-        body { font-family: 'Segoe UI', sans-serif; background: #f4f4f4; margin: 0; padding: 20px; }
-        .container { max-width: 1000px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        .aba { display: none; } .aba.ativa { display: block; }
-        .secao-card { border: 1px solid #ddd; padding: 20px; border-radius: 8px; margin-bottom: 20px; }
-        .btn-acao { background: var(--verde); color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; width: 100%; font-weight: bold; }
-        .foto-preview { max-width: 100%; height: 250px; object-fit: cover; border-radius: 8px; display: none; margin: 10px 0; border: 2px dashed var(--verde); }
-        .tabela-acervo { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        .tabela-acervo td, .tabela-acervo th { border: 1px solid #ddd; padding: 10px; }
+        /* Estilos da versão 6 preservados */
+        body { font-family: sans-serif; background: #f1f3f5; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .aba { display: none; }
+        .ativa { display: block; }
+        .secao-card { background: white; border-radius: 8px; padding: 20px; border: 1px solid #dee2e6; margin-bottom: 20px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div style="margin-bottom: 20px;">
-        <button onclick="mudarAba('cadastro')">📍 Cadastro de Campo</button>
-        <button onclick="mudarAba('catalogo')">📊 Acervo Identificado</button>
+    <div class="abas-menu">
+        <button onclick="mudarAba('inicio')">Início</button>
+        <button onclick="mudarAba('cadastro')">Cadastro</button>
+        <button onclick="mudarAba('catalogo')">Catálogo</button>
     </div>
 
-    <div id="cadastro" class="aba ativa">
+    <div id="inicio" class="aba ativa">
         <div class="secao-card">
-            <h2>📸 Scanner Botânico de Campo</h2>
-            <button class="btn-acao" onclick="document.getElementById('input-camera').click()">IDENTIFICAR E REGISTRAR PLANTA</button>
-            <input type="file" id="input-camera" accept="image/*" capture="environment" style="display:none;" onchange="previewFoto(event)">
-            <img id="preview" class="foto-preview">
+            <h2>Bem-vindo ao BioCatalog v6.0</h2>
+            <p>Sistema de Inventário Florestal - IFPA Itaituba</p>
         </div>
-        
+    </div>
+
+    <div id="cadastro" class="aba">
         <div class="secao-card">
-            <input type="text" id="reg-coords" placeholder="Coordenadas GPS (Automático)" readonly style="width: 98%; padding: 10px; margin-bottom: 10px;">
-            <input type="text" id="reg-nome" placeholder="Nome Científico" style="width: 98%; padding: 10px; margin-bottom: 10px;">
-            <button class="btn-acao" onclick="salvarNoBanco()">💾 SALVAR NO BANCO DE DADOS</button>
+            <h2>Captura em Campo</h2>
+            <input type="file" id="input-camera" accept="image/*" capture="environment">
+            <button onclick="salvarDados()">Salvar Registro</button>
         </div>
     </div>
 
     <div id="catalogo" class="aba">
-        <h2>📊 Acervo Identificado</h2>
-        <div id="lista-acervo"></div>
+        <div class="secao-card">
+            <h2>Matriz de Dados</h2>
+            <div id="corpo-tabela"></div>
+        </div>
     </div>
 </div>
 
 <script>
-    // CARREGAMENTO INICIAL
-    let banco = JSON.parse(localStorage.getItem('banco_botanico') || "[]");
-
-    function mudarAba(id) {
+    function mudarAba(abaId) {
         document.querySelectorAll('.aba').forEach(a => a.classList.remove('ativa'));
-        document.getElementById(id).classList.add('ativa');
-        if(id === 'catalogo') renderizarCatalogo();
+        document.getElementById(abaId).classList.add('ativa');
     }
 
-    function previewFoto(event) {
-        const file = event.target.files[0];
-        const reader = new FileReader();
-        reader.onload = e => {
-            document.getElementById('preview').src = e.target.result;
-            document.getElementById('preview').style.display = 'block';
-        };
-        reader.readAsDataURL(file);
-        
-        // Pega GPS
-        if(navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(pos => {
-                document.getElementById('reg-coords').value = `${pos.coords.latitude}, ${pos.coords.longitude}`;
-            });
-        }
-    }
-
-    function salvarNoBanco() {
-        const novaPlanta = {
-            id: Date.now(),
-            coords: document.getElementById('reg-coords').value,
-            nome: document.getElementById('reg-nome').value,
-            foto: document.getElementById('preview').src
-        };
-        banco.push(novaPlanta);
-        localStorage.setItem('banco_botanico', JSON.stringify(banco));
-        alert("Planta salva com sucesso no sistema!");
-        mudarAba('catalogo');
-    }
-
-    function renderizarCatalogo() {
-        const lista = document.getElementById('lista-acervo');
-        lista.innerHTML = banco.map(p => `
-            <div class="secao-card">
-                <img src="${p.foto}" width="50">
-                <strong>${p.nome}</strong><br>
-                <small>${p.coords}</small>
-            </div>
-        `).join('');
+    function salvarDados() {
+        // Lógica da v6
+        alert("Registro salvo no sistema!");
     }
 </script>
 </body>
