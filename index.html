@@ -84,6 +84,8 @@
         table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; background: white; }
         th, td { padding: 14px; border-bottom: 1px solid var(--cinza-borda); text-align: left; }
         th { background-color: var(--verde-institucional); color: white; }
+        tbody tr { cursor: pointer; transition: background 0.2s; }
+        tbody tr:hover { background-color: var(--verde-suave); }
 
         .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 14px; font-weight: bold; font-size: 14px; border-radius: 6px; cursor: pointer; width: 100%; transition: background 0.2s; }
         .btn-acao:hover { background-color: var(--verde-escuro); }
@@ -125,7 +127,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>Sobre o Projeto</h2>
-                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma initiative voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
+                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
                     
                     <h3 style="color: var(--verde-institucional); font-size: 15px; margin-top: 15px;">Objetivos do Projeto:</h3>
                     <ul class="lista-objetivos">
@@ -179,20 +181,21 @@
                 <div id="map-cadastro"></div>
             </div>
             <div class="secao-card">
-                <h2>📋 Dados de Inventário</h2>
+                <h2 id="titulo-formulario">📋 Dados de Inventário</h2>
+                <input type="hidden" id="reg-id" value="">
                 <div class="formulario-grupo"><label>Coordenadas Fixadas:</label><input type="text" id="reg-coords" placeholder="Buscando sinal de satélite..." readonly></div>
                 <div class="formulario-grupo"><label>Nome Popular:</label><input type="text" id="reg-nome" placeholder="Ex: Sumaúba"></div>
                 <div class="formulario-grupo"><label>Nome Científico:</label><input type="text" id="reg-cientifico" placeholder="Ex: Ceiba pentandra"></div>
                 <div class="formulario-grupo"><label>Família Botânica:</label><input type="text" id="reg-familia" placeholder="Ex: Malvaceae"></div>
                 <div class="formulario-grupo"><label>Características / Observações:</label><textarea id="reg-caract" rows="3" placeholder="Ex: Indivíduo centenário localizado próximo à trilha principal."></textarea></div>
-                <button class="btn-acao" onclick="salvarItemArboreto()">💾 COMPILAR REGISTRO NO ARBORETO</button>
+                <button class="btn-acao" id="btn-salvar" onclick="salvarItemArboreto()">💾 COMPILAR REGISTRO NO ARBORETO</button>
             </div>
         </div>
     </div>
 
     <div id="catalogo" class="conteudo-aba">
         <div class="secao-card">
-            <h2>📊 Matriz de Dados Técnicos</h2>
+            <h2>📊 Matriz de Dados Técnicos (Clique em uma linha para editar)</h2>
             <div class="tabela-wrapper">
                 <table>
                     <thead><tr><th>ID</th><th>Nome Popular</th><th>Nome Científico</th><th>Família</th><th>Características</th><th>Coordenadas</th></tr></thead>
@@ -252,6 +255,7 @@
     let slideIndex = 1;
     let lightboxIndex = 0;
     let mapaPrincipal, mapaCadastro, marcadorCadastro;
+    let camadaMarcadores;
 
     document.addEventListener("DOMContentLoaded", function() {
         inicializarPontosCarrossel();
@@ -278,9 +282,10 @@
         const urlSat = 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
         const subdomains = ['mt0','mt1','mt2','mt3'];
 
-        // Foco inicial ajustado exatamente para o centro do bosque em terra
         mapaPrincipal = L.map('map-principal').setView([-4.22100, -55.99900], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaPrincipal);
+        
+        camadaMarcadores = L.layerGroup().addTo(mapaPrincipal);
 
         mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
@@ -289,13 +294,113 @@
     }
 
     function plotarMarcadores() {
+        camadaMarcadores.clearLayers();
         dadosArvores.forEach(arvore => {
-            const m = L.marker(arvore.coord.split(', ').map(Number)).addTo(mapaPrincipal);
+            const m = L.marker(arvore.coord.split(', ').map(Number)).addTo(camadaMarcadores);
             m.bindPopup(`
                 <b>${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br>
-                <span style="font-size:11px; color:#666;">Coord: ${arvore.coord}</span>
+                <span style="font-size:11px; color:#666;">Coord: ${arvore.coord}</span><br>
+                <a href="#" onclick="event.preventDefault(); editarArvore(${arvore.id});" style="color:var(--verde-institucional); font-weight:bold; font-size:12px; display:inline-block; margin-top:5px;">✏️ Editar Árvore</a>
             `);
         });
+    }
+
+    // FUNÇÃO QUE CARREGA A ÁRVORE SELECIONADA NO FORMULÁRIO PARA EDIÇÃO
+    function editarArvore(id) {
+        const arvore = dadosArvores.find(a => a.id == id);
+        if (!arvore) return;
+
+        document.getElementById('reg-id').value = arvore.id;
+        document.getElementById('reg-nome').value = arvore.nome;
+        document.getElementById('reg-cientifico').value = arvore.cientifico;
+        document.getElementById('reg-familia').value = arvore.familia;
+        document.getElementById('reg-caract').value = arvore.notas || arvore.notes;
+        document.getElementById('reg-coords').value = arvore.coord;
+
+        document.getElementById('titulo-formulario').innerHTML = `✏️ Editando: ${arvore.nome} (ID: ${arvore.id})`;
+        document.getElementById('btn-salvar').innerHTML = "💾 SALVAR ALTERAÇÕES";
+
+        const coordsArr = arvore.coord.split(', ').map(Number);
+        if (marcadorCadastro) {
+            marcadorCadastro.setLatLng(coordsArr);
+        } else {
+            marcadorCadastro = L.marker(coordsArr, { draggable: true }).addTo(mapaCadastro);
+        }
+
+        mudarAba('cadastro');
+        
+        setTimeout(() => {
+            mapaCadastro.setView(coordsArr, 19);
+        }, 300);
+    }
+
+    function salvarItemArboreto() {
+        const idExistente = document.getElementById('reg-id').value;
+        const nome = document.getElementById('reg-nome').value;
+        const cie = document.getElementById('reg-cientifico').value;
+        const fam = document.getElementById('reg-familia').value;
+        const carat = document.getElementById('reg-caract').value;
+        let coords = document.getElementById('reg-coords').value;
+
+        if (!nome || !cie) { alert("Preencha Nome Popular e Científico!"); return; }
+        if (!coords) coords = "-4.22100, -55.99900";
+
+        if (idExistente) {
+            // Modo Edição: Atualiza os dados da árvore existente
+            const index = dadosArvores.findIndex(a => a.id == idExistente);
+            if (index !== -1) {
+                dadosArvores[index].nome = nome;
+                dadosArvores[index].cientifico = cie;
+                dadosArvores[index].familia = fam;
+                dadosArvores[index].coord = coords;
+                dadosArvores[index].notas = carat;
+                alert("Registro de árvore atualizado com sucesso!");
+            }
+        } else {
+            // Modo Novo Cadastro
+            const novoId = dadosArvores.length + 1;
+            dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coords, notas: carat });
+            alert("Novo espécime computado com sucesso!");
+        }
+        
+        // Reseta o formulário para o modo padrão de novos registros
+        document.getElementById('reg-id').value = "";
+        document.getElementById('reg-nome').value = "";
+        document.getElementById('reg-cientifico').value = "";
+        document.getElementById('reg-familia').value = "";
+        document.getElementById('reg-caract').value = "";
+        document.getElementById('titulo-formulario').innerHTML = "📋 Dados de Inventário";
+        document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
+
+        plotarMarcadores();
+        atualizarInterface();
+    }
+
+    function atualizarInterface() {
+        const corpo = document.getElementById('corpo-tabela');
+        const seletor = document.getElementById('seletor-laudos');
+        corpo.innerHTML = ""; seletor.innerHTML = "";
+
+        dadosArvores.forEach(a => {
+            corpo.innerHTML += `<tr onclick="editarArvore(${a.id})"><td>${a.id}</td><td>${a.nome}</td><td><i>${a.cientifico}</i></td><td>${a.familia}</td><td>${a.notas || a.notes}</td><td>${a.coord}</td></tr>`;
+            seletor.innerHTML += `<option value="${a.id}">${a.id}. ${a.nome}</option>`;
+        });
+        if(dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
+    }
+
+    function atualizarLaudo(id) {
+        const item = dadosArvores.find(a => a.id == id);
+        if (!item) return;
+
+        document.getElementById('ld-nome').textContent = item.nome;
+        document.getElementById('ld-cie').textContent = item.cientifico;
+        document.getElementById('ld-fam').textContent = item.familia;
+        document.getElementById('ld-coord').textContent = item.coord;
+        document.getElementById('ld-notas').textContent = item.notas || item.notes;
+
+        const containerQr = document.getElementById('qrcode');
+        containerQr.innerHTML = "";
+        new QRCode(containerQr, { text: `ID: ${item.id} | Pos: ${item.coord}`, width: 95, height: 95 });
     }
 
     function inicializarPontosCarrossel() {
@@ -372,57 +477,6 @@
             preview.style.display = 'block';
         }
         reader.readAsDataURL(e.target.files[0]);
-    }
-
-    function salvarItemArboreto() {
-        const nome = document.getElementById('reg-nome').value;
-        const cie = document.getElementById('reg-cientifico').value;
-        const fam = document.getElementById('reg-familia').value;
-        const carat = document.getElementById('reg-caract').value;
-        let coords = document.getElementById('reg-coords').value;
-
-        if (!nome || !cie) { alert("Preencha Nome Popular e Científico!"); return; }
-        if (!coords) coords = "-4.22100, -55.99900";
-
-        const novoId = dadosArvores.length + 1;
-        dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coords, notas: carat });
-        
-        L.marker(coords.split(', ').map(Number)).addTo(mapaPrincipal).bindPopup(`<b>${nome}</b>`);
-        
-        atualizarInterface();
-        alert("Espécime computado com sucesso!");
-        
-        document.getElementById('reg-nome').value = "";
-        document.getElementById('reg-cientifico').value = "";
-        document.getElementById('reg-familia').value = "";
-        document.getElementById('reg-caract').value = "";
-    }
-
-    function atualizarInterface() {
-        const corpo = document.getElementById('corpo-tabela');
-        const seletor = document.getElementById('seletor-laudos');
-        corpo.innerHTML = ""; seletor.innerHTML = "";
-
-        dadosArvores.forEach(a => {
-            corpo.innerHTML += `<tr><td>${a.id}</td><td>${a.nome}</td><td><i>${a.cientifico}</i></td><td>${a.familia}</td><td>${a.notas}</td><td>${a.coord}</td></tr>`;
-            seletor.innerHTML += `<option value="${a.id}">${a.id}. ${a.nome}</option>`;
-        });
-        if(dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
-    }
-
-    function atualizarLaudo(id) {
-        const item = dadosArvores.find(a => a.id == id);
-        if (!item) return;
-
-        document.getElementById('ld-nome').textContent = item.nome;
-        document.getElementById('ld-cie').textContent = item.cientifico;
-        document.getElementById('ld-fam').textContent = item.familia;
-        document.getElementById('ld-coord').textContent = item.coord;
-        document.getElementById('ld-notas').textContent = item.notas;
-
-        const containerQr = document.getElementById('qrcode');
-        containerQr.innerHTML = "";
-        new QRCode(containerQr, { text: `ID: ${item.id} | Pos: ${item.coord}`, width: 95, height: 95 });
     }
 
     document.addEventListener('keydown', function(e) {
