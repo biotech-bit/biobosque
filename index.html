@@ -28,7 +28,6 @@
 
         .container { flex: 1; padding: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
         
-        /* Menu de Abas */
         .abas-menu { display: flex; background: #e9ecef; padding: 6px; border-radius: 8px; margin-bottom: 20px; gap: 6px; overflow-x: auto; }
         .aba-btn { flex: 1; min-width: 140px; padding: 12px; background: var(--branco); border: 1px solid var(--cinza-borda); font-size: 13px; font-weight: 600; cursor: pointer; color: #495057; border-radius: 6px; text-align: center; transition: all 0.2s ease; }
         .aba-btn.ativa { background-color: var(--verde-institucional); color: var(--branco); border-color: var(--verde-institucional); }
@@ -43,11 +42,9 @@
         .secao-card { background: var(--branco); border-radius: 8px; padding: 20px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
         .secao-card h2 { color: var(--verde-institucional); font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid var(--verde-suave); padding-bottom: 6px; }
 
-        /* Lista de Objetivos */
         .lista-objetivos { margin-top: 10px; padding-left: 20px; font-size: 14px; color: #495057; }
         .lista-objetivos li { margin-bottom: 8px; line-height: 1.5; }
 
-        /* Estrutura do Carrossel */
         .carrossel-container { width: 100%; position: relative; border-radius: 8px; overflow: hidden; background: #111; box-shadow: var(--sombra-padrao); }
         .slides-wrapper { width: 100%; height: 380px; position: relative; }
         .meu-slide { display: none; width: 100%; height: 100%; position: relative; }
@@ -63,7 +60,6 @@
         .fade { animation: fadeEffect 0.4s; }
         @keyframes fadeEffect { from { opacity: 0.6; } to { opacity: 1; } }
 
-        /* Links de Canais */
         .canais-comunidade { margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: var(--sombra-padrao); text-align: center; }
         .botoes-canais { display: flex; gap: 15px; margin-top: 12px; flex-wrap: wrap; }
         .btn-canal { flex: 1; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; text-align: center; min-width: 120px; }
@@ -71,15 +67,12 @@
         .btn-web { background-color: #005a2b; }
         .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
-        /* Mapas */
         #map-principal, #map-cadastro { width: 100%; height: 470px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
 
-        /* Formulários */
         .formulario-grupo { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
         .formulario-grupo label { font-size: 14px; font-weight: 600; color: #333; }
         .formulario-grupo input, .formulario-grupo select, .formulario-grupo textarea { padding: 12px; font-size: 14px; border-radius: 6px; border: 1px solid var(--cinza-borda); background: var(--cinza-claro); width: 100%; }
 
-        /* Tabelas */
         .tabela-wrapper { overflow-x: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; }
         table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 600px; background: white; }
         th, td { padding: 14px; border-bottom: 1px solid var(--cinza-borda); text-align: left; }
@@ -92,11 +85,9 @@
         .btn-gps-camera { background-color: #0056b3; margin-bottom: 15px; }
         .btn-gps-camera:hover { background-color: #004085; }
         
-        /* Area de Evidência Capturada */
         .container-evidencia { width: 100%; display: none; margin-top: 15px; text-align: center; background: #f8f9fa; padding: 10px; border-radius: 6px; border: 2px dashed var(--verde-institucional); }
         .preview-media-capturada { width: 100%; max-height: 280px; object-fit: contain; border-radius: 4px; background: #000; }
 
-        /* Lightbox */
         .lightbox-celular { display: none; position: fixed; z-index: 10000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .lightbox-celular img { max-width: 92%; max-height: 80vh; border: 2px solid white; border-radius: 6px; object-fit: contain; }
         .lb-btn { position: absolute; color: white; font-size: 36px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 18px; border-radius: 50%; cursor: pointer; user-select: none; z-index: 10010; transition: 0.2s; }
@@ -107,9 +98,24 @@
         .lb-legenda { position: absolute; bottom: 30px; color: white; font-size: 15px; background: rgba(0,0,0,0.7); padding: 8px 16px; border-radius: 20px; text-align: center; }
 
         .bloco-laudo { border: 2px solid #333; padding: 20px; border-radius: 6px; background: white; margin-top: 15px; }
-        .flex-laudo { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .flex-laudo { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
         .aviso-qr { font-size: 11px; color: #555; margin-top: 8px; display: block; font-style: italic; line-height: 1.4; }
         #qrcode { min-width: 110px; min-height: 110px; background: #fff; padding: 5px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; }
+        
+        /* Espaço para Foto no Relatório */
+        .bloco-foto-laudo { width: 140px; height: 140px; border: 1px solid #ccc; border-radius: 6px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .bloco-foto-laudo img, .bloco-foto-laudo video { width: 100%; height: 100%; object-fit: cover; }
+        .sem-foto-texto { font-size: 11px; color: #999; text-align: center; padding: 5px; font-style: italic; }
+
+        /* Estilos de Impressão Otimizados */
+        @media print {
+            body { background: white; color: black; }
+            header, .abas-menu, .btn-acao, #map-principal, #map-cadastro, .canais-comunidade, .carrossel-container, .secao-card h2, #titulo-formulario, .formulario-grupo, #btn-salvar, table th { display: none !important; }
+            .container { padding: 0; margin: 0; }
+            .conteudo-aba { display: none !important; }
+            #emissao { display: block !important; }
+            .bloco-laudo { border: none; padding: 0; margin: 0; }
+        }
     </style>
 </head>
 <body>
@@ -132,7 +138,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>Sobre o Projeto</h2>
-                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
+                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambientação e pesquisa científica.</p>
                     
                     <h3 style="color: var(--verde-institucional); font-size: 15px; margin-top: 15px;">Objetivos do Projeto:</h3>
                     <ul class="lista-objetivos">
@@ -223,6 +229,7 @@
             <div class="bloco-laudo">
                 <div class="flex-laudo">
                     <div style="flex: 1;">
+                        <p style="font-size: 20px; font-weight: bold; margin-bottom: 10px; color: var(--verde-escuro);">FICHA DE IDENTIFICAÇÃO BOTÂNICA</p>
                         <p><strong>Nome Popular:</strong> <span id="ld-nome"></span></p>
                         <p><strong>Nome Científico:</strong> <span id="ld-cie" style="font-style:italic;"></span></p>
                         <p><strong>Família:</strong> <span id="ld-fam"></span></p>
@@ -230,7 +237,13 @@
                         <p><strong>Notas de Pesquisa:</strong> <span id="ld-notes"></span></p>
                         <span class="aviso-qr">💡 Escaneie o QR Code ao lado para abrir a localização exata via satélite no Google Maps.</span>
                     </div>
-                    <div id="qrcode"></div>
+                    
+                    <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
+                        <div id="ld-container-foto" class="bloco-foto-laudo">
+                            <div class="sem-foto-texto">Sem registro fotográfico</div>
+                        </div>
+                        <div id="qrcode"></div>
+                    </div>
                 </div>
             </div>
             <button class="btn-acao" style="background:#ffc107; color:black; margin-top:15px;" onclick="window.print()">🖨️ IMPRIMIR LAUDO</button>
@@ -247,18 +260,20 @@
 </div>
 
 <script>
-    let dadosArvores = [
-        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, amplamente utilizada para recuperação de solos degradados, fixação de nitrogênio e proteção de encostas." },
-        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso. Antecessora silvestre do cacau comercial, possui altíssimo valor para a preservação da biodiversidade genética regional." },
-        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial (polpas, sucos e geleias), além de alimentar a fauna local." },
-        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical. Apresenta pseudofruto rico em Vitamina C e castanha de elevado valor comercial e nutricional no mercado nacional." },
-        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei cuja semente possui extraordinário valor nutricional, comercial e ecológico." },
-        { id: 6, nome: "Cupuaçu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Fruta clássica da Amazônia com polpa extremamente aromática. Usada intensivamente na culinária regional e pela indústria de cosméticos." },
-        { id: 7, nome: "Embaúba", cientifico: "Cecropia peltata", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Espécie pioneira de rápido crescimento, vital para o início da regeneração natural de clareiras e áreas degradadas. Possui forte associação com formigas." },
-        { id: 8, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Espécime característico do estrato inferior e sub-bosque amazônico. Seus frutos são intensamente consumidos pela fauna nativa." },
-        { id: 9, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Gigante imponente da floresta com sapopemas (raízes tabulares) proeminentes. Funciona como verdadeiro reservatório de água no ecossistema." },
-        { id: 10, nome: "Manga", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22150, -55.99881", notas: "Árvore frutífera introduzida e amplamente consolidada na região, oferecendo sombreamento denso e excelente produção de frutos." }
+    const listaInicialBase = [
+        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, amplamente utilizada para recuperação de solos degradados, fixação de nitrogênio e proteção de encostas.", foto: "" },
+        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso. Antecessora silvestre do cacau comercial, possui altíssimo valor para a preservação da biodiversidade genética regional.", foto: "" },
+        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial (polpas, sucos e geleias), além de alimentar a fauna local.", foto: "" },
+        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical. Apresenta pseudofruto rico em Vitamina C e castanha de elevado valor comercial e nutricional no mercado nacional.", foto: "" },
+        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei cuja semente possui extraordinário valor nutricional, comercial e ecológico.", foto: "" },
+        { id: 6, nome: "Cupuaçu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Fruta clássica da Amazônia com polpa extremamente aromática. Usada intensivamente na culinária regional e pela indústria de cosméticos.", foto: "" },
+        { id: 7, nome: "Embaúba", cientifico: "Cecropia peltata", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Espécie pioneira de rápido crescimento, vital para o início da regeneração natural de clareiras e áreas degradadas. Possui forte associação com formigas.", foto: "" },
+        { id: 8, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Espécime característico do estrato inferior e sub-bosque amazônico. Seus frutos são intensamente consumidos pela fauna nativa.", foto: "" },
+        { id: 9, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Gigante imponente da floresta com sapopemas (raízes tabulares) proeminentes. Funciona como verdadeiro reservatório de água no ecossistema.", foto: "" },
+        { id: 10, nome: "Manga", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22150, -55.99881", notas: "Árvore frutífera introduzida e amplamente consolidada na região, oferecendo sombreamento denso e excelente produção de frutos.", foto: "" }
     ];
+
+    let dadosArvores = JSON.parse(localStorage.getItem('dadosArvores')) || listaInicialBase;
 
     const fotosArray = ["Equipe%20de%20Campo.jpeg","final%20da%20trilha.jpeg","In%C3%ADcio%20da%20Trilha.jpeg","mapa%20da%20trilha.png","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","Entrada%20do%20Bosque.jpeg"];
     const legendasArray = ["Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha", "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque", "Dentro do Bosque", "Entrada ao Bosque"];
@@ -267,6 +282,9 @@
     let lightboxIndex = 0;
     let mapaPrincipal, mapaCadastro, marcadorCadastro;
     let camadaMarcadores;
+    
+    // Variável temporária para segurar a string Base64 da foto capturada
+    let fotoBase64Temporaria = "";
 
     document.addEventListener("DOMContentLoaded", function() {
         inicializarPontosCarrossel();
@@ -285,7 +303,7 @@
         document.getElementById('btn-' + abaId).classList.add('ativa');
         
         setTimeout(() => {
-            if (abaId === 'inicio' && mapaPrincipal) mapaPrincipal.invalidateSize();
+            if (abaId === 'inicio' && mapaPrincipal) { mapaPrincipal.invalidateSize(); plotarMarcadores(); }
             if (abaId === 'cadastro' && mapaCadastro) mapaCadastro.invalidateSize();
         }, 200);
     }
@@ -347,6 +365,21 @@
         document.getElementById('reg-familia').value = arvore.familia;
         document.getElementById('reg-caract').value = arvore.notes || arvore.notas;
         document.getElementById('reg-coords').value = arvore.coord;
+        
+        // Carrega a foto existente se houver
+        fotoBase64Temporaria = arvore.foto || "";
+        const espacoPreview = document.getElementById('espaco-preview');
+        if(fotoBase64Temporaria) {
+            if(fotoBase64Temporaria.startsWith('data:video/')) {
+                espacoPreview.innerHTML = `<video src="${fotoBase64Temporaria}" class="preview-media-capturada" controls muted loop></video>`;
+            } else {
+                espacoPreview.innerHTML = `<img src="${fotoBase64Temporaria}" class="preview-media-capturada">`;
+            }
+            document.getElementById('container-evidencia').style.display = 'block';
+        } else {
+            document.getElementById('container-evidencia').style.display = 'none';
+            espacoPreview.innerHTML = '';
+        }
 
         document.getElementById('titulo-formulario').innerHTML = `✏️ Ficha Técnica: ${arvore.nome} (ID: ${arvore.id})`;
         document.getElementById('btn-salvar').innerHTML = "💾 SALVAR ALTERAÇÕES NA FICHA";
@@ -379,20 +412,32 @@
                 dadosArvores[index].familia = fam;
                 dadosArvores[index].coord = coords;
                 dadosArvores[index].notas = carat;
-                alert("Ficha catalográfica atualizada com sucesso!");
+                dadosArvores[index].foto = fotoBase64Temporaria; // Vincula a foto
             }
         } else {
-            const novoId = dadosArvores.length + 1;
-            dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coords, notas: carat });
-            alert("Novo espécime computado com o ponto escolhido!");
+            const maiorId = dadosArvores.reduce((max, item) => item.id > max ? item.id : max, 0);
+            dadosArvores.push({ 
+                id: maiorId + 1, 
+                nome: nome, 
+                cientifico: cie, 
+                familia: fam, 
+                coord: coords, 
+                notas: carat,
+                foto: fotoBase64Temporaria // Vincula a foto
+            });
         }
         
+        localStorage.setItem('dadosArvores', JSON.stringify(dadosArvores));
+        alert("Registro sincronizado com foto e salvo com sucesso!");
+
+        // Reseta tudo
         document.getElementById('reg-id').value = "";
         document.getElementById('reg-nome').value = "";
         document.getElementById('reg-cientifico').value = "";
         document.getElementById('reg-familia').value = "";
         document.getElementById('reg-caract').value = "";
         document.getElementById('reg-coords').value = "";
+        fotoBase64Temporaria = "";
         document.getElementById('titulo-formulario').innerHTML = "📋 Dados de Inventário";
         document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
         
@@ -420,7 +465,6 @@
         if(dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
     }
 
-    // CORREÇÃO: Ajustado a string dinâmica do Link do Google Maps para evitar erros de renderização e carregar o QR Code nativamente
     function atualizarLaudo(id) {
         const item = dadosArvores.find(a => a.id == id);
         if (!item) return;
@@ -431,17 +475,28 @@
         document.getElementById('ld-coord').textContent = item.coord;
         document.getElementById('ld-notes').textContent = item.notas;
 
+        // NOVIDADE: Atualiza o bloco de mídia no laudo
+        const containerFotoLaudo = document.getElementById('ld-container-foto');
+        containerFotoLaudo.innerHTML = "";
+        if (item.foto) {
+            if (item.foto.startsWith('data:video/')) {
+                containerFotoLaudo.innerHTML = `<video src="${item.foto}" autoplay muted loop></video>`;
+            } else {
+                containerFotoLaudo.innerHTML = `<img src="${item.foto}" alt="Foto da Árvore">`;
+            }
+        } else {
+            containerFotoLaudo.innerHTML = `<div class="sem-foto-texto">Sem registro fotográfico</div>`;
+        }
+
         const partCoords = item.coord.split(', ');
         const lat = partCoords[0].trim();
         const lng = partCoords[1].trim();
         
-        // Link padrão de busca do Maps forçando a camada híbrida/satélite nativa (&t=k)
         const googleMapsUrl = "https://maps.google.com/?q=" + lat + "," + lng + "&t=k&z=19";
 
         const containerQr = document.getElementById('qrcode');
         containerQr.innerHTML = "";
         
-        // Inicializa a renderização segura do QR Code
         new QRCode(containerQr, { 
             text: googleMapsUrl, 
             width: 110, 
@@ -516,13 +571,16 @@
         if(arquivo) {
             const reader = new FileReader();
             reader.onload = function() {
+                // Guarda a string Base64 de forma persistente
+                fotoBase64Temporaria = reader.result;
+                
                 const espacoPreview = document.getElementById('espaco-preview');
                 espacoPreview.innerHTML = "";
                 
                 if(arquivo.type.startsWith('video/')) {
-                    espacoPreview.innerHTML = `<video src="${reader.result}" class="preview-media-capturada" controls autoplay muted loop></video>`;
+                    espacoPreview.innerHTML = `<video src="${fotoBase64Temporaria}" class="preview-media-capturada" controls autoplay muted loop></video>`;
                 } else {
-                    espacoPreview.innerHTML = `<img src="${reader.result}" class="preview-media-capturada" alt="Evidência">`;
+                    espacoPreview.innerHTML = `<img src="${fotoBase64Temporaria}" class="preview-media-capturada" alt="Evidência">`;
                 }
                 
                 document.getElementById('container-evidencia').style.display = 'block';
