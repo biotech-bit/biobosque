@@ -108,6 +108,7 @@
 
         .bloco-laudo { border: 2px solid #333; padding: 20px; border-radius: 6px; background: white; margin-top: 15px; }
         .flex-laudo { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .aviso-qr { font-size: 11px; color: #555; margin-top: 5px; display: block; font-style: italic; }
     </style>
 </head>
 <body>
@@ -119,7 +120,7 @@
 
 <div class="container">
     <div class="abas-menu">
-        <button class="aba-btn ativa" id="btn-inicio" onclick="mudarAba('inicio')">🏠 MAPA INICIAL</button>
+        <button class="aba-btn acao ativa" id="btn-inicio" onclick="mudarAba('inicio')">🏠 MAPA INICIAL</button>
         <button class="aba-btn" id="btn-cadastro" onclick="mudarAba('cadastro')">📍 CAPTURA EM CAMPO</button>
         <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 MATRIZ DE DADOS</button>
         <button class="aba-btn" id="btn-emissao" onclick="mudarAba('emissao')">🖨️ PLACAS E LAUDOS</button>
@@ -177,7 +178,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>📍 Captura Georreferenciada</h2>
-                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque abaixo para registrar a evidência ou <b>clique direto no mapa</b> para fixar um ponto manualmente.</p>
+                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque abaixo para registrar a evidência ou <b>clique direto no mapa satélite</b> para fixar as coordenadas manuais.</p>
                     <button class="btn-acao btn-gps-camera" onclick="dispararColetaCampo()">📸 COLETAR EVIDÊNCIA & GPS</button>
                     
                     <input type="file" id="input-camera" accept="image/*,video/*" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none;">
@@ -192,11 +193,11 @@
             <div class="secao-card">
                 <h2 id="titulo-formulario">📋 Dados de Inventário</h2>
                 <input type="hidden" id="reg-id" value="">
-                <div class="formulario-grupo"><label>Coordenadas Fixadas:</label><input type="text" id="reg-coords" placeholder="Aguardando clique no mapa ou sinal de GPS..." readonly></div>
+                <div class="formulario-grupo"><label>Coordenadas Fixadas:</label><input type="text" id="reg-coords" placeholder="Clique no mapa para obter a latitude e longitude..." readonly></div>
                 <div class="formulario-grupo"><label>Nome Popular:</label><input type="text" id="reg-nome" placeholder="Ex: Sumaúba"></div>
                 <div class="formulario-grupo"><label>Nome Científico:</label><input type="text" id="reg-cientifico" placeholder="Ex: Ceiba pentandra"></div>
                 <div class="formulario-grupo"><label>Família Botânica:</label><input type="text" id="reg-familia" placeholder="Ex: Malvaceae"></div>
-                <div class="formulario-grupo"><label>Descrição Taxonômica e Usos Históricos:</label><textarea id="reg-caract" rows="4" placeholder="Ex: Árvore pioneira, vital para regeneração de áreas degradadas e fauna local."></textarea></div>
+                <div class="formulario-grupo"><label>Descrição Taxonômica e Usos Históricos:</label><textarea id="reg-caract" rows="4" placeholder="Ex: Árvore pioneira, vital para regeneração de áreas degradadas..."></textarea></div>
                 <button class="btn-acao" id="btn-salvar" onclick="salvarItemArboreto()">💾 COMPILAR REGISTRO NO ARBORETO</button>
             </div>
         </div>
@@ -226,6 +227,7 @@
                         <p><strong>Família:</strong> <span id="ld-fam"></span></p>
                         <p><strong>Localização:</strong> <span id="ld-coord"></span></p>
                         <p><strong>Notas de Pesquisa:</strong> <span id="ld-notas"></span></p>
+                        <span class="aviso-qr">💡 Escaneie o QR Code ao lado para abrir a localização exata via satélite no Google Maps.</span>
                     </div>
                     <div id="qrcode"></div>
                 </div>
@@ -271,9 +273,7 @@
         inicializarMapasSatellites();
         atualizarInterface();
         
-        // Ativa o leitor do input de arquivo/câmera
         document.getElementById('input-camera').addEventListener('change', processarMidiaDispositivo);
-
         setInterval(() => mudarSlide(1), 5000);
     });
 
@@ -301,6 +301,7 @@
         mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
 
+        // AJUSTE SOLICITADO: Clique manual no mapa captura o local exato e atualiza o marcador
         mapaCadastro.on('click', function(e) {
             const lat = e.latlng.lat.toFixed(5);
             const lng = e.latlng.lng.toFixed(5);
@@ -368,7 +369,7 @@
         let coords = document.getElementById('reg-coords').value;
 
         if (!nome || !cie) { alert("Preencha o Nome Popular e o Científico!"); return; }
-        if (!coords) coords = "-4.22100, -55.99900";
+        if (!coords) { alert("Por favor, selecione um ponto no mapa ou use o GPS antes de compilar!"); return; }
 
         if (idExistente) {
             const index = dadosArvores.findIndex(a => a.id == idExistente);
@@ -383,7 +384,7 @@
         } else {
             const novoId = dadosArvores.length + 1;
             dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coords, notas: carat });
-            alert("Novo espécime bibliográfico computado!");
+            alert("Novo espécime computado com o ponto escolhido!");
         }
         
         document.getElementById('reg-id').value = "";
@@ -395,7 +396,6 @@
         document.getElementById('titulo-formulario').innerHTML = "📋 Dados de Inventário";
         document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
         
-        // Oculta a evidência após salvar
         document.getElementById('container-evidencia').style.display = 'none';
         document.getElementById('espaco-preview').innerHTML = '';
 
@@ -420,6 +420,7 @@
         if(dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
     }
 
+    // AJUSTE SOLICITADO: QR Code agora gera a URL exata do Google Maps configurada para abrir no modo Satélite (&t=k)
     function atualizarLaudo(id) {
         const item = dadosArvores.find(a => a.id == id);
         if (!item) return;
@@ -430,9 +431,24 @@
         document.getElementById('ld-coord').textContent = item.coord;
         document.getElementById('ld-notas').textContent = item.notas;
 
+        // Separa latitude e longitude para montar o link seguro do Google Maps
+        const partCoords = item.coord.split(', ');
+        const lat = partCoords[0].trim();
+        const lng = partCoords[1].trim();
+        
+        // Link dinâmico com parâmetros de satélite (&t=k ativa a camada de satélite nativamente)
+        const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}&t=k&z=19`;
+
         const containerQr = document.getElementById('qrcode');
         containerQr.innerHTML = "";
-        new QRCode(containerQr, { text: `ID: ${item.id} | Nome: ${item.nome} | Científico: ${item.cientifico} | Família: ${item.familia}`, width: 95, height: 95 });
+        
+        // O QR Code agora codifica este link direto do satélite
+        new QRCode(containerQr, { 
+            text: googleMapsUrl, 
+            width: 105, 
+            height: 105,
+            correctLevel: QRCode.CorrectLevel.H
+        });
     }
 
     function inicializarPontosCarrossel() {
@@ -491,30 +507,25 @@
                 definirCoordenadasFormulario(lat, lng);
                 mapaCadastro.setView([lat, lng], 19);
             }, () => {
-                console.log("Aviso: GPS indisponível no protocolo atual. Use a marcação por clique manual.");
+                console.log("Aviso: GPS indisponível ou bloqueado. Use a marcação manual por clique direto no mapa.");
             }, { enableHighAccuracy: true, timeout: 5000 });
         }
     }
 
-    // CORREÇÃO: Função mapeia o tipo de arquivo carregado e renderiza como Imagem ou Vídeo na tela
     function processarMidiaDispositivo(e) {
         const arquivo = e.target.files[0];
         if(arquivo) {
             const reader = new FileReader();
             reader.onload = function() {
                 const espacoPreview = document.getElementById('espaco-preview');
-                espacoPreview.innerHTML = ""; // Limpa visualizações anteriores
+                espacoPreview.innerHTML = "";
                 
                 if(arquivo.type.startsWith('video/')) {
-                    // Se for um vídeo carregado
                     espacoPreview.innerHTML = `<video src="${reader.result}" class="preview-media-capturada" controls autoplay muted loop></video>`;
                 } else {
-                    // Se for uma foto tirada ou da galeria
                     espacoPreview.innerHTML = `<img src="${reader.result}" class="preview-media-capturada" alt="Evidência">`;
                 }
                 
-                // Exibe o painel de evidências na interface
-                document.getElementById('container-evidencia').style.shadow = 'block';
                 document.getElementById('container-evidencia').style.display = 'block';
             }
             reader.readAsDataURL(arquivo);
