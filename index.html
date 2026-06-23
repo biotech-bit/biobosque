@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.9 - Codified Path Fix</title>
+    <title>BioCatalog Digital V9.9 - Galeria Cinema Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kniyxNV1lvTlZBo=" crossorigin=""></script>
+
     <style>
         :root {
             --verde-institucional: #008744; /* Verde Oficial IFPA */
@@ -19,643 +19,369 @@
             --texto-escuro: #212529;
             --sombra-padrao: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-        
-        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-            background-color: #f1f3f5;
+            background-color: var(--cinza-claro);
             color: var(--texto-escuro);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
+            padding: 20px;
         }
 
-        header {
-            background: linear-gradient(135deg, var(--verde-institucional), var(--verde-escuro));
-            color: var(--branco);
-            text-align: center;
-            padding: 12px 20px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-            flex-shrink: 0;
-            z-index: 10;
-        }
-
-        header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
-        header p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
-
-        .container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            width: 100vw;
-            background: var(--branco);
-        }
-
-        .abas-menu {
-            display: flex;
-            background: #e9ecef;
-            padding: 6px;
-            flex-shrink: 0;
-            overflow-x: auto;
-            gap: 6px;
-            border-bottom: 1px solid var(--cinza-borda);
-        }
-
-        .aba-btn {
-            flex: 1;
-            min-width: 140px;
-            padding: 12px 8px;
-            background: var(--branco);
-            border: 1px solid var(--cinza-borda);
-            font-size: 11px;
-            font-weight: 600;
-            cursor: pointer;
-            color: #495057;
-            border-radius: 6px;
-            white-space: nowrap;
-            text-align: center;
-            transition: all 0.2s ease;
-        }
-
-        .aba-btn:hover { background-color: var(--cinza-claro); }
-
-        .aba-btn.ativa {
-            background-color: var(--verde-institucional);
-            color: var(--branco);
-            border-color: var(--verde-institucional);
-            box-shadow: 0 2px 4px rgba(0,135,68,0.2);
-        }
-
-        .conteudo-aba {
-            display: none;
-            flex: 1;
-            width: 100%;
-            padding: 15px;
-        }
-
-        .conteudo-aba.ativa {
-            display: block;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(2px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .layout-grid-responsivo {
+        .container-principal {
+            max-width: 1400px;
+            margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 20px;
         }
 
-        @media (min-width: 992px) { 
-            .layout-grid-responsivo { 
-                grid-template-columns: 1.2fr 1fr; 
-                align-items: start;
-            } 
+        @media (max-width: 992px) {
+            .container-principal {
+                grid-template-columns: 1fr;
+            }
         }
 
-        .coluna-flex {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .secao-card {
+        .cartao-painel {
             background: var(--branco);
             border-radius: 8px;
-            padding: 15px;
+            padding: 20px;
+            box-shadow: var(--sombra-padrao);
             border: 1px solid var(--cinza-borda);
-            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
         }
 
-        .secao-card h2 {
+        .titulo-secao {
             color: var(--verde-institucional);
-            font-size: 16px;
-            margin-bottom: 10px;
             border-bottom: 2px solid var(--verde-suave);
-            padding-bottom: 4px;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
         }
 
-        .objetivos-texto { font-size: 13px; line-height: 1.6; color: #495057; text-align: justify; }
-
-        /* CARROSSEL PREMIUM - CAMINHOS CODIFICADOS CONTRA ERROS NO GIT */
+        /* 🎪 ESTILOS DO CARROSSEL */
         .carrossel-container {
-            width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #1a1a1a;
+            position: relative;
+            max-width: 100%;
+            margin: auto;
+            overflow: hidden;
+            border-radius: 6px;
+            background: #111;
         }
-        .slides-wrapper { width: 100%; height: 240px; }
-        @media (min-width: 576px) { .slides-wrapper { height: 320px; } }
-        @media (min-width: 992px) { .slides-wrapper { height: 380px; } }
-        
-        .meu-slide { display: none; width: 100%; height: 100%; background: #1a1a1a; }
-        .meu-slide img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: transform 0.2s; }
-        .meu-slide img:hover { transform: scale(1.01); }
-        
-        .legenda-slide {
-            color: var(--branco); font-size: 11px; font-weight: 600; padding: 6px 14px; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 90, 43, 0.85); border-radius: 20px; backdrop-filter: blur(4px); text-align: center; max-width: 85%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+
+        .slides-wrapper {
+            position: relative;
+            height: 450px;
         }
+
+        .meu-slide {
+            display: none;
+            height: 100%;
+            position: relative;
+        }
+
+        .meu-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .meu-slide img:hover {
+            transform: scale(1.02);
+        }
+
         .anterior, .proximo {
-            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 12px; margin-top: -22px; color: white; font-weight: bold; font-size: 16px; background-color: rgba(0,0,0,0.4); border-radius: 4px; user-select: none; z-index: 6;
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 20px;
+            border-radius: 0 3px 3px 0;
+            user-select: none;
+            background-color: rgba(0,0,0,0.5);
+            transition: 0.3s;
+            z-index: 10;
         }
-        .anterior { left: 5px; } .proximo { right: 5px; }
-        .pontinhos-container { position: absolute; bottom: 10px; width: 100%; text-align: center; z-index: 5; }
-        .ponto { cursor: pointer; height: 8px; width: 8px; margin: 0 3px; background-color: rgba(255,255,255,0.4); border-radius: 50%; display: inline-block; }
-        .ponto.active { background-color: var(--branco); transform: scale(1.2); }
-        .fade { animation-name: fadeEffect; animation-duration: 0.5s; }
-        @keyframes fadeEffect { from { opacity: 0.7; } to { opacity: 1; } }
 
-        /* Redes Sociais */
-        .botoes-redes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
-        .btn-rede { flex: 1; min-width: 100px; padding: 10px; text-decoration: none; font-weight: bold; font-size: 11px; color: white; border-radius: 20px; text-align: center; text-transform: uppercase; }
-        .btn-ifpa { background-color: var(--verde-institucional); }
-        .btn-bio { background-color: var(--verde-escuro); }
-        .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .proximo {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
 
-        /* Formulários e Tabelas */
-        .formulario-grupo { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
-        .formulario-grupo label { font-size: 13px; font-weight: 600; color: var(--texto-escuro); }
-        .formulario-grupo input, .formulario-grupo select { padding: 10px; font-size: 13px; border-radius: 6px; border: 1px solid var(--cinza-borda); background: var(--cinza-claro); width: 100%; }
-        .status-gps { font-size: 12px; font-weight: bold; padding: 10px; border-radius: 6px; margin-bottom: 12px; text-align: center; }
+        .anterior:hover, .proximo:hover {
+            background-color: var(--verde-institucional);
+        }
 
-        #map-principal { width: 100%; height: 320px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
-        @media (min-width: 992px) { #map-principal { height: 520px; position: sticky; top: 15px; } }
-        .secao-descricoes-pontos { background: var(--verde-suave); border-left: 4px solid var(--verde-institucional); border-radius: 4px; padding: 12px; font-size: 12px; color: var(--verde-escuro); margin-top: 10px; }
-        .tag-mapa-permanente { background: rgba(0, 135, 68, 0.9); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 3px 6px; border-radius: 4px; }
-        
-        .tabela-wrapper { overflow-x: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; background: white; }
-        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 600px; }
-        th, td { padding: 10px 12px; border-bottom: 1px solid var(--cinza-borda); }
-        th { background-color: var(--verde-institucional); color: white; font-weight: 600; }
-        .linha-clicavel:hover { background-color: #f1f8f5; cursor: pointer; }
-        .cientifico-italico { font-style: italic; font-weight: 600; color: #1e7e34;}
+        .legenda-slide {
+            color: #fff;
+            font-size: 14px;
+            padding: 10px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+        }
 
-        .bloco-impressao { border: 1px solid #000; padding: 20px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; background: white;}
-        .secao-flex-laudo { display: flex; flex-direction: column; gap: 15px; }
-        @media (min-width: 480px) { .secao-flex-laudo { flex-direction: row; justify-content: space-between; } }
-        
-        .coluna-dados-abnt { flex: 1; font-size: 13px; line-height: 1.5;}
-        .termo-destacado-abnt { font-weight: bold; text-transform: uppercase; color: #333; font-size: 10px;}
-        .moldura-qr-print { border: 1px solid #000; padding: 8px; text-align: center; width: 115px; margin: 0 auto; }
-        .container-midias { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;}
-        .media-item { width: 75px; height: 75px; object-fit: cover; border: 1px solid var(--cinza-borda); border-radius: 4px; cursor: pointer; }
-        
-        .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 12px; font-weight: bold; font-size: 13px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 5px; transition: background 0.2s; }
-        .btn-acao:hover { background-color: var(--verde-escuro); }
-        .btn-gps-camera { background-color: #0056b3; margin-bottom: 10px;}
-        .btn-gps-camera:hover { background-color: #004085; }
-        .preview-foto-capturada { width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; border: 1px dashed var(--cinza-borda); display: none; margin: 10px 0; cursor: pointer; }
-        
-        /* LIGHTBOX CINEMATOGRÁFICO AVANÇADO (FILME) */
-        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
-        .lightbox img { max-width: 90%; max-height: 85%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 30px rgba(0,0,0,0.8); object-fit: contain; }
-        
-        .lightbox-btn { position: absolute; color: white; font-size: 40px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; user-select: none; z-index: 10000; }
-        .lightbox-btn:hover { background: rgba(255,255,255,0.3); }
-        .lb-fechar { top: 20px; right: 20px; font-size: 35px; }
-        .lb-anterior { left: 20px; top: 50%; transform: translateY(-50%); }
-        .lb-proximo { right: 20px; top: 50%; transform: translateY(-50%); }
+        .pontinhos-container {
+            text-align: center;
+            padding: 10px;
+            background: #222;
+        }
 
-        @media print {
-            body * { visibility: hidden; }
-            #emissao, #emissao * { visibility: visible; }
-            #emissao { position: absolute; left: 0; top: 0; width: 100%; }
-            .abas-menu, header, .btn-acao, .seletor-impressao-area, .container-midias, h2, h3 { display: none !important; }
+        .ponto {
+            cursor: pointer;
+            height: 12px;
+            width: 12px;
+            margin: 0 4px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: 0.6s ease;
+        }
+
+        .ponto.active, .ponto:hover {
+            background-color: var(--verde-institucional);
+        }
+
+        /* 🗺️ MAPA */
+        #mapa-leaflet {
+            height: 550px;
+            width: 100%;
+            border-radius: 6px;
+            border: 1px solid var(--cinza-borda);
+        }
+
+        /* 🎬 LIGHTBOX MODO CINEMA */
+        .lightbox-cinema {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .conteudo-cinema {
+            max-width: 90%;
+            max-height: 85%;
+            position: relative;
+        }
+
+        .conteudo-cinema img {
+            max-width: 100%;
+            max-height: 85vh;
+            border: 3px solid #fff;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(255,255,255,0.2);
+        }
+
+        .fechar-cinema {
+            position: absolute;
+            top: -45px;
+            right: 0;
+            color: #fff;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .fechar-cinema:hover {
+            color: #ff4d4d;
+        }
+
+        .legenda-cinema {
+            color: #fff;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+        }
+
+        .fade {
+            animation: fadeAnim 0.5s ease-in-out;
+        }
+
+        @keyframes fadeAnim {
+            from { opacity: 0.4 } 
+            to { opacity: 1 }
         }
     </style>
 </head>
 <body>
 
-<header>
-    <h1>BIOCATALOG DIGITAL V9.9</h1>
-    <p>Monitoramento Florestal Multiplataforma — IFPA Campus Itaituba</p>
-</header>
+    <div class="container-principal">
+        
+        <div class="cartao-painel">
+            <h2 class="titulo-secao">Bosque da Ciência - Galeria</h2>
+            
+            <div class="carrossel-container">
+                <div class="slides-wrapper">
+                    <div class="meu-slide fade"><img src="Equipe%20de%20Campo.jpeg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
+                    <div class="meu-slide fade"><img src="final%20da%20trilha.jpeg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
+                    <div class="meu-slide fade"><img src="In%C3%ADcio%20da%20Trilha.jpeg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
+                    <div class="meu-slide fade"><img src="mapa%20da%20trilha.png" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
+                    <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                    <div class="meu-slide fade"><img src="acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
+                    <div class="meu-slide fade"><img src="ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
+                    <div class="meu-slide fade"><img src="conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
+                    <div class="meu-slide fade"><img src="Dentro%20do%20bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
+                    <div class="meu-slide fade"><img src="Entrada%20do%20Bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
+                </div>
+                
+                <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a>
+                <a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
+                
+                <div class="pontinhos-container" id="container-pontinhos"></div>
+            </div>
+        </div>
 
-<div class="container">
-    <div class="abas-menu">
-        <button class="aba-btn ativa" id="btn-inicio" onclick="mudarAba('inicio')">🏠 MAPA INICIAL</button>
-        <button class="aba-btn" id="btn-cadastro" onclick="mudarAba('cadastro')">📍 CAPTURA EM CAMPO</button>
-        <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 MATRIZ DE DADOS</button>
-        <button class="aba-btn" id="btn-emissao" onclick="mudarAba('emissao')">🖨️ PLACAS E LAUDOS</button>
+        <div class="cartao-painel">
+            <h2 class="titulo-secao">Mapeamento Geospacial</h2>
+            <div id="mapa-leaflet"></div>
+        </div>
+
     </div>
 
-    <div id="inicio" class="conteudo-aba ativa">
-        <div class="layout-grid-responsivo">
-            <div class="coluna-flex">
-                <div class="secao-card">
-                    <h2>Bosque da Ciência</h2>
-                    <p class="objetivos-texto">
-                        O **BioCatálogo Digital** executa o mapeamento e o inventário dinâmico das espécies arbóreas do campus. Projetado com responsividade total, permite o monitoramento geoespacial tanto em computadores da administração quanto em celulares no trabalho de campo, mitigando danos fustais e pisoteio.
-                    </p>
-                </div>
-
-                <div class="carrossel-container">
-                    <div class="slides-wrapper">
-                        <div class="meu-slide fade"><img src="Inicial/Equipe%20de%20Campo.jpg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/final%20da%20trilha.jpg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/In%C3%ADcio%20da%20Trilha.jpg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/mapa%20da%20trilha.jpg" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/Dentro%20do%20bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
-                        <div class="meu-slide fade"><img src="Inicial/entrada%20ao%20bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
-                    </div>
-                    <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
-                    <div class="pontinhos-container" id="container-pontinhos"></div>
-                </div>
-
-                <div class="secao-card">
-                    <p style="font-size:12px; font-weight:bold; margin-bottom:8px; text-align:center;">Canais Oficiais da Comunidade</p>
-                    <div class="botoes-redes">
-                        <a href="https://itaituba.ifpa.edu.br" target="_blank" class="btn-rede btn-ifpa">Portal</a>
-                        <a href="https://biotech-bit.github.io/biobosque/" target="_blank" class="btn-rede btn-bio">Web</a>
-                        <a href="https://www.instagram.com/biobosque_22" target="_blank" class="btn-rede btn-instagram">Instagram</a>
-                    </div>
-                </div>
-            </div>
-
-            <div class="coluna-flex">
-                <div id="map-principal"></div>
-                <div class="secao-descricoes-pontos"><strong>📋 Distribuição Espacial:</strong> Marcadores indicam os indivíduos monitorados no perímetro do campus. Clique em um ponto para abrir a ficha de impressão.</div>
-            </div>
+    <div id="cinema-modal" class="lightbox-cinema" onclick="fecharLightboxCinema()">
+        <div class="conteudo-cinema" onclick="event.stopPropagation()">
+            <span class="fechar-cinema" onclick="fecharLightboxCinema()">&times;</span>
+            <img id="imagem-cinema" src="" alt="Imagem Ampliada">
+            <div id="legenda-cinema" class="legenda-cinema"></div>
         </div>
     </div>
 
-    <div id="cadastro" class="conteudo-aba">
-        <div class="layout-grid-responsivo">
-            <div class="coluna-flex">
-                <div class="secao-card">
-                    <h2>📍 Catalogação em Tempo Real</h2>
-                    <p style="font-size:12px; color:#555; margin-bottom:12px;">Se estiver no celular, o botão abaixo abrirá o sensor de satélite e a câmera traseira do aparelho de forma integrada.</p>
-                    
-                    <button class="btn-acao btn-gps-camera" onclick="dispararCapturaCampo()">📸 ACIONAR GPS & CÂMERA DO CELULAR</button>
-                    <input type="file" id="input-camera-oculto" accept="image/*" capture="environment" style="display:none;" onchange="processarFotoCampo(event)">
-
-                    <div id="status-gps-painel" class="status-gps" style="display:none;">Aguardando...</div>
-                    <img id="preview-foto" class="preview-foto-capturada" onclick="abrirLightboxSimples(this.src)">
-                </div>
-            </div>
-
-            <div class="coluna-flex">
-                <div class="secao-card">
-                    <h2>📋 Atributos Botânicos (Padrão TCC)</h2>
-                    <div class="formulario-grupo">
-                        <label>Coordenadas Fixadas (WGS84):</label>
-                        <input type="text" id="campo-coordenadas" placeholder="Coordenadas automáticas via GPS" readonly style="font-family:monospace; background:#e9ecef; font-weight:bold; color:var(--verde-escuro);">
-                    </div>
-                    <div class="formulario-grupo">
-                        <label>Nome Popular / Comum:</label>
-                        <input type="text" id="campo-nome" placeholder="Ex: Samaúma, Ipê Amarelo...">
-                    </div>
-                    <div class="formulario-grupo">
-                        <label>Nome Científico:</label>
-                        <input type="text" id="campo-cientifico" placeholder="Ex: Ceiba pentandra" style="font-style:italic;">
-                    </div>
-                    <div class="formulario-grupo">
-                        <label>Família Botânica:</label>
-                        <input type="text" id="campo-familia" placeholder="Ex: Malvaceae">
-                    </div>
-                    <div class="formulario-grupo">
-                        <label>Origem:</label>
-                        <select id="campo-origem">
-                            <option value="Nativa">Nativa da Amazônia</option>
-                            <option value="Exótica">Exótica / Introduzida</option>
-                        </select>
-                    </div>
-                    <button class="btn-acao" onclick="salvarNovoEspecimeRealtime()" style="background:#17a2b8;">💾 SALVAR ARBORETO NO SISTEMA</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="catalogo" class="conteudo-aba">
-        <div class="secao-card">
-            <h2>📋 Matriz de Dados Técnicos Florestais (TCC)</h2>
-            <div class="tabela-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome Comum</th>
-                            <th>Nome Científico</th>
-                            <th>Família Botânica</th>
-                            <th>Coordenadas Fixas (WGS84)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="corpo-tabela"></tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div id="emissao" class="conteudo-aba">
-        <div class="layout-grid-responsivo">
-            <div class="coluna-flex">
-                <div class="secao-card seletor-impressao-area">
-                    <h2>Seleção de Indivíduo</h2>
-                    <select id="select-arvore-placa" onchange="gerarPlaca(this.value)" style="width:100%; padding:10px; font-size:13px; border-radius:6px; border:1px solid var(--cinza-borda);"></select>
-                </div>
-
-                <div class="secao-card">
-                    <div class="bloco-impressao">
-                        <div class="secao-flex-laudo">
-                            <div class="coluna-dados-abnt">
-                                <p><span class="termo-destacado-abnt">Nome Popular:</span> <span id="placa-nome" style="font-weight: bold; font-size: 14px; color:var(--verde-escuro);"></span></p>
-                                <p><span class="termo-destacado-abnt">Nome Científico:</span> <span id="placa-cie" class="cientifico-italico"></span></p>
-                                <p><span class="termo-destacado-abnt">Família:</span> <span id="placa-fam"></span></p>
-                                <p><span class="termo-destacado-abnt">Origem:</span> <span id="placa-ori"></span></p>
-                                <p><span class="termo-destacado-abnt">Localização:</span> <span id="placa-coord"></span></p>
-                            </div>
-                            <div class="moldura-qr-print">
-                                <div id="qrcode"></div>
-                                <p style="font-size:9px; font-weight:bold; margin-top:4px; color:#333;">IFPA ITAITUBA</p>
-                            </div>
-                        </div>
-                        <div style="border-top: 1px dashed #000; margin-top: 10px; padding-top: 10px;">
-                            <p style="font-size:11px; text-align:justify; line-height:1.4; color:#444;">Espécime integrante do inventário florístico do Bosque da Ciência do IFPA Itaituba para fins de preservação e monitoramento ecológico.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="coluna-flex">
-                <div class="secao-card">
-                    <h2>🖼️ Monitoramento Fotográfico</h2>
-                    <div id="container-midias-placa" class="container-midias"></div>
-                    <button class="btn-acao" style="background:#ffc107; color:black; font-weight:700; margin-top:15px;" onclick="window.print()">🖨️ GERAR PDF / IMPRIMIR LAUDO</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="lightbox" class="lightbox">
-    <button class="lightbox-btn lb-fechar" onclick="fecharLightbox()">&times;</button>
-    <button class="lightbox-btn lb-anterior" onclick="navegarLightbox(-1)">&#10094;</button>
-    <img id="lightbox-img" src="">
-    <button class="lightbox-btn lb-proximo" onclick="navegarLightbox(1)">&#10095;</button>
-</div>
-
-<script>
-    const dadosArvores = [
-        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Inicial/Dentro%20do%20bosque.jpg"] },
-        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Inicial/final%20da%20trilha.jpg"] },
-        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: [] },
-        { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
-        { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] }
-    ];
-
-    // Lista unificada e codificada com caminhos compatíveis com o Git
-    const listaFotosCartaoPostal = [
-        "Inicial/Equipe%20de%20Campo.jpg",
-        "Inicial/final%20da%20trilha.jpg",
-        "Inicial/In%C3%ADcio%20da%20Trilha.jpg",
-        "Inicial/mapa%20da%20trilha.jpg",
-        "Inicial/Trilha%20guiada.jpg",
-        "Inicial/Acompanhamento%20tecnico.jpg",
-        "Inicial/Ambienta%C3%A7ao.jpg",
-        "Inicial/Conhecendo%20o%20bosque.jpg",
-        "Inicial/Dentro%20do%20bosque.jpg",
-        "Inicial/entrada%20ao%20bosque.jpeg"
-    ];
-
-    let mapInicio, camadaMarcadores, qrcode, indiceSlide = 1, fotoTemporariaBase64 = "";
-    let indiceFotoLightboxAtual = 0;
-
-    document.addEventListener("DOMContentLoaded", function() {
-        gerarPontinhosCarrossel();
-        initMap();
-        renderizarGradeDados();
-        mostrarSlides(indiceSlide);
-        setInterval(() => mudarSlide(1), 5000);
-    });
-
-    function gerarPontinhosCarrossel() {
-        const container = document.getElementById('container-pontinhos');
-        const numSlides = document.getElementsByClassName("meu-slide").length;
-        container.innerHTML = "";
-        for (let i = 1; i <= numSlides; i++) {
-            const span = document.createElement('span');
-            span.className = "ponto";
-            span.onclick = () => slideAtual(i);
-            container.appendChild(span);
-        }
-    }
-
-    // LIGHTBOX MODO CINEMA (NAVEGAR EM TELA CHEIA)
-    function abrirLightboxCinema(index) {
-        indiceFotoLightboxAtual = index;
-        const lb = document.getElementById('lightbox');
-        const lbImg = document.getElementById('lightbox-img');
+    <script>
+        // 1. Configuração do Carrossel
+        let indiceSlide = 0;
         
-        lbImg.src = listaFotosCartaoPostal[indiceFotoLightboxAtual];
-        lb.style.display = 'flex';
-        
-        document.querySelector('.lb-anterior').style.display = "block";
-        document.querySelector('.lb-proximo').style.display = "block";
-    }
+        // Lista exata de ficheiros vindos da raiz do GitHub
+        const listaFotosCartaoPostal = [
+            "Equipe%20de%20Campo.jpeg",
+            "final%20da%20trilha.jpeg",
+            "In%C3%ADcio%20da%20Trilha.jpeg",
+            "mapa%20da%20trilha.png",
+            "Trilha%20guiada.jpg",
+            "acompanhamento%20tecnico.jpg",
+            "ambienta%C3%A7ao.jpg",
+            "conhecendo%20o%20bosque.jpg",
+            "Dentro%20do%20bosque.jpg",
+            "Entrada%20do%20Bosque.jpeg"
+        ];
 
-    function abrirLightboxSimples(src) {
-        const lb = document.getElementById('lightbox');
-        const lbImg = document.getElementById('lightbox-img');
-        lbImg.src = src;
-        lb.style.display = 'flex';
-        
-        document.querySelector('.lb-anterior').style.display = "none";
-        document.querySelector('.lb-proximo').style.display = "none";
-    }
+        const legendasFotos = [
+            "Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha",
+            "Trilha Guided", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque",
+            "Dentro do Bosque", "Entrada ao Bosque"
+        ];
 
-    function navegarLightbox(direcao) {
-        indiceFotoLightboxAtual += direcao;
-        if (indiceFotoLightboxAtual >= listaFotosCartaoPostal.length) indiceFotoLightboxAtual = 0;
-        if (indiceFotoLightboxAtual < 0) indiceFotoLightboxAtual = listaFotosCartaoPostal.length - 1;
-        
-        document.getElementById('lightbox-img').src = listaFotosCartaoPostal[indiceFotoLightboxAtual];
-    }
-
-    function fecharLightbox() {
-        document.getElementById('lightbox').style.display = 'none';
-    }
-
-    document.getElementById('lightbox').addEventListener('click', function(e) {
-        if (e.target === this) fecharLightbox();
-    });
-
-    // CONTROLES DO CARROSSEL PRINCIPAL
-    function mudarSlide(n) { mostrarSlides(indiceSlide += n); }
-    function slideAtual(n) { mostrarSlides(indiceSlide = n); }
-    function mostrarSlides(n) {
-        let slides = document.getElementsByClassName("meu-slide");
-        let pontos = document.getElementsByClassName("ponto");
-        if (!slides.length) return;
-        if (n > slides.length) { indiceSlide = 1; }    
-        if (n < 1) { indiceSlide = slides.length; }
-        for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";  
-        for (let i = 0; i < pontos.length; i++) pontos[i].className = pontos[i].className.replace(" active", "");
-        slides[indiceSlide-1].style.display = "block";  
-        if (pontos[indiceSlide-1]) pontos[indiceSlide-1].className += " active";
-    }
-
-    function mudarAba(abaId) {
-        document.querySelectorAll('.conteudo-aba').forEach(aba => aba.classList.remove('ativa'));
-        document.querySelectorAll('.aba-btn').forEach(btn => btn.classList.remove('ativa'));
-        document.getElementById(abaId).classList.add('ativa');
-        document.getElementById('btn-' + abaId).classList.add('ativa');
-        if (abaId === 'inicio') setTimeout(() => mapInicio.invalidateSize(), 150);
-    }
-
-    function initMap() {
-        mapInicio = L.map('map-principal').setView([-4.2208, -55.9991], 17);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInicio);
-        L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }).addTo(mapInicio);
-        
-        camadaMarcadores = L.layerGroup().addTo(mapInicio);
-        plotarMarcadoresNoMapa();
-    }
-
-    function plotarMarcadoresNoMapa() {
-        camadaMarcadores.clearLayers();
-        dadosArvores.forEach((arvore) => {
-            const coords = arvore.coord.split(', ').map(Number);
-            const marker = L.marker(coords).addTo(camadaMarcadores);
-            marker.bindTooltip(`[${arvore.id}] ${arvore.nome}`, { permanent: true, direction: 'top', className: 'tag-mapa-permanente', offset: [0, -10] });
-            marker.bindPopup(`<b>[${arvore.id}] ${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br><button onclick="abrirFichaDireta(${arvore.id})" style="padding:6px; background:#008744; color:white; border:none; border-radius:4px; font-size:11px; cursor:pointer; width:100%;">Ver Laudo/QR</button>`);
-        });
-    }
-
-    function renderizarGradeDados() {
-        const corpo = document.getElementById('corpo-tabela');
-        const select = document.getElementById('select-arvore-placa');
-        corpo.innerHTML = ""; select.innerHTML = "";
-
-        dadosArvores.forEach(a => {
-            const linha = document.createElement('tr');
-            linha.className = "linha-clicavel";
-            linha.onclick = () => abrirFichaDireta(a.id);
-            linha.innerHTML = `<td><b>${a.id}</b></td><td><strong>${a.nome}</strong></td><td class="cientifico-italico">${a.cientifico}</td><td>${a.familia}</td><td style="font-family:monospace; color:#555;">${a.coord}</td>`;
-            corpo.appendChild(linha);
-
-            const opt = document.createElement('option');
-            opt.value = a.id; opt.text = `${a.id}. ${a.nome}`;
-            select.appendChild(opt);
-        });
-
-        if(dadosArvores.length > 0) gerarPlaca(dadosArvores[0].id);
-    }
-
-    function abrirFichaDireta(id) {
-        mudarAba('emissao');
-        document.getElementById('select-arvore-placa').value = id;
-        gerarPlaca(id);
-    }
-
-    function dispararCapturaCampo() {
-        const statusPainel = document.getElementById('status-gps-painel');
-        statusPainel.style.display = "block"; statusPainel.style.background = "#fff3cd"; statusPainel.style.color = "#856404";
-        statusPainel.innerText = "📍 Sincronizando com satélites GPS...";
-
-        if (!navigator.geolocation) {
-            statusPainel.style.background = "#f8d7da"; statusPainel.style.color = "#721c24";
-            statusPainel.innerText = "❌ Dispositivo sem suporte a GPS.";
-            document.getElementById('input-camera-oculto').click();
-            return;
+        function inicializarCarrossel() {
+            const containerPontinhos = document.getElementById("container-pontinhos");
+            const slides = document.getElementsByClassName("meu-slide");
+            
+            containerPontinhos.innerHTML = "";
+            for (let i = 0; i < slides.length; i++) {
+                let ponto = document.createElement("span");
+                ponto.className = "ponto";
+                ponto.onclick = () => irParaSlide(i);
+                containerPontinhos.appendChild(ponto);
+            }
+            mostrarSlides(indiceSlide);
         }
 
-        navigator.geolocation.getCurrentPosition(
-            (posicao) => {
-                const lat = posicao.coords.latitude.toFixed(6);
-                const lng = posicao.coords.longitude.toFixed(6);
-                document.getElementById('campo-coordenadas').value = `${lat}, ${lng}`;
-                statusPainel.style.background = "#d4edda"; statusPainel.style.color = "#155724";
-                statusPainel.innerText = `✅ GPS travado! Abrindo câmera...`;
-                setTimeout(() => { document.getElementById('input-camera-oculto').click(); }, 600);
-            },
-            (erro) => {
-                statusPainel.style.background = "#f8d7da"; statusPainel.style.color = "#721c24";
-                statusPainel.innerText = "⚠️ Sinal GPS fraco. Digite ou use em área aberta.";
-                document.getElementById('input-camera-oculto').click();
-            },
-            { enableHighAccuracy: true, timeout: 10000 }
-        );
-    }
-
-    function processarFotoCampo(event) {
-        const arquivo = event.target.files[0];
-        if (!arquivo) return;
-        const leitor = new FileReader();
-        leitor.onload = function(e) {
-            fotoTemporariaBase64 = e.target.result;
-            const preview = document.getElementById('preview-foto');
-            preview.src = fotoTemporariaBase64; preview.style.display = "block";
-        };
-        leitor.readAsDataURL(arquivo);
-    }
-
-    function salvarNovoEspecimeRealtime() {
-        const coord = document.getElementById('campo-coordenadas').value;
-        const nome = document.getElementById('campo-nome').value;
-        const cientifico = document.getElementById('campo-cientifico').value;
-        const familia = document.getElementById('campo-familia').value;
-        const origem = document.getElementById('campo-origem').value;
-
-        if (!coord || !nome || !cientifico) {
-            alert("❌ Preencha os campos obrigatórios: Coordenadas, Nome Comum e Científico.");
-            return;
+        function mudarSlide(n) {
+            mostrarSlides(indiceSlide += n);
         }
 
-        const novoId = dadosArvores.length > 0 ? Math.max(...dadosArvores.map(a => a.id)) + 1 : 1;
-        dadosArvores.push({
-            id: novoId, nome: nome, cientifico: cientifico, familia: familia || "Indeterminada", origem: origem, coord: coord, fotos: fotoTemporariaBase64 ? [fotoTemporariaBase64] : []
-        });
+        function irParaSlide(n) {
+            mostrarSlides(indiceSlide = n);
+        }
 
-        renderizarGradeDados(); plotarMarcadoresNoMapa();
-        mapInicio.setView(coord.split(', ').map(Number), 18);
+        function mostrarSlides(n) {
+            let slides = document.getElementsByClassName("meu-slide");
+            let pontos = document.getElementsByClassName("ponto");
+            
+            if (n >= slides.length) { indiceSlide = 0; }
+            if (n < 0) { indiceSlide = slides.length - 1; }
+            
+            for (let i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            for (let i = 0; i < pontos.length; i++) {
+                pontos[i].className = pontos[i].className.replace(" active", "");
+            }
+            
+            if(slides[indiceSlide]) {
+                slides[indiceSlide].style.display = "block";
+            }
+            if(pontos[indiceSlide]) {
+                pontos[indiceSlide].className += " active";
+            }
+        }
 
-        document.getElementById('campo-coordenadas').value = "";
-        document.getElementById('campo-nome').value = "";
-        document.getElementById('campo-cientifico').value = "";
-        document.getElementById('campo-familia').value = "";
-        document.getElementById('preview-foto').style.display = "none";
-        document.getElementById('status-gps-painel').style.display = "none";
-        fotoTemporariaBase64 = "";
+        // 2. Funções do Modo Cinema (Lightbox)
+        function abrirLightboxCinema(index) {
+            const modal = document.getElementById("cinema-modal");
+            const imgCinema = document.getElementById("imagem-cinema");
+            const legendaCinema = document.getElementById("legenda-cinema");
+            
+            if(modal && imgCinema && legendaCinema) {
+                imgCinema.src = listaFotosCartaoPostal[index];
+                legendaCinema.textContent = legendasFotos[index];
+                modal.style.display = "flex";
+            }
+        }
 
-        alert(`✅ Ponto [ID ${novoId}] adicionado com sucesso!`);
-        abrirFichaDireta(novoId);
-    }
+        function fecharLightboxCinema() {
+            document.getElementById("cinema-modal").style.display = "none";
+        }
 
-    function gerarPlaca(id) {
-        const arvore = dadosArvores.find(a => a.id == id);
-        if (!arvore) return;
+        // 3. Inicialização do Mapa Leaflet
+        function inicializarMapa() {
+            const mapa = L.map('mapa-leaflet').setView([-4.275, -55.985], 16);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(mapa);
 
-        document.getElementById('placa-nome').innerText = arvore.nome;
-        document.getElementById('placa-cie').innerText = arvore.cientifico;
-        document.getElementById('placa-fam').innerText = arvore.familia;
-        document.getElementById('placa-ori').innerText = arvore.origem;
-        document.getElementById('placa-coord').innerText = arvore.coord;
+            // Marcadores de Exemplo
+            const pontosBosque = [
+                { lat: -4.2745, lon: -55.9855, nome: "Samaúma" },
+                { lat: -4.2750, lon: -55.9848, nome: "Ipê Amarelo" },
+                { lat: -4.2755, lon: -55.9860, nome: "Castanheira do Pará" }
+            ];
 
-        const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = "";
-        const link = `https://biotech-bit.github.io/biobosque/?id=${arvore.id}`;
-        qrcode = new QRCode(qrContainer, { text: link, width: 90, height: 90, colorDark : "#000000", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H });
-
-        const midiaContainer = document.getElementById('container-midias-placa');
-        midiaContainer.innerHTML = "";
-        if (arvore.fotos.length > 0) {
-            arvore.fotos.forEach(src => {
-                const img = document.createElement('img');
-                img.src = src; img.className = "media-item";
-                img.onclick = () => abrirLightboxSimples(src);
-                midiaContainer.appendChild(img);
+            pontosBosque.forEach(ponto => {
+                L.marker([ponto.lat, ponto.lon])
+                 .addTo(mapa)
+                 .bindPopup(`<b>${ponto.nome}</b><br>Monitoramento Ativo.`);
             });
-        } else {
-            midiaContainer.innerHTML = "<p style='font-size:12px; color:#777; font-style:italic;'>Nenhuma foto capturada.</p>";
         }
-    }
-</script>
 
+        // Executar ao carregar a página
+        window.onload = function() {
+            inicializarCarrossel();
+            inicializarMapa();
+        };
+
+        // Fechar modo cinema com a tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') fecharLightboxCinema();
+        });
+    </script>
 </body>
 </html>
