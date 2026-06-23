@@ -43,10 +43,12 @@
         .secao-card { background: var(--branco); border-radius: 8px; padding: 20px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
         .secao-card h2 { color: var(--verde-institucional); font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid var(--verde-suave); padding-bottom: 6px; }
 
-        /* CARROSSEL RESTAURADO E TOTALMENTE CORRIGIDO */
+        /* RECONSTRUÇÃO DO CARROSSEL ORIGINAL QUE EXIBIA TUDO */
         .carrossel-container { width: 100%; position: relative; border-radius: 8px; overflow: hidden; background: #111; box-shadow: var(--sombra-padrao); }
         .slides-wrapper { width: 100%; height: 380px; position: relative; }
-        .meu-slide { display: none; width: 100%; height: 100%; }
+        
+        /* Forçando a exibição correta via display block controlado pelo JS original */
+        .meu-slide { display: none; width: 100%; height: 100%; position: relative; }
         .meu-slide img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
         .legenda-slide { color: var(--branco); font-size: 13px; font-weight: 600; padding: 12px; position: absolute; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.75); text-align: center; }
         
@@ -87,7 +89,7 @@
         .btn-gps-camera:hover { background-color: #004085; }
         .preview-foto-capturada { width: 100%; max-height: 280px; object-fit: cover; border-radius: 6px; display: none; margin-top: 12px; border: 2px dashed var(--verde-institucional); }
 
-        /* LIGHTBOX CINEMA */
+        /* LIGHTBOX CINEMA CORRIGIDO */
         .lightbox-celular { display: none; position: fixed; z-index: 10000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .lightbox-celular img { max-width: 92%; max-height: 80vh; border: 2px solid white; border-radius: 6px; object-fit: contain; }
         .lb-btn { position: absolute; color: white; font-size: 36px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 18px; border-radius: 50%; cursor: pointer; user-select: none; z-index: 10010; transition: 0.2s; }
@@ -230,8 +232,8 @@
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.27555, -55.98521", notas: "Comum em áreas de sub-bosque secundário." }
     ];
 
-    // Array Corrigido e Sincronizado com o HTML
-    const fotosArray = ["Equipe de Campo.jpeg","final da trilha.jpeg","Início da Trilha.jpeg","mapa da trilha.png","Trilha guiada.jpg","acompanhamento tecnico.jpg","ambientaçao.jpg","conhecendo o bosque.jpg","Dentro do bosque.jpg","Entrada do Bosque.jpeg"];
+    // Array Original de Imagens Resgatado
+    const fotosArray = ["Equipe%20de%20Campo.jpeg","final%20da%20trilha.jpeg","In%C3%ADcio%20da%20Trilha.jpeg","mapa%20da%20trilha.png","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","Entrada%20do%20Bosque.jpeg"];
     const legendasArray = ["Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha", "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque", "Dentro do Bosque", "Entrada ao Bosque"];
 
     let slideIndex = 1;
@@ -282,6 +284,7 @@
         });
     }
 
+    // RETORNO DA LÓGICA DE EXIBIÇÃO CLÁSSICA DO CARROSSEL
     function inicializarPontosCarrossel() {
         const container = document.getElementById('container-pontinhos');
         container.innerHTML = "";
@@ -291,15 +294,24 @@
     }
     function mudarSlide(n) { mostrarSlides(slideIndex += n); }
     function slideAtual(n) { mostrarSlides(slideIndex = n); }
+    
     function mostrarSlides(n) {
         let slides = document.getElementsByClassName("meu-slide");
         let pontos = document.getElementsByClassName("ponto");
         if (n > slides.length) slideIndex = 1;
         if (n < 1) slideIndex = slides.length;
-        for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
-        for (let i = 0; i < pontos.length; i++) pontos[i].classList.remove("active");
+        
+        // Esconde todos usando o display none tradicional
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].style.display = "none";
+        }
+        for (let i = 0; i < pontos.length; i++) {
+            pontos[i].className = pontos[i].className.replace(" active", "");
+        }
+        
+        // Mostra o slide ativo de forma isolada e limpa
         if (slides[slideIndex-1]) slides[slideIndex-1].style.display = "block";
-        if (pontos[slideIndex-1]) pontos[slideIndex-1].classList.add("active");
+        if (pontos[slideIndex-1]) pontos[slideIndex-1].className += " active";
     }
 
     function abrirLightboxCinema(index) {
@@ -317,7 +329,8 @@
         carregarConteudoLightbox();
     }
     function carregarConteudoLightbox() {
-        document.getElementById('lb-img').src = fotosArray[lightboxIndex];
+        // Descodifica os caracteres especiais para o Lightbox renderizar perfeitamente
+        document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
         document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
     }
 
