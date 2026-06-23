@@ -108,7 +108,8 @@
 
         .bloco-laudo { border: 2px solid #333; padding: 20px; border-radius: 6px; background: white; margin-top: 15px; }
         .flex-laudo { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
-        .aviso-qr { font-size: 11px; color: #555; margin-top: 5px; display: block; font-style: italic; }
+        .aviso-qr { font-size: 11px; color: #555; margin-top: 8px; display: block; font-style: italic; line-height: 1.4; }
+        #qrcode { min-width: 110px; min-height: 110px; background: #fff; padding: 5px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; }
     </style>
 </head>
 <body>
@@ -154,7 +155,7 @@
                         <div class="meu-slide fade"><img src="Dentro%20do%20bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
                         <div class="meu-slide fade"><img src="Entrada%20do%20Bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
                     </div>
-                    <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
+                    <a class="anterior" onclick="mudarSlide(-1)">❮</a><a class="proximo" onclick="mudarSlide(1)">❯</a>
                     <div class="pontinhos-container" id="container-pontinhos"></div>
                 </div>
             </div>
@@ -221,12 +222,12 @@
             <select id="seletor-laudos" onchange="atualizarLaudo(this.value)" style="width:100%; padding:12px; margin-bottom:15px; border-radius:6px;"></select>
             <div class="bloco-laudo">
                 <div class="flex-laudo">
-                    <div>
+                    <div style="flex: 1;">
                         <p><strong>Nome Popular:</strong> <span id="ld-nome"></span></p>
                         <p><strong>Nome Científico:</strong> <span id="ld-cie" style="font-style:italic;"></span></p>
                         <p><strong>Família:</strong> <span id="ld-fam"></span></p>
                         <p><strong>Localização:</strong> <span id="ld-coord"></span></p>
-                        <p><strong>Notas de Pesquisa:</strong> <span id="ld-notas"></span></p>
+                        <p><strong>Notas de Pesquisa:</strong> <span id="ld-notes"></span></p>
                         <span class="aviso-qr">💡 Escaneie o QR Code ao lado para abrir a localização exata via satélite no Google Maps.</span>
                     </div>
                     <div id="qrcode"></div>
@@ -238,10 +239,10 @@
 </div>
 
 <div id="lb-modal" class="lightbox-celular">
-    <button class="lb-btn lb-fechar" onclick="fecharLightboxCinema()">&times;</button>
-    <button class="lb-btn lb-anterior" onclick="navegarLightbox(-1)">&#10094;</button>
+    <button class="lb-btn lb-fechar" onclick="fecharLightboxCinema()">×</button>
+    <button class="lb-btn lb-anterior" onclick="navegarLightbox(-1)">❮</button>
     <img id="lb-img" src="" alt="Ampliado">
-    <button class="lb-btn lb-proximo" onclick="navegarLightbox(1)">&#10095;</button>
+    <button class="lb-btn lb-proximo" onclick="navegarLightbox(1)">❯</button>
     <div id="lb-legenda" class="lb-legenda"></div>
 </div>
 
@@ -301,7 +302,6 @@
         mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
 
-        // AJUSTE SOLICITADO: Clique manual no mapa captura o local exato e atualiza o marcador
         mapaCadastro.on('click', function(e) {
             const lat = e.latlng.lat.toFixed(5);
             const lng = e.latlng.lng.toFixed(5);
@@ -345,7 +345,7 @@
         document.getElementById('reg-nome').value = arvore.nome;
         document.getElementById('reg-cientifico').value = arvore.cientifico;
         document.getElementById('reg-familia').value = arvore.familia;
-        document.getElementById('reg-caract').value = arvore.notas;
+        document.getElementById('reg-caract').value = arvore.notes || arvore.notas;
         document.getElementById('reg-coords').value = arvore.coord;
 
         document.getElementById('titulo-formulario').innerHTML = `✏️ Ficha Técnica: ${arvore.nome} (ID: ${arvore.id})`;
@@ -420,7 +420,7 @@
         if(dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
     }
 
-    // AJUSTE SOLICITADO: QR Code agora gera a URL exata do Google Maps configurada para abrir no modo Satélite (&t=k)
+    // CORREÇÃO: Ajustado a string dinâmica do Link do Google Maps para evitar erros de renderização e carregar o QR Code nativamente
     function atualizarLaudo(id) {
         const item = dadosArvores.find(a => a.id == id);
         if (!item) return;
@@ -429,24 +429,23 @@
         document.getElementById('ld-cie').textContent = item.cientifico;
         document.getElementById('ld-fam').textContent = item.familia;
         document.getElementById('ld-coord').textContent = item.coord;
-        document.getElementById('ld-notas').textContent = item.notas;
+        document.getElementById('ld-notes').textContent = item.notas;
 
-        // Separa latitude e longitude para montar o link seguro do Google Maps
         const partCoords = item.coord.split(', ');
         const lat = partCoords[0].trim();
         const lng = partCoords[1].trim();
         
-        // Link dinâmico com parâmetros de satélite (&t=k ativa a camada de satélite nativamente)
-        const googleMapsUrl = `https://www.google.com/maps?q=${lat},${lng}&t=k&z=19`;
+        // Link padrão de busca do Maps forçando a camada híbrida/satélite nativa (&t=k)
+        const googleMapsUrl = "https://maps.google.com/?q=" + lat + "," + lng + "&t=k&z=19";
 
         const containerQr = document.getElementById('qrcode');
         containerQr.innerHTML = "";
         
-        // O QR Code agora codifica este link direto do satélite
+        // Inicializa a renderização segura do QR Code
         new QRCode(containerQr, { 
             text: googleMapsUrl, 
-            width: 105, 
-            height: 105,
+            width: 110, 
+            height: 110,
             correctLevel: QRCode.CorrectLevel.H
         });
     }
