@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.8 - Galeria de Cinema</title>
+    <title>BioCatalog Digital V9.9 - Galeria Cinema Fix</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -142,7 +142,7 @@
 
         .objetivos-texto { font-size: 13px; line-height: 1.6; color: #495057; text-align: justify; }
 
-        /* CARROSSEL PREMIUM - FOTOS INTEIRAS */
+        /* CARROSSEL PREMIUM - IMAGENS INTEIRAS */
         .carrossel-container {
             width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #1a1a1a;
         }
@@ -208,13 +208,13 @@
         .btn-gps-camera:hover { background-color: #004085; }
         .preview-foto-capturada { width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; border: 1px dashed var(--cinza-borda); display: none; margin: 10px 0; cursor: pointer; }
         
-        /* LIGHTBOX CINEMATOGRÁFICO COM NAVEGAÇÃO DE SETAS */
+        /* LIGHTBOX CINEMATOGRÁFICO AVANÇADO (FILME) */
         .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
         .lightbox img { max-width: 90%; max-height: 85%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 30px rgba(0,0,0,0.8); object-fit: contain; }
         
-        .lightbox-btn { position: absolute; color: white; font-size: 35px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 18px; border-radius: 5px; cursor: pointer; user-select: none; transition: background 0.2s; }
-        .lightbox-btn:hover { background: rgba(255,255,255,0.25); }
-        .lb-fechar { top: 20px; right: 20px; font-size: 30px; }
+        .lightbox-btn { position: absolute; color: white; font-size: 40px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; user-select: none; transition: background 0.2s; z-index: 10000; }
+        .lightbox-btn:hover { background: rgba(255,255,255,0.3); }
+        .lb-fechar { top: 20px; right: 20px; font-size: 35px; }
         .lb-anterior { left: 20px; top: 50%; transform: translateY(-50%); }
         .lb-proximo { right: 20px; top: 50%; transform: translateY(-50%); }
 
@@ -229,7 +229,7 @@
 <body>
 
 <header>
-    <h1>BIOCATALOG DIGITAL V9.8</h1>
+    <h1>BIOCATALOG DIGITAL V9.9</h1>
     <p>Monitoramento Florestal Multiplataforma — IFPA Campus Itaituba</p>
 </header>
 
@@ -401,7 +401,6 @@
 </div>
 
 <script>
-    // Banco de Dados Fixo das Árvores
     const dadosArvores = [
         { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Dentro do bosque.jpg"] },
         { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["final da trilha.jpg"] },
@@ -410,7 +409,7 @@
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] }
     ];
 
-    // Lista ordenada de fotos da página inicial para a navegação do filme (Lightbox)
+    // Mapeamento idêntico dos arquivos carregados
     const listaFotosCartaoPostal = [
         "Equipe de Campo.jpg",
         "final da trilha.jpg",
@@ -447,7 +446,7 @@
         }
     }
 
-    // CONTROLES DO LIGHTBOX CINEMATOGRÁFICO
+    // LIGHTBOX MODO CINEMA (PASSAR DE FOTO EM FOTO)
     function abrirLightboxCinema(index) {
         indiceFotoLightboxAtual = index;
         const lb = document.getElementById('lightbox');
@@ -456,7 +455,6 @@
         lbImg.src = listaFotosCartaoPostal[indiceFotoLightboxAtual];
         lb.style.display = 'flex';
         
-        // Exibe as setas de navegação
         document.querySelector('.lb-anterior').style.display = "block";
         document.querySelector('.lb-proximo').style.display = "block";
     }
@@ -467,7 +465,6 @@
         lbImg.src = src;
         lb.style.display = 'flex';
         
-        // Esconde as setas já que é foto única externa
         document.querySelector('.lb-anterior').style.display = "none";
         document.querySelector('.lb-proximo').style.display = "none";
     }
@@ -484,12 +481,11 @@
         document.getElementById('lightbox').style.display = 'none';
     }
 
-    // Fechar ao clicar no fundo escuro
     document.getElementById('lightbox').addEventListener('click', function(e) {
         if (e.target === this) fecharLightbox();
     });
 
-    // CARROSSEL SLIDES
+    // CONTROLES DO CARROSSEL PRINCIPAL
     function mudarSlide(n) { mostrarSlides(indiceSlide += n); }
     function slideAtual(n) { mostrarSlides(indiceSlide = n); }
     function mostrarSlides(n) {
