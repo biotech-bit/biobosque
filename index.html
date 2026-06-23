@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.9 - Galeria Cinema Fix</title>
+    <title>BioCatalog Digital V9.9 - Restauração Completa e Responsiva</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kniyxNV1lvTlZBo=" crossorigin=""></script>
-
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCt9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
     <style>
         :root {
             --verde-institucional: #008744; /* Verde Oficial IFPA */
@@ -19,198 +19,155 @@
             --texto-escuro: #212529;
             --sombra-padrao: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
         }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
-            background-color: var(--cinza-claro);
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background-color: #f1f3f5;
             color: var(--texto-escuro);
-            padding: 20px;
-        }
-
-        /* Abas Superiores */
-        .abas-navegacao {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            background: #fff;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: var(--sombra-padrao);
-        }
-
-        .aba-item {
-            flex: 1;
-            padding: 10px;
-            text-align: center;
-            background: #f1f3f5;
-            border-radius: 6px;
-            font-weight: bold;
-            font-size: 0.9rem;
-            color: #495057;
-            cursor: pointer;
-            border: 1px solid var(--cinza-borda);
-        }
-
-        .aba-item.ativa {
-            background: var(--verde-institucional);
-            color: #fff;
-            border-color: var(--verde-escuro);
-        }
-
-        .container-principal {
-            max-width: 100%;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1.2fr 1fr;
-            gap: 20px;
-        }
-
-        @media (max-width: 992px) {
-            .container-principal {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        .cartao-painel {
-            background: var(--branco);
-            border-radius: 8px;
-            padding: 20px;
-            box-shadow: var(--sombra-padrao);
-            border: 1px solid var(--cinza-borda);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
+            overflow-x: hidden;
         }
 
-        .titulo-secao {
-            color: var(--verde-institucional);
-            border-bottom: 2px solid var(--verde-suave);
-            padding-bottom: 8px;
-            margin-bottom: 15px;
-            font-size: 1.4rem;
-        }
-
-        .descricao-projeto {
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 15px;
-            color: #495057;
-        }
-
-        /* 🎪 ESTILOS DO CARROSSEL */
-        .carrossel-container {
-            position: relative;
-            max-width: 100%;
-            margin: auto;
-            overflow: hidden;
-            border-radius: 6px;
-            background: #111;
-            width: 100%;
-        }
-
-        .slides-wrapper {
-            position: relative;
-            height: 480px;
-        }
-
-        .meu-slide {
-            display: none;
-            height: 100%;
-            position: relative;
-        }
-
-        .meu-slide img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-        }
-
-        .meu-slide img:hover {
-            transform: scale(1.02);
-        }
-
-        .anterior, .proximo {
-            cursor: pointer;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            width: auto;
-            padding: 16px;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
-            border-radius: 0 3px 3px 0;
-            user-select: none;
-            background-color: rgba(0,0,0,0.5);
-            transition: 0.3s;
+        header {
+            background: linear-gradient(135deg, var(--verde-institucional), var(--verde-escuro));
+            color: var(--branco);
+            text-align: center;
+            padding: 12px 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+            flex-shrink: 0;
             z-index: 10;
         }
 
-        .proximo {
-            right: 0;
-            border-radius: 3px 0 0 3px;
+        header h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+        header p { font-size: 12px; opacity: 0.9; margin-top: 2px; }
+
+        .container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            width: 100vw;
+            background: var(--branco);
         }
 
-        .anterior:hover, .proximo:hover {
-            background-color: var(--verde-institucional);
+        .abas-menu {
+            display: flex;
+            background: #e9ecef;
+            padding: 6px;
+            flex-shrink: 0;
+            overflow-x: auto;
+            gap: 6px;
+            border-bottom: 1px solid var(--cinza-borda);
         }
 
-        .legenda-slide {
-            color: #fff;
-            font-size: 14px;
-            padding: 10px;
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            text-align: center;
-            background: rgba(0, 0, 0, 0.7);
-        }
-
-        .pontinhos-container {
-            text-align: center;
-            padding: 10px;
-            background: #222;
-        }
-
-        .ponto {
-            cursor: pointer;
-            height: 12px;
-            width: 12px;
-            margin: 0 4px;
-            background-color: #bbb;
-            border-radius: 50%;
-            display: inline-block;
-            transition: 0.6s ease;
-        }
-
-        .ponto.active, .ponto:hover {
-            background-color: var(--verde-institucional);
-        }
-
-        /* 🗺️ MAPA */
-        #mapa-leaflet {
-            height: 520px;
-            width: 100%;
-            border-radius: 6px;
+        .aba-btn {
+            flex: 1;
+            min-width: 140px;
+            padding: 12px 8px;
+            background: var(--branco);
             border: 1px solid var(--cinza-borda);
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #495057;
+            border-radius: 6px;
+            white-space: nowrap;
+            text-align: center;
+            transition: all 0.2s ease;
         }
 
-        .rodape-mapa {
-            margin-top: 10px;
-            font-size: 0.85rem;
+        .aba-btn:hover { background-color: var(--cinza-claro); }
+
+        .aba-btn.ativa {
+            background-color: var(--verde-institucional);
+            color: var(--branco);
+            border-color: var(--verde-institucional);
+            box-shadow: 0 2px 4px rgba(0,135,68,0.2);
+        }
+
+        .conteudo-aba {
+            display: none;
+            flex: 1;
+            width: 100%;
+            padding: 15px;
+        }
+
+        .conteudo-aba.ativa {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(2px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .layout-grid-responsivo {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+        }
+
+        @media (min-width: 992px) { 
+            .layout-grid-responsivo { 
+                grid-template-columns: 1.2fr 1fr; 
+                align-items: start;
+            } 
+        }
+
+        .coluna-flex {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .secao-card {
+            background: var(--branco);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--cinza-borda);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+        }
+
+        .secao-card h2 {
             color: var(--verde-institucional);
-            font-weight: 500;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-bottom: 2px solid var(--verde-suave);
+            padding-bottom: 4px;
         }
 
-        /* Canais Oficiais Inferiores */
+        .objetivos-texto { font-size: 13px; line-height: 1.6; color: #495057; text-align: justify; }
+
+        /* CARROSSEL PREMIUM - CAMINHOS CODIFICADOS CONTRA ERROS NO GIT */
+        .carrossel-container {
+            width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #1a1a1a;
+        }
+        .slides-wrapper { width: 100%; height: 240px; }
+        @media (min-width: 576px) { .slides-wrapper { height: 320px; } }
+        @media (min-width: 992px) { .slides-wrapper { height: 380px; } }
+        
+        .meu-slide { display: none; width: 100%; height: 100%; background: #1a1a1a; }
+        .meu-slide img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; transition: transform 0.2s; }
+        .meu-slide img:hover { transform: scale(1.01); }
+        
+        .legenda-slide {
+            color: var(--branco); font-size: 11px; font-weight: 600; padding: 6px 14px; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 90, 43, 0.85); border-radius: 20px; backdrop-filter: blur(4px); text-align: center; max-width: 85%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
+        }
+        .anterior, .proximo {
+            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 12px; margin-top: -22px; color: white; font-weight: bold; font-size: 16px; background-color: rgba(0,0,0,0.4); border-radius: 4px; user-select: none; z-index: 6;
+        }
+        .anterior { left: 5px; } .proximo { right: 5px; }
+        .pontinhos-container { position: absolute; bottom: 10px; width: 100%; text-align: center; z-index: 5; }
+        .ponto { cursor: pointer; height: 8px; width: 8px; margin: 0 3px; background-color: rgba(255,255,255,0.4); border-radius: 50%; display: inline-block; }
+        .ponto.active { background-color: var(--branco); transform: scale(1.2); }
+        .fade { animation-name: fadeEffect; animation-duration: 0.5s; }
+        @keyframes fadeEffect { from { opacity: 0.7; } to { opacity: 1; } }
+
+        /* Canais Oficiais de Comunidade */
         .canais-comunidade {
             margin-top: 20px;
             background: #fff;
@@ -219,19 +176,18 @@
             box-shadow: var(--sombra-padrao);
             text-align: center;
         }
-
         .canais-titulo {
-            font-size: 0.9rem;
+            font-size: 11px;
             font-weight: bold;
             margin-bottom: 10px;
             color: #495057;
+            text-transform: uppercase;
         }
-
         .botoes-canais {
             display: flex;
             gap: 15px;
+            flex-wrap: wrap;
         }
-
         .btn-canal {
             flex: 1;
             padding: 12px;
@@ -241,241 +197,287 @@
             font-weight: bold;
             font-size: 0.9rem;
             text-align: center;
+            min-width: 120px;
         }
-
         .btn-portal { background-color: #008744; }
         .btn-web { background-color: #005a2b; }
         .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
-        /* 🎬 LIGHTBOX MODO CINEMA */
-        .lightbox-cinema {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.95);
-            justify-content: center;
-            align-items: center;
-        }
+        /* Formulários, Tabelas e Mapa */
+        .formulario-grupo { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
+        .formulario-grupo label { font-size: 13px; font-weight: 600; color: var(--texto-escuro); }
+        .formulario-grupo input, .formulario-grupo select { padding: 10px; font-size: 13px; border-radius: 6px; border: 1px solid var(--cinza-borda); background: var(--cinza-claro); width: 100%; }
+        .status-gps { font-size: 12px; font-weight: bold; padding: 10px; border-radius: 6px; margin-bottom: 12px; text-align: center; }
 
-        .conteudo-cinema {
-            max-width: 90%;
-            max-height: 85%;
-            position: relative;
-        }
+        #map-principal { width: 100%; height: 320px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
+        @media (min-width: 992px) { #map-principal { height: 520px; position: sticky; top: 15px; } }
+        .secao-descricoes-pontos { background: var(--verde-suave); border-left: 4px solid var(--verde-institucional); border-radius: 4px; padding: 12px; font-size: 12px; color: var(--verde-escuro); margin-top: 10px; }
+        .tag-mapa-permanente { background: rgba(0, 135, 68, 0.9); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 3px 6px; border-radius: 4px; }
+        
+        .tabela-wrapper { overflow-x: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; background: white; }
+        table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 600px; }
+        th, td { padding: 10px 12px; border-bottom: 1px solid var(--cinza-borda); }
+        th { background-color: var(--verde-institucional); color: white; font-weight: 600; }
+        .linha-clicavel:hover { background-color: #f1f8f5; cursor: pointer; }
+        .cientifico-italico { font-style: italic; font-weight: 600; color: #1e7e34;}
 
-        .conteudo-cinema img {
-            max-width: 100%;
-            max-height: 85vh;
-            border: 3px solid #fff;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(255,255,255,0.2);
-        }
+        .bloco-impressao { border: 1px solid #000; padding: 20px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; background: white;}
+        .secao-flex-laudo { display: flex; flex-direction: column; gap: 15px; }
+        @media (min-width: 480px) { .secao-flex-laudo { flex-direction: row; justify-content: space-between; } }
+        
+        .coluna-dados-abnt { flex: 1; font-size: 13px; line-height: 1.5;}
+        .termo-destacado-abnt { font-weight: bold; text-transform: uppercase; color: #333; font-size: 10px;}
+        .moldura-qr-print { border: 1px solid #000; padding: 8px; text-align: center; width: 115px; margin: 0 auto; }
+        .container-midias { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px;}
+        .media-item { width: 75px; height: 75px; object-fit: cover; border: 1px solid var(--cinza-borda); border-radius: 4px; cursor: pointer; }
+        
+        .btn-acao { background-color: var(--verde-institucional); color: white; border: none; padding: 12px; font-weight: bold; font-size: 13px; border-radius: 6px; cursor: pointer; width: 100%; margin-top: 5px; transition: background 0.2s; }
+        .btn-acao:hover { background-color: var(--verde-escuro); }
+        .btn-gps-camera { background-color: #0056b3; margin-bottom: 10px;}
+        .btn-gps-camera:hover { background-color: #004085; }
+        .preview-foto-capturada { width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; border: 1px dashed var(--cinza-borda); display: none; margin: 10px 0; cursor: pointer; }
+        
+        /* LIGHTBOX CINEMATOGRÁFICO AVANÇADO (FILME) */
+        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(8px); }
+        .lightbox img { max-width: 90%; max-height: 85%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 30px rgba(0,0,0,0.8); object-fit: contain; }
+        
+        .lightbox-btn { position: absolute; color: white; font-size: 40px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; user-select: none; z-index: 10000; }
+        .lightbox-btn:hover { background: rgba(255,255,255,0.3); }
+        .lb-fechar { top: 20px; right: 20px; font-size: 35px; }
+        .lb-anterior { left: 20px; top: 50%; transform: translateY(-50%); }
+        .lb-proximo { right: 20px; top: 50%; transform: translateY(-50%); }
 
-        .fechar-cinema {
-            position: absolute;
-            top: -45px;
-            right: 0;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .fechar-cinema:hover {
-            color: #ff4d4d;
-        }
-
-        .legenda-cinema {
-            color: #fff;
-            text-align: center;
-            margin-top: 15px;
-            font-size: 1.2rem;
-            letter-spacing: 1px;
-        }
-
-        .fade {
-            animation: fadeAnim 0.5s ease-in-out;
-        }
-
-        @keyframes fadeAnim {
-            from { opacity: 0.4 } 
-            to { opacity: 1 }
+        @media print {
+            body * { visibility: hidden; }
+            #emissao, #emissao * { visibility: visible; }
+            #emissao { position: absolute; left: 0; top: 0; width: 100%; }
+            .abas-menu, header, .btn-acao, .seletor-impressao-area, .container-midias, h2, h3 { display: none !important; }
         }
     </style>
 </head>
 <body>
 
-    <div class="abas-navegacao">
-        <div class="aba-item ativa">🗺️ MAPA INICIAL</div>
-        <div class="aba-item">📌 CAPTURA EM CAMPO</div>
-        <div class="aba-item">📊 MATRIZ DE DADOS</div>
-        <div class="aba-item">🪪 PLACAS E LAUDOS</div>
+<header>
+    <h1>BIOCATALOG DIGITAL V9.9</h1>
+    <p>Monitoramento Florestal Multiplataforma — IFPA Campus Itaituba</p>
+</header>
+
+<div class="container">
+    <div class="abas-menu">
+        <button class="aba-btn ativa" id="btn-inicio" onclick="mudarAba('inicio')">🏠 MAPA INICIAL</button>
+        <button class="aba-btn" id="btn-cadastro" onclick="mudarAba('cadastro')">📍 CAPTURA EM CAMPO</button>
+        <button class="aba-btn" id="btn-catalogo" onclick="mudarAba('catalogo')">📊 MATRIZ DE DADOS</button>
+        <button class="aba-btn" id="btn-emissao" onclick="mudarAba('emissao')">🖨️ PLACAS E LAUDOS</button>
     </div>
-    
-    <div class="container-principal">
-        
-        <div class="cartao-painel">
-            <div>
-                <h2 class="titulo-secao">Bosque da Ciência</h2>
-                <p class="descricao-projeto">
-                    O <b>*BioCatálogo Digital*</b> executa o mapeamento e o inventário dinâmico das espécies arbóreas do campus. Projetado com responsividade total, permite o monitoramento geoespacial tanto em computadores da administração quanto em telemóveis no trabalho de campo, mitigando danos fustais e pisoteio.
-                </p>
-            </div>
-            
-            <div class="carrossel-container">
-                <div class="slides-wrapper">
-                    <div class="meu-slide fade"><img src="Equipe%20de%20Campo.jpeg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
-                    <div class="meu-slide fade"><img src="final%20da%20trilha.jpeg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
-                    <div class="meu-slide fade"><img src="In%C3%ADcio%20da%20Trilha.jpeg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
-                    <div class="meu-slide fade"><img src="mapa%20da%20trilha.png" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
-                    <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
-                    <div class="meu-slide fade"><img src="acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
-                    <div class="meu-slide fade"><img src="ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
-                    <div class="meu-slide fade"><img src="conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
-                    <div class="meu-slide fade"><img src="Dentro%20do%20bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
-                    <div class="meu-slide fade"><img src="Entrada%20do%20Bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
+
+    <div id="inicio" class="conteudo-aba ativa">
+        <div class="layout-grid-responsivo">
+            <div class="coluna-flex">
+                <div class="secao-card">
+                    <h2>Bosque da Ciência</h2>
+                    <p class="objetivos-texto">
+                        O **BioCatálogo Digital** executa o mapeamento e o inventário dinâmico das espécies arbóreas do campus. Projetado com responsividade total, permite o monitoramento geoespacial tanto em computadores da administração quanto em celulares no trabalho de campo, mitigando danos fustais e pisoteio.
+                    </p>
                 </div>
-                
-                <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a>
-                <a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
-                
-                <div class="pontinhos-container" id="container-pontinhos"></div>
+
+                <div class="carrossel-container">
+                    <div class="slides-wrapper">
+                        <div class="meu-slide fade"><img src="Inicial/Equipe%20de%20Campo.jpg" onclick="abrirLightboxCinema(0)"><div class="legenda-slide">Equipe de Campo</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/final%20da%20trilha.jpg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/In%C3%ADcio%20da%20Trilha.jpg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/mapa%20da%20trilha.jpg" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
+                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/Dentro%20do%20bosque.jpg" onclick="abrirLightboxCinema(8)"><div class="legenda-slide">Dentro do Bosque</div></div>
+                        <div class="meu-slide fade"><img src="Inicial/entrada%20ao%20bosque.jpeg" onclick="abrirLightboxCinema(9)"><div class="legenda-slide">Entrada ao Bosque</div></div>
+                    </div>
+                    <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
+                    <div class="pontinhos-container" id="container-pontinhos"></div>
+                </div>
+            </div>
+
+            <div class="coluna-flex">
+                <div id="map-principal"></div>
+                <div class="secao-descricoes-pontos"><strong>📋 Distribuição Espacial:</strong> Marcadores indicam os indivíduos monitorados no perímetro do campus. Clique em um ponto para abrir a ficha de impressão.</div>
             </div>
         </div>
 
-        <div class="cartao-painel">
-            <div>
-                <h2 class="titulo-secao">Mapeamento Geospacial</h2>
-                <div id="mapa-leaflet"></div>
+        <div class="canais-comunidade">
+            <div class="canais-titulo">Canais Oficiais da Comunidade</div>
+            <div class="botoes-canais">
+                <a href="https://itaituba.ifpa.edu.br" target="_blank" class="btn-canal btn-portal">PORTAL</a>
+                <a href="https://biotech-bit.github.io/biobosque/" target="_blank" class="btn-canal btn-web">WEB</a>
+                <a href="https://www.instagram.com/biobosque_22" target="_blank" class="btn-canal btn-instagram">INSTAGRAM</a>
             </div>
-            <div class="rodape-mapa">
-                📋 <b>Distribuição Espacial:</b> Marcadores indicam os indivíduos monitorados no perímetro do campus. Clique num ponto para abrir a ficha de impressão.
+        </div>
+    </div>
+
+    <div id="cadastro" class="conteudo-aba">
+        <div class="layout-grid-responsivo">
+            <div class="coluna-flex">
+                <div class="secao-card">
+                    <h2>📍 Catalogação em Tempo Real</h2>
+                    <button class="btn-acao btn-gps-camera" onclick="dispararCapturaCampo()">📸 ACIONAR GPS & CÂMERA DO CELULAR</button>
+                    <input type="file" id="input-camera-oculto" accept="image/*" capture="environment" style="display:none;" onchange="processarFotoCampo(event)">
+                    <div id="status-gps-painel" class="status-gps" style="display:none;">Aguardando...</div>
+                    <img id="preview-foto" class="preview-foto-capturada" onclick="abrirLightboxSimples(this.src)">
+                </div>
+            </div>
+            <div class="coluna-flex">
+                <div class="secao-card">
+                    <h2>📋 Atributos Botânicos (Padrão TCC)</h2>
+                    <div class="formulario-grupo"><label>Coordenadas Fixadas:</label><input type="text" id="campo-coordenadas" readonly></div>
+                    <div class="formulario-grupo"><label>Nome Popular:</label><input type="text" id="campo-nome"></div>
+                    <div class="formulario-grupo"><label>Nome Científico:</label><input type="text" id="campo-cientifico"></div>
+                    <div class="formulario-grupo"><label>Família Botânica:</label><input type="text" id="campo-familia"></div>
+                    <div class="formulario-grupo"><label>Origem:</label><select id="campo-origem"><option value="Nativa">Nativa da Amazônia</option><option value="Exótica">Exótica</option></select></div>
+                    <button class="btn-acao" onclick="salvarNovoEspecimeRealtime()" style="background:#17a2b8;">💾 SALVAR ARBORETO</button>
+                </div>
             </div>
         </div>
-
     </div>
 
-    <div class="canais-comunidade">
-        <div class="canais-titulo">Canais Oficiais da Comunidade</div>
-        <div class="botoes-canais">
-            <a href="#" class="btn-canal btn-portal">PORTAL</a>
-            <a href="#" class="btn-canal btn-web">WEB</a>
-            <a href="#" class="btn-canal btn-instagram">INSTAGRAM</a>
+    <div id="catalogo" class="conteudo-aba">
+        <div class="secao-card">
+            <h2>📋 Matriz de Dados Técnicos (TCC)</h2>
+            <div class="tabela-wrapper">
+                <table>
+                    <thead><tr><th>ID</th><th>Nome Comum</th><th>Nome Científico</th><th>Família</th><th>Coordenadas (WGS84)</th></tr></thead>
+                    <tbody id="corpo-tabela"></tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div id="cinema-modal" class="lightbox-cinema" onclick="fecharLightboxCinema()">
-        <div class="conteudo-cinema" onclick="event.stopPropagation()">
-            <span class="fechar-cinema" onclick="fecharLightboxCinema()">&times;</span>
-            <img id="imagem-cinema" src="" alt="Imagem Ampliada">
-            <div id="legenda-cinema" class="legenda-cinema"></div>
+    <div id="emissao" class="conteudo-aba">
+        <div class="layout-grid-responsivo">
+            <div class="coluna-flex">
+                <div class="secao-card seletor-impressao-area">
+                    <h2>Seleção de Indivíduo</h2>
+                    <select id="select-arvore-placa" onchange="gerarPlaca(this.value)" style="width:100%; padding:10px;"></select>
+                </div>
+                <div class="secao-card">
+                    <div class="bloco-impressao">
+                        <div class="secao-flex-laudo">
+                            <div class="coluna-dados-abnt">
+                                <p><span class="termo-destacado-abnt">Nome Popular:</span> <span id="placa-nome"></span></p>
+                                <p><span class="termo-destacado-abnt">Nome Científico:</span> <span id="placa-cie"></span></p>
+                                <p><span class="termo-destacado-abnt">Localização:</span> <span id="placa-coord"></span></p>
+                            </div>
+                            <div class="moldura-qr-print"><div id="qrcode"></div><p style="font-size:9px;">IFPA</p></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="coluna-flex">
+                <div class="secao-card">
+                    <h2>🖼️ Monitoramento Fotográfico</h2>
+                    <div id="container-midias-placa" class="container-midias"></div>
+                    <button class="btn-acao" style="background:#ffc107; color:black;" onclick="window.print()">🖨️ IMPRIMIR LAUDO</button>
+                </div>
+            </div>
         </div>
     </div>
+</div>
 
-    <script>
-        let indiceSlide = 0;
-        
-        const listaFotosCartaoPostal = [
-            "Equipe%20de%20Campo.jpeg",
-            "final%20da%20trilha.jpeg",
-            "In%C3%ADcio%20da%20Trilha.jpeg",
-            "mapa%20da%20trilha.png",
-            "Trilha%20guiada.jpg",
-            "acompanhamento%20tecnico.jpg",
-            "ambienta%C3%A7ao.jpg",
-            "conhecendo%20o%20bosque.jpg",
-            "Dentro%20do%20bosque.jpg",
-            "Entrada%20do%20Bosque.jpeg"
-        ];
+<div id="lightbox" class="lightbox">
+    <button class="lightbox-btn lb-fechar" onclick="fecharLightbox()">&times;</button>
+    <button class="lightbox-btn lb-anterior" onclick="navegarLightbox(-1)">&#10094;</button>
+    <img id="lightbox-img" src="">
+    <button class="lightbox-btn lb-proximo" onclick="navegarLightbox(1)">&#10095;</button>
+</div>
 
-        const legendasFotos = [
-            "Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha",
-            "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque",
-            "Dentro do Bosque", "Entrada ao Bosque"
-        ];
+<script>
+    // Banco de Dados e Mapas Reais do BioCatálogo
+    const dadosArvores = [
+        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.2746, -55.9851", fotos: ["Inicial/Dentro%20do%20bosque.jpg"] },
+        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.2758, -55.9857", fotos: ["Inicial/final%20da%20trilha.jpg"] },
+        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.2751, -55.9849", fotos: [] },
+        { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.2753, -55.9854", fotos: [] },
+        { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.2755, -55.9852", fotos: [] }
+    ];
 
-        function inicializarCarrossel() {
-            const containerPontinhos = document.getElementById("container-pontinhos");
-            const slides = document.getElementsByClassName("meu-slide");
-            
-            containerPontinhos.innerHTML = "";
-            for (let i = 0; i < slides.length; i++) {
-                let ponto = document.createElement("span");
-                ponto.className = "ponto";
-                ponto.onclick = () => irParaSlide(i);
-                containerPontinhos.appendChild(ponto);
-            }
-            mostrarSlides(indiceSlide);
-        }
+    const listaFotosCartaoPostal = ["Inicial/Equipe%20de%20Campo.jpg","Inicial/final%20da%20trilha.jpg","Inicial/In%C3%ADcio%20da%20Trilha.jpg","Inicial/mapa%20da%20trilha.jpg","Trilha%20guiada.jpg","Inicial/Acompanhamento%20tecnico.jpg","Inicial/Ambienta%C3%A7ao.jpg","Inicial/Conhecendo%20o%20bosque.jpg","Inicial/Dentro%20do%20bosque.jpg","Inicial/entrada%20ao%20bosque.jpeg"];
+    const legendasFotos = ["Equipe de Campo","Final da Trilha","Início da Trilha","Mapa da Trilha","Trilha Guiada","Acompanhamento Técnico","Ambientação","Conhecendo o Bosque","Dentro do Bosque","Entrada ao Bosque"];
 
-        function mudarSlide(n) { mostrarSlides(indiceSlide += n); }
-        function irParaSlide(n) { mostrarSlides(indiceSlide = n); }
+    let mapInicio, camadaMarcadores, qrcode, indiceSlide = 1, fotoTemporariaBase64 = "", indiceFotoLightboxAtual = 0;
 
-        function mostrarSlides(n) {
-            let slides = document.getElementsByClassName("meu-slide");
-            let pontos = document.getElementsByClassName("ponto");
-            
-            if (n >= slides.length) { indiceSlide = 0; }
-            if (n < 0) { indiceSlide = slides.length - 1; }
-            
-            for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
-            for (let i = 0; i < pontos.length; i++) { pontos[i].className = pontos[i].className.replace(" active", ""); }
-            
-            if(slides[indiceSlide]) { slides[indiceSlide].style.display = "block"; }
-            if(pontos[indiceSlide]) { pontos[indiceSlide].className += " active"; }
-        }
+    document.addEventListener("DOMContentLoaded", function() {
+        gerarPontinhosCarrossel();
+        initMap();
+        renderizarGradeDados();
+        mostrarSlides(indiceSlide);
+        setInterval(() => mudarSlide(1), 5000);
+    });
 
-        function abrirLightboxCinema(index) {
-            const modal = document.getElementById("cinema-modal");
-            const imgCinema = document.getElementById("imagem-cinema");
-            const legendaCinema = document.getElementById("legenda-cinema");
-            
-            if(modal && imgCinema && legendaCinema) {
-                imgCinema.src = listaFotosCartaoPostal[index];
-                legendaCinema.textContent = legendasFotos[index];
-                modal.style.display = "flex";
-            }
-        }
+    // Funções de Navegação de Abas
+    function mudarAba(abaId) {
+        document.querySelectorAll('.conteudo-aba').forEach(aba => aba.classList.remove('ativa'));
+        document.querySelectorAll('.aba-btn').forEach(btn => btn.classList.remove('ativa'));
+        document.getElementById(abaId).classList.add('ativa');
+        document.getElementById('btn-' + abaId).classList.add('ativa');
+        if (abaId === 'inicio') setTimeout(() => mapInicio.invalidateSize(), 200);
+    }
 
-        function fecharLightboxCinema() { document.getElementById("cinema-modal").style.display = "none"; }
+    // Inicialização do Mapa Leaflet
+    function initMap() {
+        mapInicio = L.map('map-principal').setView([-4.2754, -55.9852], 17);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(mapInicio);
+        L.tileLayer('http://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}',{ maxZoom: 20, subdomains:['mt0','mt1','mt2','mt3'] }).addTo(mapInicio);
+        camadaMarcadores = L.layerGroup().addTo(mapInicio);
+        plotarMarcadoresNoMapa();
+    }
 
-        // Inicialização Restabelecida do Mapa Leaflet com os Marcadores Reais do BioCatálogo
-        function inicializarMapa() {
-            // Foco centralizado na área do campus do IFPA Itaituba
-            const mapa = L.map('mapa-leaflet').setView([-4.2754, -55.9852], 17);
-            
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(mapa);
-
-            // Marcadores do Inventário Real
-            const especiesInventariadas = [
-                { lat: -4.2746, lon: -55.9851, nome: "[1] Samaúma" },
-                { lat: -4.2751, lon: -55.9849, nome: "[3] Ipê Amarelo" },
-                { lat: -4.2753, lon: -55.9854, nome: "[4] Mogno Africano" },
-                { lat: -4.2755, lon: -55.9852, nome: "[5] Palmeira Inajá" },
-                { lat: -4.2758, lon: -55.9857, nome: "[2] Castanheira do Pará" }
-            ];
-
-            especiesInventariadas.forEach(ponto => {
-                L.marker([ponto.lat, ponto.lon])
-                 .addTo(mapa)
-                 .bindPopup(`<b>${ponto.nome}</b><br>Status: Monitoramento Ativo.<br><a href="#" style="color:var(--verde-institucional); font-weight:bold; font-size:0.85rem;">Ver ficha de impressão</a>`);
-            });
-        }
-
-        window.onload = function() {
-            inicializarCarrossel();
-            inicializarMapa();
-        };
-
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') fecharLightboxCinema();
+    function plotarMarcadoresNoMapa() {
+        camadaMarcadores.clearLayers();
+        dadosArvores.forEach(arvore => {
+            const marker = L.marker(arvore.coord.split(', ').map(Number)).addTo(camadaMarcadores);
+            marker.bindPopup(`<b>${arvore.nome}</b><br>Monitoramento Ativo.`);
         });
-    </script>
+    }
+
+    // Gerenciamento de Dados Temporários
+    function renderizarGradeDados() {
+        const corpo = document.getElementById('corpo-tabela');
+        const select = document.getElementById('select-arvore-placa');
+        corpo.innerHTML = ""; select.innerHTML = "";
+        dadosArvores.forEach(a => {
+            corpo.innerHTML += `<tr><td>${a.id}</td><td>${a.nome}</td><td>${a.cientifico}</td><td>${a.familia}</td><td>${a.coord}</td></tr>`;
+            select.innerHTML += `<option value="${a.id}">${a.id}. ${a.nome}</option>`;
+        });
+        if(dadosArvores.length > 0) gerarPlaca(dadosArvores[0].id);
+    }
+
+    // Carrossel e Modo Cinema
+    function gerarPontinhosCarrossel() { const container = document.getElementById('container-pontinhos'); for (let i = 1; i <= listaFotosCartaoPostal.length; i++) container.innerHTML += `<span class="ponto" onclick="slideAtual(${i})"></span>`; }
+    function mudarSlide(n) { mostrarSlides(indiceSlide += n); }
+    function slideAtual(n) { mostrarSlides(indiceSlide = n); }
+    function mostrarSlides(n) {
+        let slides = document.getElementsByClassName("meu-slide");
+        let pontos = document.getElementsByClassName("ponto");
+        if (n > slides.length) indiceSlide = 1;
+        if (n < 1) indiceSlide = slides.length;
+        for (let i = 0; i < slides.length; i++) slides[i].style.display = "none";
+        for (let i = 0; i < pontos.length; i++) pontos[i].className = pontos[i].className.replace(" active", "");
+        if(slides[indiceSlide-1]) slides[indiceSlide-1].style.display = "block";
+        if(pontos[indiceSlide-1]) pontos[indiceSlide-1].className += " active";
+    }
+
+    function abrirLightboxCinema(index) {
+        indiceFotoLightboxAtual = index;
+        document.getElementById('lightbox-img').src = listaFotosCartaoPostal[indiceFotoLightboxAtual];
+        document.getElementById('lightbox').style.display = 'flex';
+    }
+    function fecharLightbox() { document.getElementById('lightbox').style.display = 'none'; }
+    function navegarLightbox(direcao) {
+        indiceFotoLightboxAtual += direcao;
+        if (indiceFotoLightboxAtual >= listaFotosCartaoPostal.length) indiceFotoLightboxAtual = 0;
+        if (indiceFotoLightboxAtual < 0) indiceFotoLightboxAtual = listaFotosCartaoPostal.length - 1;
+        document.getElementById('lightbox-img').src = listaFotosCartaoPostal[indiceFotoLightboxAtual];
+    }
+</script>
+
 </body>
 </html>
