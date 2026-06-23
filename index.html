@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioCatalog Digital V9.5 - Responsivo</title>
+    <title>BioCatalog Digital V9.6 - Galeria Fixada</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
@@ -105,7 +105,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* GRID RESPONSIVO: 1 Coluna no Celular, 2 colunas no Computador (992px+) */
         .layout-grid-responsivo {
             display: grid;
             grid-template-columns: 1fr;
@@ -143,7 +142,7 @@
 
         .objetivos-texto { font-size: 13px; line-height: 1.6; color: #495057; text-align: justify; }
 
-        /* Carrossel Adaptável */
+        /* Carrossel Interativo */
         .carrossel-container {
             width: 100%; position: relative; border-radius: 8px; overflow: hidden; box-shadow: var(--sombra-padrao); border: 1px solid var(--cinza-borda); background: #000;
         }
@@ -152,12 +151,14 @@
         @media (min-width: 992px) { .slides-wrapper { height: 320px; } }
         
         .meu-slide { display: none; width: 100%; height: 100%; }
-        .meu-slide img { width: 100%; height: 100%; object-fit: cover; }
+        .meu-slide img { width: 100%; height: 100%; object-fit: cover; cursor: pointer; transition: opacity 0.2s; }
+        .meu-slide img:hover { opacity: 0.9; }
+        
         .legenda-slide {
-            color: var(--branco); font-size: 11px; font-weight: 600; padding: 6px 12px; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 90, 43, 0.85); border-radius: 20px; backdrop-filter: blur(4px); text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+            color: var(--branco); font-size: 11px; font-weight: 600; padding: 6px 12px; position: absolute; bottom: 35px; left: 50%; transform: translateX(-50%); background-color: rgba(0, 90, 43, 0.85); border-radius: 20px; backdrop-filter: blur(4px); text-align: center; max-width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; pointer-events: none;
         }
         .anterior, .proximo {
-            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 12px; margin-top: -22px; color: white; font-weight: bold; font-size: 16px; background-color: rgba(0,0,0,0.3); border-radius: 4px; user-select: none;
+            cursor: pointer; position: absolute; top: 50%; width: auto; padding: 12px; margin-top: -22px; color: white; font-weight: bold; font-size: 16px; background-color: rgba(0,0,0,0.3); border-radius: 4px; user-select: none; z-index: 6;
         }
         .anterior { left: 5px; } .proximo { right: 5px; }
         .pontinhos-container { position: absolute; bottom: 10px; width: 100%; text-align: center; z-index: 5; }
@@ -166,26 +167,26 @@
         .fade { animation-name: fadeEffect; animation-duration: 0.6s; }
         @keyframes fadeEffect { from { opacity: 0.6; } to { opacity: 1; } }
 
-        /* Redes Sociais Responsivas */
+        /* Redes Sociais */
         .botoes-redes { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 5px; }
         .btn-rede { flex: 1; min-width: 100px; padding: 10px; text-decoration: none; font-weight: bold; font-size: 11px; color: white; border-radius: 20px; text-align: center; text-transform: uppercase; }
         .btn-ifpa { background-color: var(--verde-institucional); }
         .btn-bio { background-color: var(--verde-escuro); }
         .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
-        /* Elementos do Formulário */
+        /* Formulário */
         .formulario-grupo { margin-bottom: 12px; display: flex; flex-direction: column; gap: 4px; }
         .formulario-grupo label { font-size: 13px; font-weight: 600; color: var(--texto-escuro); }
         .formulario-grupo input, .formulario-grupo select { padding: 10px; font-size: 13px; border-radius: 6px; border: 1px solid var(--cinza-borda); background: var(--cinza-claro); width: 100%; }
         .status-gps { font-size: 12px; font-weight: bold; padding: 10px; border-radius: 6px; margin-bottom: 12px; text-align: center; }
 
-        /* Mapas Responsivos */
+        /* Mapas */
         #map-principal { width: 100%; height: 320px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
         @media (min-width: 992px) { #map-principal { height: 500px; position: sticky; top: 15px; } }
         .secao-descricoes-pontos { background: var(--verde-suave); border-left: 4px solid var(--verde-institucional); border-radius: 4px; padding: 12px; font-size: 12px; color: var(--verde-escuro); margin-top: 10px; }
         .tag-mapa-permanente { background: rgba(0, 135, 68, 0.9); color: white; border: 1px solid white; font-weight: bold; font-size: 10px; padding: 3px 6px; border-radius: 4px; }
         
-        /* Tabelas Responsivas */
+        /* Tabelas */
         .tabela-wrapper { overflow-x: auto; border: 1px solid var(--cinza-borda); border-radius: 8px; background: white; }
         table { width: 100%; border-collapse: collapse; text-align: left; font-size: 13px; min-width: 600px; }
         th, td { padding: 10px 12px; border-bottom: 1px solid var(--cinza-borda); }
@@ -193,7 +194,7 @@
         .linha-clicavel:hover { background-color: #f1f8f5; cursor: pointer; }
         .cientifico-italico { font-style: italic; font-weight: 600; color: #1e7e34;}
 
-        /* Área de Impressão e Placa */
+        /* Impressão */
         .bloco-impressao { border: 1px solid #000; padding: 20px; max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; background: white;}
         .secao-flex-laudo { display: flex; flex-direction: column; gap: 15px; }
         @media (min-width: 480px) { .secao-flex-laudo { flex-direction: row; justify-content: space-between; } }
@@ -209,9 +210,11 @@
         .btn-gps-camera { background-color: #0056b3; margin-bottom: 10px;}
         .btn-gps-camera:hover { background-color: #004085; }
 
-        .preview-foto-capturada { width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; border: 1px dashed var(--cinza-borda); display: none; margin: 10px 0; }
-        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); align-items: center; justify-content: center;}
-        .lightbox img { max-width: 90%; max-height: 90%; border: 2px solid white; }
+        .preview-foto-capturada { width: 100%; max-height: 200px; object-fit: cover; border-radius: 6px; border: 1px dashed var(--cinza-borda); display: none; margin: 10px 0; cursor: pointer; }
+        
+        /* LIGHTBOX DE EXPANSÃO (Abre qualquer foto ao clicar) */
+        .lightbox { display: none; position: fixed; z-index: 9999; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.85); align-items: center; justify-content: center; backdrop-filter: blur(5px); cursor: pointer;}
+        .lightbox img { max-width: 90%; max-height: 85%; border: 3px solid white; border-radius: 4px; box-shadow: 0px 0px 20px rgba(0,0,0,0.5); object-fit: contain; }
 
         @media print {
             body * { visibility: hidden; }
@@ -224,7 +227,7 @@
 <body>
 
 <header>
-    <h1>BIOCATALOG DIGITAL V9.5</h1>
+    <h1>BIOCATALOG DIGITAL V9.6</h1>
     <p>Monitoramento Florestal Multiplataforma — IFPA Campus Itaituba</p>
 </header>
 
@@ -248,10 +251,10 @@
 
                 <div class="carrossel-container">
                     <div class="slides-wrapper">
-                        <div class="meu-slide fade"><img src="Fachada IFPA.jpeg" onerror="tratarErroImagem(this)"><div class="legenda-slide">Fachada IFPA Campus Itaituba</div></div>
-                        <div class="meu-slide fade"><img src="Equipe de Campo.jpeg" onerror="tratarErroImagem(this)"><div class="legenda-slide">Equipe de Campo em Atividade</div></div>
-                        <div class="meu-slide fade"><img src="Entrada do Bosque.jpeg" onerror="tratarErroImagem(this)"><div class="legenda-slide">Entrada do Bosque da Ciência</div></div>
-                        <div class="meu-slide fade"><img src="inicio_da_trilha.jpeg" onerror="tratarErroImagem(this)"><div class="legenda-slide">Início da Trilha de Amostragem</div></div>
+                        <div class="meu-slide fade"><img src="Fachada IFPA.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Fachada IFPA Campus Itaituba</div></div>
+                        <div class="meu-slide fade"><img src="Equipe de Campo.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Equipe de Campo em Atividade</div></div>
+                        <div class="meu-slide fade"><img src="Entrada do Bosque.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Entrada do Bosque da Ciência</div></div>
+                        <div class="meu-slide fade"><img src="inicio_da_trilha.jpeg" onerror="tratarErroImagem(this)" onclick="abrirLightbox(this.src)"><div class="legenda-slide">Início da Trilha de Amostragem</div></div>
                     </div>
                     <a class="anterior" onclick="mudarSlide(-1)">&#10094;</a><a class="proximo" onclick="mudarSlide(1)">&#10095;</a>
                     <div class="pontinhos-container">
@@ -287,7 +290,7 @@
                     <input type="file" id="input-camera-oculto" accept="image/*" capture="environment" style="display:none;" onchange="processarFotoCampo(event)">
 
                     <div id="status-gps-painel" class="status-gps" style="display:none;">Aguardando...</div>
-                    <img id="preview-foto" class="preview-foto-capturada">
+                    <img id="preview-foto" class="preview-foto-capturada" onclick="abrirLightbox(this.src)">
                 </div>
             </div>
 
@@ -384,15 +387,19 @@
     </div>
 </div>
 
-<div id="lightbox" class="lightbox" onclick="this.style.display='none'"><img id="lightbox-img" src=""></div>
+<div id="lightbox" class="lightbox" onclick="fecharLightbox()"><img id="lightbox-img" src=""></div>
 
 <script>
+    // ==========================================
+    // 🌳 INSIRA SUAS ÁRVORES REAIS AQUI ABAIXO 🌳
+    // ==========================================
     const dadosArvores = [
         { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", origem: "Nativa", coord: "-4.220194, -55.999028", fotos: ["Fachada IFPA.jpeg", "Entrada do Bosque.jpeg"] },
-        { id: 2, nome: "Castanheira beira rio", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe de Campo.jpeg", "inicio_da_trilha.jpeg"] },
+        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", origem: "Nativa", coord: "-4.221500, -55.998806", fotos: ["Equipe de Campo.jpeg", "inicio_da_trilha.jpeg"] },
         { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", origem: "Nativa", coord: "-4.220500, -55.999500", fotos: ["Fachada IFPA.jpeg"] },
         { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", origem: "Exótica", coord: "-4.220972, -55.999667", fotos: [] },
         { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", origem: "Nativa", coord: "-4.221222, -55.999111", fotos: [] }
+        // Se você tiver mais registros, basta continuar adicionando seguindo essa mesma estrutura padrão (vírgula no final da linha de cima)
     ];
 
     let mapInicio, camadaMarcadores, qrcode, indiceSlide = 1, fotoTemporariaBase64 = "";
@@ -403,6 +410,19 @@
         mostrarSlides(indiceSlide);
         setInterval(() => mudarSlide(1), 4500);
     });
+
+    // FUNÇÕES DO LIGHTBOX
+    function abrirLightbox(src) {
+        if (!src || src.includes("data:image/svg+xml")) return; // ignora placeholders vazios
+        const lb = document.getElementById('lightbox');
+        const lbImg = document.getElementById('lightbox-img');
+        lbImg.src = src;
+        lb.style.display = 'flex';
+    }
+
+    function fecharLightbox() {
+        document.getElementById('lightbox').style.display = 'none';
+    }
 
     function mudarSlide(n) { mostrarSlides(indiceSlide += n); }
     function slideAtual(n) { mostrarSlides(indiceSlide = n); }
@@ -572,10 +592,7 @@
                 const img = document.createElement('img');
                 img.src = src; img.className = "media-item";
                 img.onerror = function() { tratarErroImagem(this); };
-                img.onclick = () => {
-                    document.getElementById('lightbox-img').src = src;
-                    document.getElementById('lightbox').style.display = 'flex';
-                };
+                img.onclick = () => abrirLightbox(src); // Ativa clique na galeria de laudos
                 midiaContainer.appendChild(img);
             });
         } else {
