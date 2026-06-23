@@ -174,6 +174,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>📍 Captura Georreferenciada</h2>
+                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque no botão para foto/GPS ou <b>clique direto no mapa abaixo</b> para fixar um ponto manualmente.</p>
                     <button class="btn-acao btn-gps-camera" onclick="dispararColetaCampo()">📸 TIRAR FOTO & CAPTURAR GPS</button>
                     <input type="file" id="input-camera" accept="image/*" capture="environment" style="display:none;" onchange="processarFotoDispositivo(event)">
                     <img id="preview-foto" class="preview-foto-capturada" alt="Preview">
@@ -183,7 +184,7 @@
             <div class="secao-card">
                 <h2 id="titulo-formulario">📋 Dados de Inventário</h2>
                 <input type="hidden" id="reg-id" value="">
-                <div class="formulario-grupo"><label>Coordenadas Fixadas:</label><input type="text" id="reg-coords" placeholder="Buscando sinal de satélite..." readonly></div>
+                <div class="formulario-grupo"><label>Coordenadas Fixadas:</label><input type="text" id="reg-coords" placeholder="Aguardando clique no mapa ou sinal de GPS..." readonly></div>
                 <div class="formulario-grupo"><label>Nome Popular:</label><input type="text" id="reg-nome" placeholder="Ex: Sumaúba"></div>
                 <div class="formulario-grupo"><label>Nome Científico:</label><input type="text" id="reg-cientifico" placeholder="Ex: Ceiba pentandra"></div>
                 <div class="formulario-grupo"><label>Família Botânica:</label><input type="text" id="reg-familia" placeholder="Ex: Malvaceae"></div>
@@ -290,6 +291,13 @@
         mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
 
+        // NOVO: Ouvinte de clique para posicionamento manual direto no mapa de cadastro
+        mapaCadastro.on('click', function(e) {
+            const lat = e.latlng.lat.toFixed(5);
+            const lng = e.latlng.lng.toFixed(5);
+            definirCoordenadasFormulario(lat, lng);
+        });
+
         plotarMarcadores();
     }
 
@@ -305,7 +313,21 @@
         });
     }
 
-    // FUNÇÃO QUE CARREGA A ÁRVORE SELECIONADA NO FORMULÁRIO PARA EDIÇÃO
+    // Função unificada para setar o marcador de cadastro e preencher o input
+    function definirCoordenadasFormulario(lat, lng) {
+        document.getElementById('reg-coords').value = `${lat}, ${lng}`;
+        if (marcadorCadastro) {
+            marcadorCadastro.setLatLng([lat, lng]);
+        } else {
+            marcadorCadastro = L.marker([lat, lng], { draggable: true }).addTo(mapaCadastro);
+            marcadorCadastro.on('dragend', function(event) {
+                const marker = event.target;
+                const position = marker.getLatLng();
+                document.getElementById('reg-coords').value = `${position.lat.toFixed(5)}, ${position.lng.toFixed(5)}`;
+            });
+        }
+    }
+
     function editarArvore(id) {
         const arvore = dadosArvores.find(a => a.id == id);
         if (!arvore) return;
@@ -314,21 +336,16 @@
         document.getElementById('reg-nome').value = arvore.nome;
         document.getElementById('reg-cientifico').value = arvore.cientifico;
         document.getElementById('reg-familia').value = arvore.familia;
-        document.getElementById('reg-caract').value = arvore.notas || arvore.notes;
+        document.getElementById('reg-caract').value = arvore.notas;
         document.getElementById('reg-coords').value = arvore.coord;
 
         document.getElementById('titulo-formulario').innerHTML = `✏️ Editando: ${arvore.nome} (ID: ${arvore.id})`;
         document.getElementById('btn-salvar').innerHTML = "💾 SALVAR ALTERAÇÕES";
 
         const coordsArr = arvore.coord.split(', ').map(Number);
-        if (marcadorCadastro) {
-            marcadorCadastro.setLatLng(coordsArr);
-        } else {
-            marcadorCadastro = L.marker(coordsArr, { draggable: true }).addTo(mapaCadastro);
-        }
+        definirCoordenadasFormulario(coordsArr[0], coordsArr[1]);
 
         mudarAba('cadastro');
-        
         setTimeout(() => {
             mapaCadastro.setView(coordsArr, 19);
         }, 300);
@@ -346,7 +363,6 @@
         if (!coords) coords = "-4.22100, -55.99900";
 
         if (idExistente) {
-            // Modo Edição: Atualiza os dados da árvore existente
             const index = dadosArvores.findIndex(a => a.id == idExistente);
             if (index !== -1) {
                 dadosArvores[index].nome = nome;
@@ -357,20 +373,25 @@
                 alert("Registro de árvore atualizado com sucesso!");
             }
         } else {
-            // Modo Novo Cadastro
             const novoId = dadosArvores.length + 1;
             dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coords, notas: carat });
             alert("Novo espécime computado com sucesso!");
         }
         
-        // Reseta o formulário para o modo padrão de novos registros
+        // Reseta o formulário
         document.getElementById('reg-id').value = "";
         document.getElementById('reg-nome').value = "";
         document.getElementById('reg-cientifico').value = "";
         document.getElementById('reg-familia').value = "";
         document.getElementById('reg-caract').value = "";
+        document.getElementById('reg-coords').value = "";
         document.getElementById('titulo-formulario').innerHTML = "📋 Dados de Inventário";
         document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
+        
+        if(marcadorCadastro) {
+            mapaCadastro.removeLayer(marcadorCadastro);
+            marcadorCadastro = null;
+        }
 
         plotarMarcadores();
         atualizarInterface();
@@ -382,7 +403,7 @@
         corpo.innerHTML = ""; seletor.innerHTML = "";
 
         dadosArvores.forEach(a => {
-            corpo.innerHTML += `<tr onclick="editarArvore(${a.id})"><td>${a.id}</td><td>${a.nome}</td><td><i>${a.cientifico}</i></td><td>${a.familia}</td><td>${a.notas || a.notes}</td><td>${a.coord}</td></tr>`;
+            corpo.innerHTML += `<tr onclick="editarArvore(${a.id})"><td>${a.id}</td><td>${a.nome}</td><td><i>${a.cientifico}</i></td><td>${a.familia}</td><td>${a.notas}</td><td>${a.coord}</td></tr>`;
             seletor.innerHTML += `<option value="${a.id}">${a.id}. ${a.nome}</option>`;
         });
         if(dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
@@ -396,7 +417,7 @@
         document.getElementById('ld-cie').textContent = item.cientifico;
         document.getElementById('ld-fam').textContent = item.familia;
         document.getElementById('ld-coord').textContent = item.coord;
-        document.getElementById('ld-notas').textContent = item.notas || item.notes;
+        document.getElementById('ld-notas').textContent = item.notas;
 
         const containerQr = document.getElementById('qrcode');
         containerQr.innerHTML = "";
@@ -455,28 +476,24 @@
             navigator.geolocation.getCurrentPosition(pos => {
                 const lat = pos.coords.latitude.toFixed(5);
                 const lng = pos.coords.longitude.toFixed(5);
-                document.getElementById('reg-coords').value = `${lat}, ${lng}`;
-                
-                if (marcadorCadastro) {
-                    marcadorCadastro.setLatLng([lat, lng]);
-                } else {
-                    marcadorCadastro = L.marker([lat, lng], { draggable: true }).addTo(mapaCadastro);
-                }
+                definirCoordenadasFormulario(lat, lng);
                 mapaCadastro.setView([lat, lng], 19);
             }, () => {
-                document.getElementById('reg-coords').value = "-4.22100, -55.99900";
-            }, { enableHighAccuracy: true });
+                alert("Não foi possível obter a localização via satélite. Por favor, clique diretamente no mapa para marcar o ponto.");
+            }, { enableHighAccuracy: true, timeout: 7000 });
         }
     }
 
     function processarFotoDispositivo(e) {
-        const reader = new FileReader();
-        reader.onload = function() {
-            const preview = document.getElementById('preview-foto');
-            preview.src = reader.result;
-            preview.style.display = 'block';
+        if(e.target.files && e.target.files[0]) {
+            const reader = new FileReader();
+            reader.onload = function() {
+                const preview = document.getElementById('preview-foto');
+                preview.src = reader.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(e.target.files[0]);
         }
-        reader.readAsDataURL(e.target.files[0]);
     }
 
     document.addEventListener('keydown', function(e) {
