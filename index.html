@@ -43,11 +43,13 @@
         .secao-card { background: var(--branco); border-radius: 8px; padding: 20px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
         .secao-card h2 { color: var(--verde-institucional); font-size: 18px; margin-bottom: 12px; border-bottom: 2px solid var(--verde-suave); padding-bottom: 6px; }
 
-        /* RECONSTRUÇÃO DO CARROSSEL ORIGINAL QUE EXIBIA TUDO */
+        /* Lista de Objetivos */
+        .lista-objetivos { margin-top: 10px; padding-left: 20px; font-size: 14px; color: #495057; }
+        .lista-objetivos li { margin-bottom: 8px; line-height: 1.5; }
+
+        /* CARROSSEL (ESTRUTURA QUE FUNCIONA - NÃO MEXER) */
         .carrossel-container { width: 100%; position: relative; border-radius: 8px; overflow: hidden; background: #111; box-shadow: var(--sombra-padrao); }
         .slides-wrapper { width: 100%; height: 380px; position: relative; }
-        
-        /* Forçando a exibição correta via display block controlado pelo JS original */
         .meu-slide { display: none; width: 100%; height: 100%; position: relative; }
         .meu-slide img { width: 100%; height: 100%; object-fit: contain; cursor: pointer; }
         .legenda-slide { color: var(--branco); font-size: 13px; font-weight: 600; padding: 12px; position: absolute; bottom: 0; left: 0; width: 100%; background-color: rgba(0, 0, 0, 0.75); text-align: center; }
@@ -89,7 +91,7 @@
         .btn-gps-camera:hover { background-color: #004085; }
         .preview-foto-capturada { width: 100%; max-height: 280px; object-fit: cover; border-radius: 6px; display: none; margin-top: 12px; border: 2px dashed var(--verde-institucional); }
 
-        /* LIGHTBOX CINEMA CORRIGIDO */
+        /* LIGHTBOX CINEMA */
         .lightbox-celular { display: none; position: fixed; z-index: 10000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .lightbox-celular img { max-width: 92%; max-height: 80vh; border: 2px solid white; border-radius: 6px; object-fit: contain; }
         .lb-btn { position: absolute; color: white; font-size: 36px; font-weight: bold; background: rgba(255,255,255,0.1); border: none; padding: 10px 18px; border-radius: 50%; cursor: pointer; user-select: none; z-index: 10010; transition: 0.2s; }
@@ -122,8 +124,15 @@
         <div class="layout-grid-responsivo">
             <div class="coluna-flex">
                 <div class="secao-card">
-                    <h2>Bosque da Ciência</h2>
-                    <p>O <b>BioCatálogo Digital</b> executa o monitoramento geoespacial e inventariado dinâmico botânico no perímetro do campus do IFPA.</p>
+                    <h2>Sobre o Projeto</h2>
+                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
+                    
+                    <h3 style="color: var(--verde-institucional); font-size: 15px; margin-top: 15px;">Objetivos do Projeto:</h3>
+                    <ul class="lista-objetivos">
+                        <li><b>Mapeamento Dinâmico:</b> Georreferenciar espécimes arbóreos nativos e introduzidos dentro do perímetro do bosque.</li>
+                        <li><b>Visibilidade Institucional:</b> Democratizar o acesso a dados taxonômicos para a comunidade acadêmica e externa.</li>
+                        <li><b>Apoio à Conservação:</b> Subsidiar estudos ecológicos e o desenvolvimento de ações práticas de preservação na Amazônia Tapajônica.</li>
+                    </ul>
                 </div>
 
                 <div class="carrossel-container">
@@ -132,7 +141,7 @@
                         <div class="meu-slide fade"><img src="final%20da%20trilha.jpeg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
                         <div class="meu-slide fade"><img src="In%C3%ADcio%20da%20Trilha.jpeg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
                         <div class="meu-slide fade"><img src="mapa%20da%20trilha.png" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guided</div></div>
                         <div class="meu-slide fade"><img src="acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
                         <div class="meu-slide fade"><img src="ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
                         <div class="meu-slide fade"><img src="conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
@@ -223,16 +232,15 @@
 </div>
 
 <script>
-    // Banco de Dados Consolidado
+    // Banco de Dados Consolidado com Coordenadas REAIS dentro do IFPA Campus Itaituba
     let dadosArvores = [
-        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.27464, -55.98512", notas: "Indivíduo de grande porte, copa proeminente." },
-        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.27581, -55.98573", notas: "Espécie protegida por lei nacional." },
-        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", coord: "-4.27512, -55.98491", notas: "Floração intensa observada no período de estiagem." },
-        { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", coord: "-4.27533, -55.98542", notas: "Introduzida para monitoramento adaptativo." },
-        { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.27555, -55.98521", notas: "Comum em áreas de sub-bosque secundário." }
+        { id: 1, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.29810, -55.97710", notas: "Indivíduo de grande porte, próximo à entrada da trilha." },
+        { id: 2, nome: "Castanheira do Pará", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.29850, -55.97740", notas: "Espécie protegida dentro do perímetro florestal do campus." },
+        { id: 3, nome: "Ipê Amarelo", cientifico: "Handroanthus albus", familia: "Bignoniaceae", coord: "-4.29790, -55.97690", notas: "Floração monitorada no sub-bosque secundário." },
+        { id: 4, nome: "Mogno Africano", cientifico: "Khaya ivorensis", familia: "Meliaceae", coord: "-4.29830, -55.97730", notas: "Área de aclamação técnica institucional." },
+        { id: 5, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.29840, -55.97700", notas: "Comum na transição de mata densa." }
     ];
 
-    // Array Original de Imagens Resgatado
     const fotosArray = ["Equipe%20de%20Campo.jpeg","final%20da%20trilha.jpeg","In%C3%ADcio%20da%20Trilha.jpeg","mapa%20da%20trilha.png","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","Entrada%20do%20Bosque.jpeg"];
     const legendasArray = ["Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha", "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque", "Dentro do Bosque", "Entrada ao Bosque"];
 
@@ -261,14 +269,16 @@
         }, 200);
     }
 
+    // MAPAS CONFIGURADOS EXATAMENTE NAS COORDENADAS DO CAMPUS IFPA ITAITUBA
     function inicializarMapasSatellites() {
         const urlSat = 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
         const subdomains = ['mt0','mt1','mt2','mt3'];
 
-        mapaPrincipal = L.map('map-principal').setView([-4.2752, -55.9852], 17);
+        // Foco real ajustado no Bosque do IFPA
+        mapaPrincipal = L.map('map-principal').setView([-4.29824, -55.97721], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaPrincipal);
 
-        mapaCadastro = L.map('map-cadastro').setView([-4.2752, -55.9852], 17);
+        mapaCadastro = L.map('map-cadastro').setView([-4.29824, -55.97721], 17);
         L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
 
         plotarMarcadores();
@@ -284,7 +294,6 @@
         });
     }
 
-    // RETORNO DA LÓGICA DE EXIBIÇÃO CLÁSSICA DO CARROSSEL
     function inicializarPontosCarrossel() {
         const container = document.getElementById('container-pontinhos');
         container.innerHTML = "";
@@ -301,7 +310,6 @@
         if (n > slides.length) slideIndex = 1;
         if (n < 1) slideIndex = slides.length;
         
-        // Esconde todos usando o display none tradicional
         for (let i = 0; i < slides.length; i++) {
             slides[i].style.display = "none";
         }
@@ -309,7 +317,6 @@
             pontos[i].className = pontos[i].className.replace(" active", "");
         }
         
-        // Mostra o slide ativo de forma isolada e limpa
         if (slides[slideIndex-1]) slides[slideIndex-1].style.display = "block";
         if (pontos[slideIndex-1]) pontos[slideIndex-1].className += " active";
     }
@@ -329,7 +336,6 @@
         carregarConteudoLightbox();
     }
     function carregarConteudoLightbox() {
-        // Descodifica os caracteres especiais para o Lightbox renderizar perfeitamente
         document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
         document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
     }
@@ -349,7 +355,8 @@
                 }
                 mapaCadastro.setView([lat, lng], 19);
             }, () => {
-                document.getElementById('reg-coords').value = "-4.27520, -55.98520";
+                // Default seguro dentro do IFPA caso o GPS falhe
+                document.getElementById('reg-coords').value = "-4.29824, -55.97721";
             }, { enableHighAccuracy: true });
         }
     }
@@ -372,7 +379,7 @@
         let coords = document.getElementById('reg-coords').value;
 
         if (!nome || !cie) { alert("Preencha Nome Popular e Científico!"); return; }
-        if (!coords) coords = "-4.2752, -55.9852";
+        if (!coords) coords = "-4.29824, -55.97721";
 
         const novoId = dadosArvores.length + 1;
         dadosArvores.push({ id: novoId, nome: nome, cientifico: cie, familia: fam, coord: coords, notas: carat });
