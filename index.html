@@ -295,19 +295,20 @@
 
 <script>
     const listaInicialBase = [
-        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, indicada para recuperação de áreas degradadas e proteção do solo.", foto: [] },
-        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa de sub-bosque, antecessora silvestre do cacau comercial, vital para conservação local.", foto: [] },
-        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Frutífera nativa de grande relevância ecológica, com potencial comercial para agroindústrias.", foto: [] },
-        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22110, -55.99890", notas: "Espécie amplamente adaptada, fornecedora de pseudofruto rico em vitamina C e amêndoa de alto valor comercial. (Área de cultivo comum)", foto: [] },
-        { id: 5, nome: "Castanheira (Beira Rio)", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22150, -55.99881", notas: "Espécie protegida por lei. Considerada um gigante da Amazônia, com sementes de alto valor nutritivo e socioeconômico. [Ponto 1 - Beira Rio]", foto: [] },
-        { id: 6, nome: "Castanheira (Ponto 2)", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Espécie protegida por lei. Considerada um gigante da Amazônia, com sementes de alto valor nutritivo e socioeconômico. [Ponto 2]", foto: [] },
-        { id: 7, nome: "Cupuaçu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Frutífera amazônica emblemática, cuja polpa e sementes possuem ampla aplicação culinária e na indústria de cosméticos.", foto: [] },
-        { id: 8, nome: "Embaúba", cientifico: "Cecropia leucomela", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Planta pioneira de crescimento acelerado, fundamental em processos pioneiros de regeneração florestal espontânea.", foto: [] },
-        { id: 9, nome: "Inajá", cientifico: "Maximiliana maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Palmeira nativa de frutos oleaginosos e folhas largamente utilizadas em coberturas e artesanato tradicional.", foto: [] },
-        { id: 10, nome: "Ipê", cientifico: "Handroanthus chrysanthus", familia: "Bignoniaceae", coord: "-4.22120, -55.99920", notas: "Espécie ornamental de madeira densa, com flores de alta expressividade estética e potencial terapêutico. (Área interna do bosque)", foto: [] },
-        { id: 11, nome: "Mangueira", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore exótica amplamente cultivada na região urbana e institucional pela oferta de sombra e frutos.", foto: [] },
-        { id: 12, nome: "Mogno Africano", cientifico: "Khaya senegalensis", familia: "Meliaceae", coord: "-4.22140, -55.99950", notas: "Árvore introduzida de elevado valor comercial madeireiro, utilizada em modelos de reflorestamento produtivo comercial. (Área de transição)", foto: [] },
-        { id: 13, nome: "Sumaúma", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Considerada a 'árvore da vida' ou 'rainha da floresta', possui imenso valor cultural e ecológico na Amazônia, atuando na retenção de água do solo.", foto: [] }
+        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22235, -56.00107", notas: "Árvore de rápido crescimento, amplamente utilizada para recuperação de solos degradados, fixação de nitrogênio e proteção de encostas.", foto: [] },
+        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso. Antecessora silvestre do cacau comercial, possui altíssimo valor para a preservação da biodiversidade genética regional.", foto: [] },
+        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial (polpas, sucos e geleias), além de alimentar a fauna local.", foto: [] },
+        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical. Apresenta pseudofruto rico em Vitamina C e castanha de elevado valor comercial e nutricional no mercado nacional.", foto: [] },
+        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei cuja semente possui extraordinário valor nutricional, comercial e ecológico.", foto: [] },
+        { id: 6, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.23860, -56.00827", notas: "Árvore de rápido crescimento, indicada para recuperação de áreas degradadas e proteção do solo (Ponto de monitoramento secundário).", foto: [] },
+        { id: 7, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22150, -55.99881", notas: "Espécie protegida por lei. Considerada um gigante da Amazônia, com sementes de alto valor nutritivo e socioeconômico. [Ponto 1 - Beira Rio]", foto: [] },
+        { id: 8, nome: "Cupuaçu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Frutífera amazônica emblemática, cuja polpa e sementes possuem ampla aplicação culinária e na indústria de cosméticos.", foto: [] },
+        { id: 9, nome: "Embaúba", cientifico: "Cecropia leucomela", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Planta pioneira de crescimento acelerado, fundamental em processos pioneiros de regeneração florestal espontânea.", foto: [] },
+        { id: 10, nome: "Inajá", cientifico: "Maximiliana maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Palmeira nativa de frutos oleaginosos e folhas largamente utilizadas em coberturas e artesanato tradicional.", foto: [] },
+        { id: 11, nome: "Ipê", cientifico: "Handroanthus chrysanthus", familia: "Bignoniaceae", coord: "-4.22120, -55.99920", notas: "Espécie ornamental de madeira densa, com flores de alta expressividade estética e potencial terapêutico. (Área interna do bosque)", foto: [] },
+        { id: 12, nome: "Mangueira", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore exótica amplamente cultivada na região urbana e institucional pela oferta de sombra e frutos.", foto: [] },
+        { id: 13, nome: "Mogno Africano", cientifico: "Khaya senegalensis", familia: "Meliaceae", coord: "-4.22140, -55.99950", notas: "Árvore introduzida de elevado valor comercial madeireiro, utilizada em modelos de reflorestamento produtivo comercial. (Área de transição)", foto: [] },
+        { id: 14, nome: "Sumaúma", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Considerada a 'árvore da vida' ou 'rainha da floresta', possui imenso valor cultural e ecológico na Amazônia, atuando na retenção de água do solo.", foto: [] }
     ];
 
     let dadosArvores = [];
@@ -630,7 +631,7 @@
 
         const qrContainer = document.getElementById('qrcode');
         qrContainer.innerHTML = '';
-        const urlBusca = `https://www.google.com/maps/search/?api=1&query=${arvore.coord.replace(' ', '')}`;
+        const urlBusca = `https://maps.google.com/?q=${arvore.coord.replace(' ', '')}`;
         new QRCode(qrContainer, {
             text: urlBusca, width: 110, height: 110, colorDark : "#005a2b", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
         });
