@@ -164,7 +164,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>Sobre o Projeto</h2>
-                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
+                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma initiative voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
                     
                     <h3 style="color: var(--verde-institucional); font-size: 15px; margin-top: 15px;">Objetivos do Projeto:</h3>
                     <ul class="lista-objetivos">
@@ -306,7 +306,7 @@
         { id: 9, nome: "Embaúba", cientifico: "Cecropia leucomela", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Planta pioneira de crescimento acelerado, fundamental em processos pioneiros de regeneração florestal espontânea.", foto: [] },
         { id: 10, nome: "Inajá", cientifico: "Maximiliana maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Palmeira nativa de frutos oleaginosos e folhas largamente utilizadas em coberturas e artesanato tradicional.", foto: [] },
         { id: 11, nome: "Ipê", cientifico: "Handroanthus chrysanthus", familia: "Bignoniaceae", coord: "-4.22120, -55.99920", notas: "Espécie ornamental de madeira densa, com flores de alta expressividade estética e potencial terapêutico. (Área interna do bosque)", foto: [] },
-        { id: 12, nome: "Mangueira", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore exótica amplamente cultivada na região urbana e institutional pela oferta de sombra e frutos.", foto: [] },
+        { id: 12, nome: "Mangueira", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore exótica amplamente cultivada na região urbana e institucional pela oferta de sombra e frutos.", foto: [] },
         { id: 13, nome: "Mogno Africano", cientifico: "Khaya senegalensis", familia: "Meliaceae", coord: "-4.22140, -55.99950", notas: "Árvore introduzida de elevado valor comercial madeireiro, utilizada em modelos de reflorestamento produtivo comercial. (Área de transição)", foto: [] },
         { id: 14, nome: "Sumaúma", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Considerada a 'árvore da vida' ou 'rainha da floresta', possui imenso valor cultural e ecológico na Amazônia, atuando na retenção de água do solo.", foto: [] }
     ];
@@ -339,10 +339,12 @@
                 window.onValueFirebase(arvoresRef, (snapshot) => {
                     const dados = snapshot.val();
                     
-                    // LÓGICA AUTOMÁTICA DE CORREÇÃO SENSÍVEL AO TAMANHO DA MATRIZ (IGNORA RESÍDUOS ANTIGOS DO BANCO)
                     if (dados) {
-                        const listaTmp = Object.keys(dados).map(key => dados[key]);
-                        // Se o banco na nuvem tiver menos que as 14 espécies oficiais, ou o ID 14 estiver ausente, força o reset automático
+                        // Converte o objeto e FORÇA a ordenação numérica do ID crescente
+                        const listaTmp = Object.keys(dados)
+                            .map(key => dados[key])
+                            .sort((a, b) => Number(a.id) - Number(b.id));
+
                         const temSumauma = listaTmp.some(a => a.id == 14);
                         if (listaTmp.length < 14 || !temSumauma) {
                             console.log("Detectada assincronia ou dados antigos no Firebase. Forçando sobreposição automática...");
@@ -565,6 +567,9 @@
             };
             dadosArvores.push(novoItem);
         }
+
+        // Garante ordenação também antes de enviar um novo item criado
+        dadosArvores.sort((a, b) => Number(a.id) - Number(b.id));
 
         sincronizarTudoParaFirebase();
         limparFormularioCadastro();
