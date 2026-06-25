@@ -310,8 +310,7 @@
     let lightboxIndex = 0;
     let mapaPrincipal, mapaCadastro, marcadorCadastro;
     let camadaMarcadores;
-    let fotoBase64Temporaria = []; 
-    let qrcodeInstancia = null;
+    let fotoBase64Temporaria = []; // Mudado para Array para armazenar várias mídias
 
     document.addEventListener("DOMContentLoaded", function() {
         inicializarPontosCarrossel();
@@ -421,6 +420,7 @@
         document.getElementById('input-camera').click();
     }
 
+    // Processa múltiplos arquivos e comprime fotos via Canvas
     async function processarMidiaDispositivo(event) {
         const arquivos = event.target.files;
         if (!arquivos || arquivos.length === 0) return;
@@ -485,186 +485,172 @@
 
         const resultados = await Promise.all(promessas);
         fotoBase64Temporaria = resultados.filter(item => item !== null);
-        
-        if (fotoBase64Temporaria.length > 0) {
-            document.getElementById('container-evidencia').style.display = 'block';
-        }
-    }
-
-    function salvarItemArboreto() {
-        const idExistente = document.getElementById('reg-id').value;
-        const coords = document.getElementById('reg-coords').value;
-        const nome = document.getElementById('reg-nome').value;
-        const cientifico = document.getElementById('reg-cientifico').value;
-        const familia = document.getElementById('reg-familia').value;
-        const caract = document.getElementById('reg-caract').value;
-
-        if (!coords || !nome) {
-            alert("Por favor, preencha pelo menos o Nome Popular e defina as Coordenadas no mapa!");
-            return;
-        }
-
-        let novoId = idExistente ? parseInt(idExistente) : (dadosArvores.length > 0 ? Math.max(...dadosArvores.map(a => a.id)) + 1 : 1);
-        
-        let novaArvore = {
-            id: novoId,
-            nome: nome,
-            cientifico: cientifico,
-            familia: familia,
-            coord: coords,
-            notas: caract,
-            foto: fotoBase64Temporaria.length > 0 ? fotoBase64Temporaria : (idExistente ? (dadosArvores.find(a => a.id === novoId)?.foto || []) : [])
-        };
-
-        if (idExistente) {
-            dadosArvores = dadosArvores.map(a => a.id === novoId ? novaArvore : a);
-        } else {
-            dadosArvores.push(novaArvore);
-        }
-
-        sincronizarTudoParaFirebase();
-        limparFormularioCadastro();
-        alert("Registro sincronizado e compilado com sucesso no Firebase!");
-        mudarAba('catalogo');
+        document.getElementById('container-evidencia').style.display = 'block';
     }
 
     function editarArvore(id) {
-        const arvore = dadosArvores.find(a => a.id === id);
+        const arvore = dadosArvores.find(a => a.id == id);
         if (!arvore) return;
 
-        mudarAba('cadastro');
-        document.getElementById('titulo-formulario').innerText = `✏️ Editando Ficha #${arvore.id}`;
         document.getElementById('reg-id').value = arvore.id;
-        document.getElementById('reg-coords').value = arvore.coord;
         document.getElementById('reg-nome').value = arvore.nome;
         document.getElementById('reg-cientifico').value = arvore.cientifico;
         document.getElementById('reg-familia').value = arvore.familia;
-        document.getElementById('reg-caract').value = arvore.notas;
-
+        document.getElementById('reg-caract').value = arvore.notes || arvore.notas;
+        document.getElementById('reg-coords').value = arvore.coord;
+        
+        // Garante que foto seja um array
+        fotoBase64Temporaria = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
+        
         const espacoPreview = document.getElementById('espaco-preview');
         espacoPreview.innerHTML = '';
-        fotoBase64Temporaria = arvore.foto || [];
-
-        if (fotoBase64Temporaria.length > 0) {
-            document.getElementById('container-evidencia').style.display = 'block';
+        
+        if(fotoBase64Temporaria.length > 0) {
             fotoBase64Temporaria.forEach(midia => {
-                let elemento;
                 if(midia.startsWith('data:video/')) {
-                    elemento = document.createElement('video');
-                    elemento.controls = true;
+                    espacoPreview.innerHTML += `<video src="${midia}" class="preview-media-capturada" controls muted loop></video>`;
                 } else {
-                    elemento = document.createElement('img');
+                    espacoPreview.innerHTML += `<img src="${midia}" class="preview-media-capturada">`;
                 }
-                elemento.src = midia;
-                elemento.className = 'preview-media-capturada';
-                espacoPreview.appendChild(elemento);
             });
+            document.getElementById('container-evidencia').style.display = 'block';
         } else {
             document.getElementById('container-evidencia').style.display = 'none';
         }
 
-        if(arvore.coord) {
-            const c = arvore.coord.split(', ').map(Number);
-            definirCoordenadasFormulario(c[0], c[1]);
-            mapaCadastro.setView(c, 19);
+        document.getElementById('titulo-formulario').innerHTML = `✏️ Ficha Técnica: ${arvore.nome} (ID: ${arvore.id})`;
+        document.getElementById('btn-salvar').innerHTML = "💾 SALVAR ALTERAÇÕES NA FICHA";
+
+        const coordsArr = arvore.coord.split(', ').map(Number);
+        definirCoordenadasFormulario(coordsArr[0], coordsArr[1]);
+
+        mudarAba('cadastro');
+        setTimeout(() => { mapaCadastro.setView(coordsArr, 19); }, 300);
+    }
+
+    function salvarItemArboreto() {
+        const idExistente = document.getElementById('reg-id').value;
+        const nome = document.getElementById('reg-nome').value;
+        const cie = document.getElementById('reg-cientifico').value;
+        const fam = document.getElementById('reg-familia').value;
+        const carat = document.getElementById('reg-caract').value;
+        let coords = document.getElementById('reg-coords').value;
+
+        if (!nome || !cie) { alert("Preencha o Nome Popular e o Científico!"); return; }
+        if (!coords) { alert("Por favor, selecione um ponto no mapa ou use o GPS antes de compilar!"); return; }
+
+        if (idExistente) {
+            const index = dadosArvores.findIndex(a => a.id == idExistente);
+            if (index !== -1) {
+                dadosArvores[index].nome = nome;
+                dadosArvores[index].cientifico = cie;
+                dadosArvores[index].familia = fam;
+                dadosArvores[index].notes = carat;
+                dadosArvores[index].notas = carat;
+                dadosArvores[index].coord = coords;
+                dadosArvores[index].foto = fotoBase64Temporaria;
+            }
+        } else {
+            const proximoId = dadosArvores.length > 0 ? Math.max(...dadosArvores.map(a => a.id)) + 1 : 1;
+            dadosArvores.push({
+                id: proximoId,
+                nome: nome,
+                cientifico: cie,
+                familia: fam,
+                coord: coords,
+                notes: carat,
+                notas: carat,
+                foto: fotoBase64Temporaria
+            });
         }
+
+        sincronizarTudoParaFirebase();
+        limparFormularioCadastro();
+        alert("Ficha Botânica compilada com sucesso no Firebase!");
+        mudarAba('catalogo');
     }
 
     function limparFormularioCadastro() {
-        document.getElementById('titulo-formulario').innerText = "📋 Dados de Inventário";
-        document.getElementById('reg-id').value = "";
-        document.getElementById('reg-coords').value = "";
-        document.getElementById('reg-nome').value = "";
-        document.getElementById('reg-cientifico').value = "";
-        document.getElementById('reg-familia').value = "";
-        document.getElementById('reg-caract').value = "";
-        document.getElementById('espaco-preview').innerHTML = "";
+        document.getElementById('reg-id').value = '';
+        document.getElementById('reg-nome').value = '';
+        document.getElementById('reg-cientifico').value = '';
+        document.getElementById('reg-familia').value = '';
+        document.getElementById('reg-caract').value = '';
+        document.getElementById('reg-coords').value = '';
+        document.getElementById('input-camera').value = '';
+        document.getElementById('espaco-preview').innerHTML = '';
         document.getElementById('container-evidencia').style.display = 'none';
         fotoBase64Temporaria = [];
-        if (marcadorCadastro) {
-            mapaCadastro.removeLayer(marcadorCadastro);
-            marcadorCadastro = null;
-        }
+        if (marcadorCadastro) { mapaCadastro.removeLayer(marcadorCadastro); marcadorCadastro = null; }
+        document.getElementById('titulo-formulario').innerHTML = `📋 Dados de Inventário`;
+        document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
     }
 
     function atualizarInterface() {
         const corpo = document.getElementById('corpo-tabela');
-        corpo.innerHTML = '';
-        
         const seletor = document.getElementById('seletor-laudos');
+        
+        if(!corpo || !seletor) return;
+        
+        corpo.innerHTML = '';
         seletor.innerHTML = '';
 
         dadosArvores.forEach(arvore => {
             const tr = document.createElement('tr');
             tr.onclick = () => editarArvore(arvore.id);
-            tr.innerHTML = `
-                <td><b>#${arvore.id}</b></td>
-                <td>${arvore.nome}</td>
-                <td><i>${arvore.cientifico}</i></td>
-                <td>${arvore.familia}</td>
-                <td style="max-width:300px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${arvore.notas}</td>
-                <td><small>${arvore.coord}</small></td>
-            `;
+            tr.innerHTML = `<td>${String(arvore.id).padStart(2,'0')}</td><td><b>${arvore.nome}</b></td><td><i>${arvore.cientifico}</i></td><td>${arvore.familia || '-'}</td><td style="font-size:12px; max-width:400px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${arvore.notes || arvore.notas || '-'}</td><td><code style="font-size:11px;">${arvore.coord}</code></td>`;
             corpo.appendChild(tr);
 
             const opt = document.createElement('option');
             opt.value = arvore.id;
-            opt.innerText = `ID #${arvore.id} - ${arvore.nome}`;
+            opt.textContent = `ID ${String(arvore.id).padStart(2,'0')} - ${arvore.nome} (${arvore.cientifico})`;
             seletor.appendChild(opt);
         });
 
-        if (dadosArvores.length > 0) {
-            atualizarLaudo(dadosArvores[0].id);
-        }
+        if (dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
     }
 
     function atualizarLaudo(id) {
         const arvore = dadosArvores.find(a => a.id == id);
         if (!arvore) return;
 
-        document.getElementById('ld-nome').innerText = arvore.nome;
-        document.getElementById('ld-cie').innerText = arvore.cientifico;
-        document.getElementById('ld-fam').innerText = arvore.familia;
-        document.getElementById('ld-coord').innerText = arvore.coord;
-        document.getElementById('ld-notes').innerText = arvore.notas;
+        document.getElementById('ld-nome').textContent = arvore.nome;
+        document.getElementById('ld-cie').textContent = arvore.cientifico;
+        document.getElementById('ld-fam').textContent = arvore.familia || 'Não informada';
+        document.getElementById('ld-coord').textContent = arvore.coord;
+        document.getElementById('ld-notes').textContent = arvore.notes || arvore.notas || 'Sem observações taxonômicas.';
 
         const containerFoto = document.getElementById('ld-container-foto');
         containerFoto.innerHTML = '';
-
-        if (arvore.foto && arvore.foto.length > 0) {
-            let midia = arvore.foto[0];
-            let elemento;
-            if (midia.startsWith('data:video/')) {
-                elemento = document.createElement('video');
-                elemento.controls = true;
+        
+        const arrayFotos = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
+        
+        if (arrayFotos.length > 0) {
+            // Mostra a primeira evidência no espaço do laudo impresso
+            const primeiraMidia = arrayFotos[0];
+            if (primeiraMidia.startsWith('data:video/')) {
+                containerFoto.innerHTML = `<video src="${primeiraMidia}" autoplay muted loop style="width:100%; height:100%; object-fit:cover;"></video>`;
             } else {
-                elemento = document.createElement('img');
+                containerFoto.innerHTML = `<img src="${primeiraMidia}" style="width:100%; height:100%; object-fit:cover;">`;
             }
-            elemento.src = midia;
-            containerFoto.appendChild(elemento);
         } else {
             containerFoto.innerHTML = '<div class="sem-foto-texto">Sem registro fotográfico</div>';
         }
 
-        const urlQr = `https://biotech-bit.github.io/biobosque/?id=${arvore.id}`;
-        document.getElementById('qrcode').innerHTML = '';
-        qrcodeInstancia = new QRCode(document.getElementById('qrcode'), {
-            text: urlQr,
-            width: 110,
-            height: 110,
-            colorDark : "#005a2b",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
+        const qrDiv = document.getElementById("qrcode");
+        qrDiv.innerHTML = "";
+        const urlMaps = `https://www.google.com/maps/search/?api=1&query=${arvore.coord.replace(' ', '')}`;
+        new QRCode(qrDiv, { text: urlMaps, width: 110, height: 110, correctLevel: QRCode.CorrectLevel.H });
     }
 
     function inicializarPontosCarrossel() {
         const container = document.getElementById('container-pontinhos');
+        if(!container) return;
         container.innerHTML = '';
-        fotosArray.forEach((_, idx) => {
+        fotosArray.forEach((_, index) => {
             const p = document.createElement('span');
             p.className = 'ponto';
-            p.onclick = () => atualSlide(idx + 1);
+            p.onclick = () => atual Slide(index + 1);
             container.appendChild(p);
         });
     }
@@ -673,32 +659,32 @@
     function atualSlide(n) { mostrarSlides(slideIndex = n); }
 
     function mostrarSlides(n) {
-        let i;
-        let slides = document.getElementsByClassName("meu-slide");
-        let pontos = document.getElementsByClassName("ponto");
-        if (slides.length === 0) return;
-        if (n > slides.length) { slideIndex = 1 }
-        if (n < 1) { slideIndex = slides.length }
-        for (i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
-        for (i = 0; i < pontos.length; i++) { pontos[i].className = pontos[i].className.replace(" active", ""); }
-        slides[slideIndex-1].style.display = "block";
-        if(pontos[slideIndex-1]) pontos[slideIndex-1].className += " active";
+        const slides = document.getElementsByClassName("meu-slide");
+        const pontos = document.getElementsByClassName("ponto");
+        if (!slides || slides.length === 0) return;
+        if (n > slides.length) { slideIndex = 1; }
+        if (n < 1) { slideIndex = slides.length; }
+        for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
+        for (let i = 0; i < pontos.length; i++) { pontos[i].className = pontos[i].className.replace(" active", ""); }
+        slides[slideIndex - 1].style.display = "block";
+        if(pontos[slideIndex - 1]) pontos[slideIndex - 1].className += " active";
     }
 
     function abrirLightboxCinema(index) {
         lightboxIndex = index;
-        document.getElementById("lb-modal").style.display = "flex";
-        document.getElementById("lb-img").src = decodeURIComponent(fotosArray[lightboxIndex]);
-        document.getElementById("lb-legenda").innerText = legendasArray[lightboxIndex];
+        document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
+        document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
+        document.getElementById('lb-modal').style.display = "flex";
     }
 
-    function fecharLightboxCinema() { document.getElementById("lb-modal").style.display = "none"; }
+    function fecharLightboxCinema() { document.getElementById('lb-modal').style.display = "none"; }
+    
     function navegarLightbox(n) {
         lightboxIndex += n;
-        if (lightboxIndex >= fotosArray.length) { lightboxIndex = 0; }
-        if (lightboxIndex < 0) { lightboxIndex = fotosArray.length - 1; }
-        document.getElementById("lb-img").src = decodeURIComponent(fotosArray[lightboxIndex]);
-        document.getElementById("lb-legenda").innerText = legendasArray[lightboxIndex];
+        if (lightboxIndex >= fotosArray.length) lightboxIndex = 0;
+        if (lightboxIndex < 0) lightboxIndex = fotosArray.length - 1;
+        document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
+        document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
     }
 </script>
 
