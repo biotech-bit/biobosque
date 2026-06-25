@@ -1,8 +1,3 @@
-Aqui está o código-fonte completo e unificado do sistema **BIOBOSQUE**.
-
-Foram integradas todas as correções de fechamento das funções, a comunicação em tempo real com o seu banco de dados Firebase Realtime, a lógica de geolocalização por GPS, o upload de evidências em Base64, a geração automatizada de placas com QR Code e os ajustes para a impressão limpa de laudos técnicos.
-
-```html
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -96,7 +91,7 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
         .btn-gps-camera:hover { background-color: #004085; }
         
         .container-evidencia { width: 100%; display: none; margin-top: 15px; text-align: center; background: #f8f9fa; padding: 10px; border-radius: 6px; border: 2px dashed var(--verde-institucional); }
-        .preview-media-capturada { width: 100%; max-height: 280px; object-fit: contain; border-radius: 4px; background: #000; }
+        .preview-media-capturada { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; background: #000; margin: 4px; display: inline-block; }
 
         .lightbox-celular { display: none; position: fixed; z-index: 10000; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.95); align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .lightbox-celular img { max-width: 92%; max-height: 80vh; border: 2px solid white; border-radius: 6px; object-fit: contain; }
@@ -224,13 +219,13 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>📍 Captura Georreferenciada</h2>
-                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque abaixo para registrar a evidência ou <b>clique direto no mapa</b> para fixar as coordenadas manuais.</p>
-                    <button class="btn-acao btn-gps-camera" onclick="dispararColetaCampo()">📸 COLETAR EVIDÊNCIA & GPS</button>
+                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque abaixo para registrar as evidências ou <b>clique direto no mapa</b> para fixar as coordenadas manuais.</p>
+                    <button class="btn-acao btn-gps-camera" onclick="dispararColetaCampo()">📸 COLETAR EVIDÊNCIAS (FOTOS/VÍDEOS) & GPS</button>
                     
-                    <input type="file" id="input-camera" accept="image/*,video/*" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none;">
+                    <input type="file" id="input-camera" accept="image/*,video/*" multiple style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none;">
                     
                     <div id="container-evidencia" class="container-evidencia">
-                        <span style="font-size: 11px; font-weight: bold; color: var(--verde-institucional); display: block; margin-bottom: 5px;">✔️ EVIDÊNCIA CARREGADA COM SUCESSO</span>
+                        <span style="font-size: 11px; font-weight: bold; color: var(--verde-institucional); display: block; margin-bottom: 5px;">✔️ EVIDÊNCIAS CARREGADAS COM SUCESSO</span>
                         <div id="espaco-preview"></div>
                     </div>
                 </div>
@@ -300,15 +295,14 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
 
 <script>
     const listaInicialBase = [
-        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, amplamente utilizada para recuperação de solos degradados, fixação de nitrogênio e proteção de encostas.", foto: "" },
-        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso. Antecessora silvestre do cacau comercial, possui altíssimo valor para a preservação da biodiversidade genética regional.", foto: "" },
-        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial (polpas, sucos e geleias), além de alimentar a fauna local.", foto: "" },
-        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical. Apresenta pseudofruto rico em Vitamina C e castanha de elevado valor comercial e nutricional no mercado nacional.", foto: "" },
-        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei cuja semente possui extraordinário valor nutricional, comercial e ecológico.", foto: "" }
+        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, utilizada para recuperação de solos degradados.", foto: [] },
+        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso, antecessora silvestre do cacau comercial.", foto: [] },
+        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial.", foto: [] },
+        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical com pseudofruto rico em Vitamina C.", foto: [] },
+        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei.", foto: [] }
     ];
 
     let dadosArvores = [];
-
     const fotosArray = ["Equipe%20de%20Campo.jpeg","final%20da%20trilha.jpeg","In%C3%ADcio%20da%20Trilha.jpeg","mapa%20da%20trilha.png","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","Entrada%20do%20Bosque.jpeg"];
     const legendasArray = ["Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha", "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque", "Dentro do Bosque", "Entrada ao Bosque"];
 
@@ -316,7 +310,7 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
     let lightboxIndex = 0;
     let mapaPrincipal, mapaCadastro, marcadorCadastro;
     let camadaMarcadores;
-    let fotoBase64Temporaria = "";
+    let fotoBase64Temporaria = []; // Mudado para Array para armazenar várias mídias
 
     document.addEventListener("DOMContentLoaded", function() {
         inicializarPontosCarrossel();
@@ -332,7 +326,6 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
         const checarConexao = setInterval(() => {
             if (window.dbFirebase && window.refFirebase && window.onValueFirebase) {
                 clearInterval(checarConexao);
-                
                 const arvoresRef = window.refFirebase(window.dbFirebase, 'arvores');
                 window.onValueFirebase(arvoresRef, (snapshot) => {
                     const dados = snapshot.val();
@@ -415,6 +408,86 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
         }
     }
 
+    function dispararColetaCampo() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(position => {
+                const lat = position.coords.latitude.toFixed(5);
+                const lng = position.coords.longitude.toFixed(5);
+                definirCoordenadasFormulario(lat, lng);
+                mapaCadastro.setView([lat, lng], 19);
+            }, () => { alert("Não foi possível capturar o GPS automático. Selecione o ponto clicando no mapa."); });
+        }
+        document.getElementById('input-camera').click();
+    }
+
+    // Processa múltiplos arquivos e comprime fotos via Canvas
+    async function processarMidiaDispositivo(event) {
+        const arquivos = event.target.files;
+        if (!arquivos || arquivos.length === 0) return;
+
+        const espacoPreview = document.getElementById('espaco-preview');
+        espacoPreview.innerHTML = '';
+        fotoBase64Temporaria = [];
+
+        const promessas = Array.from(arquivos).map(file => {
+            return new Promise((resolve) => {
+                const reader = new FileReader();
+                
+                if (file.type.startsWith('image/')) {
+                    reader.readAsDataURL(file);
+                    reader.onload = (e) => {
+                        const img = new Image();
+                        img.src = e.target.result;
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            const ctx = canvas.getContext('2d');
+                            const MAX_WIDTH = 800;
+                            let width = img.width;
+                            let height = img.height;
+                            
+                            if (width > MAX_WIDTH) {
+                                height *= MAX_WIDTH / width;
+                                width = MAX_WIDTH;
+                            }
+                            canvas.width = width;
+                            canvas.height = height;
+                            ctx.drawImage(img, 0, 0, width, height);
+                            
+                            const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                            
+                            const previewImg = document.createElement('img');
+                            previewImg.src = dataUrl;
+                            previewImg.className = 'preview-media-capturada';
+                            espacoPreview.appendChild(previewImg);
+                            
+                            resolve(dataUrl);
+                        };
+                    };
+                } else if (file.type.startsWith('video/')) {
+                    reader.readAsDataURL(file);
+                    reader.onload = (e) => {
+                        const dataUrl = e.target.result;
+                        
+                        const previewVideo = document.createElement('video');
+                        previewVideo.src = dataUrl;
+                        previewVideo.className = 'preview-media-capturada';
+                        previewVideo.controls = true;
+                        previewVideo.muted = true;
+                        espacoPreview.appendChild(previewVideo);
+                        
+                        resolve(dataUrl);
+                    };
+                } else {
+                    resolve(null);
+                }
+            });
+        });
+
+        const resultados = await Promise.all(promessas);
+        fotoBase64Temporaria = resultados.filter(item => item !== null);
+        document.getElementById('container-evidencia').style.display = 'block';
+    }
+
     function editarArvore(id) {
         const arvore = dadosArvores.find(a => a.id == id);
         if (!arvore) return;
@@ -423,21 +496,26 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
         document.getElementById('reg-nome').value = arvore.nome;
         document.getElementById('reg-cientifico').value = arvore.cientifico;
         document.getElementById('reg-familia').value = arvore.familia;
-        document.getElementById('reg-caract').value = arvore.notas || arvore.notas;
+        document.getElementById('reg-caract').value = arvore.notes || arvore.notas;
         document.getElementById('reg-coords').value = arvore.coord;
         
-        fotoBase64Temporaria = arvore.foto || "";
+        // Garante que foto seja um array
+        fotoBase64Temporaria = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
+        
         const espacoPreview = document.getElementById('espaco-preview');
-        if(fotoBase64Temporaria) {
-            if(fotoBase64Temporaria.startsWith('data:video/')) {
-                espacoPreview.innerHTML = `<video src="${fotoBase64Temporaria}" class="preview-media-capturada" controls muted loop></video>`;
-            } else {
-                espacoPreview.innerHTML = `<img src="${fotoBase64Temporaria}" class="preview-media-capturada">`;
-            }
+        espacoPreview.innerHTML = '';
+        
+        if(fotoBase64Temporaria.length > 0) {
+            fotoBase64Temporaria.forEach(midia => {
+                if(midia.startsWith('data:video/')) {
+                    espacoPreview.innerHTML += `<video src="${midia}" class="preview-media-capturada" controls muted loop></video>`;
+                } else {
+                    espacoPreview.innerHTML += `<img src="${midia}" class="preview-media-capturada">`;
+                }
+            });
             document.getElementById('container-evidencia').style.display = 'block';
         } else {
             document.getElementById('container-evidencia').style.display = 'none';
-            espacoPreview.innerHTML = '';
         }
 
         document.getElementById('titulo-formulario').innerHTML = `✏️ Ficha Técnica: ${arvore.nome} (ID: ${arvore.id})`;
@@ -447,9 +525,7 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
         definirCoordenadasFormulario(coordsArr[0], coordsArr[1]);
 
         mudarAba('cadastro');
-        setTimeout(() => {
-            mapaCadastro.setView(coordsArr, 19);
-        }, 300);
+        setTimeout(() => { mapaCadastro.setView(coordsArr, 19); }, 300);
     }
 
     function salvarItemArboreto() {
@@ -469,208 +545,148 @@ Foram integradas todas as correções de fechamento das funções, a comunicaç�
                 dadosArvores[index].nome = nome;
                 dadosArvores[index].cientifico = cie;
                 dadosArvores[index].familia = fam;
+                dadosArvores[index].notes = carat;
                 dadosArvores[index].notas = carat;
                 dadosArvores[index].coord = coords;
                 dadosArvores[index].foto = fotoBase64Temporaria;
             }
         } else {
-            const novoId = dadosArvores.length > 0 ? Math.max(...dadosArvores.map(a => a.id)) + 1 : 1;
-            const novoItem = {
-                id: novoId,
+            const proximoId = dadosArvores.length > 0 ? Math.max(...dadosArvores.map(a => a.id)) + 1 : 1;
+            dadosArvores.push({
+                id: proximoId,
                 nome: nome,
                 cientifico: cie,
                 familia: fam,
-                notas: carat,
                 coord: coords,
+                notes: carat,
+                notas: carat,
                 foto: fotoBase64Temporaria
-            };
-            dadosArvores.push(novoItem);
+            });
         }
 
         sincronizarTudoParaFirebase();
         limparFormularioCadastro();
-        alert("Registro processado e sincronizado com sucesso na nuvem!");
+        alert("Ficha Botânica compilada com sucesso no Firebase!");
         mudarAba('catalogo');
     }
 
     function limparFormularioCadastro() {
-        document.getElementById('reg-id').value = "";
-        document.getElementById('reg-nome').value = "";
-        document.getElementById('reg-cientifico').value = "";
-        document.getElementById('reg-familia').value = "";
-        document.getElementById('reg-caract').value = "";
-        document.getElementById('reg-coords').value = "";
-        fotoBase64Temporaria = "";
-        document.getElementById('container-evidencia').style.display = 'none';
+        document.getElementById('reg-id').value = '';
+        document.getElementById('reg-nome').value = '';
+        document.getElementById('reg-cientifico').value = '';
+        document.getElementById('reg-familia').value = '';
+        document.getElementById('reg-caract').value = '';
+        document.getElementById('reg-coords').value = '';
+        document.getElementById('input-camera').value = '';
         document.getElementById('espaco-preview').innerHTML = '';
-        document.getElementById('titulo-formulario').innerHTML = "📋 Dados de Inventário";
+        document.getElementById('container-evidencia').style.display = 'none';
+        fotoBase64Temporaria = [];
+        if (marcadorCadastro) { mapaCadastro.removeLayer(marcadorCadastro); marcadorCadastro = null; }
+        document.getElementById('titulo-formulario').innerHTML = `📋 Dados de Inventário`;
         document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
-        if (marcadorCadastro) {
-            mapaCadastro.removeLayer(marcadorCadastro);
-            marcadorCadastro = null;
-        }
     }
 
     function atualizarInterface() {
-        const corpoTabela = document.getElementById('corpo-tabela');
+        const corpo = document.getElementById('corpo-tabela');
         const seletor = document.getElementById('seletor-laudos');
         
-        if (!corpoTabela) return;
+        if(!corpo || !seletor) return;
         
-        corpoTabela.innerHTML = '';
-        let opcoesSeletor = '';
+        corpo.innerHTML = '';
+        seletor.innerHTML = '';
 
         dadosArvores.forEach(arvore => {
-            const linha = document.createElement('tr');
-            linha.onclick = () => editarArvore(arvore.id);
-            linha.innerHTML = `
-                <td><b>${arvore.id}</b></td>
-                <td>${arvore.nome}</td>
-                <td style="font-style: italic;">${arvore.cientifico}</td>
-                <td>${arvore.familia}</td>
-                <td>${arvore.notas || arvore.notas}</td>
-                <td><small>${arvore.coord}</small></td>
-            `;
-            corpoTabela.appendChild(linha);
+            const tr = document.createElement('tr');
+            tr.onclick = () => editarArvore(arvore.id);
+            tr.innerHTML = `<td>${String(arvore.id).padStart(2,'0')}</td><td><b>${arvore.nome}</b></td><td><i>${arvore.cientifico}</i></td><td>${arvore.familia || '-'}</td><td style="font-size:12px; max-width:400px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${arvore.notes || arvore.notas || '-'}</td><td><code style="font-size:11px;">${arvore.coord}</code></td>`;
+            corpo.appendChild(tr);
 
-            opcoesSeletor += `<option value="${arvore.id}">${arvore.nome} [${arvore.cientifico}]</option>`;
+            const opt = document.createElement('option');
+            opt.value = arvore.id;
+            opt.textContent = `ID ${String(arvore.id).padStart(2,'0')} - ${arvore.nome} (${arvore.cientifico})`;
+            seletor.appendChild(opt);
         });
 
-        if (seletor) {
-            seletor.innerHTML = opcoesSeletor;
-            if (dadosArvores.length > 0) {
-                atualizarLaudo(dadosArvores[0].id);
-            }
-        }
+        if (dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
     }
 
     function atualizarLaudo(id) {
         const arvore = dadosArvores.find(a => a.id == id);
         if (!arvore) return;
 
-        document.getElementById('ld-nome').innerText = arvore.nome;
-        document.getElementById('ld-cie').innerText = arvore.cientifico;
-        document.getElementById('ld-fam').innerText = arvore.familia;
-        document.getElementById('ld-coord').innerText = arvore.coord;
-        document.getElementById('ld-notes').innerText = arvore.notas || arvore.notas;
+        document.getElementById('ld-nome').textContent = arvore.nome;
+        document.getElementById('ld-cie').textContent = arvore.cientifico;
+        document.getElementById('ld-fam').textContent = arvore.familia || 'Não informada';
+        document.getElementById('ld-coord').textContent = arvore.coord;
+        document.getElementById('ld-notes').textContent = arvore.notes || arvore.notas || 'Sem observações taxonômicas.';
 
         const containerFoto = document.getElementById('ld-container-foto');
-        if (arvore.foto) {
-            if (arvore.foto.startsWith('data:video/')) {
-                containerFoto.innerHTML = `<video src="${arvore.foto}" style="width:100%; height:100%; object-fit:cover;" autoplay muted loop></video>`;
+        containerFoto.innerHTML = '';
+        
+        const arrayFotos = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
+        
+        if (arrayFotos.length > 0) {
+            // Mostra a primeira evidência no espaço do laudo impresso
+            const primeiraMidia = arrayFotos[0];
+            if (primeiraMidia.startsWith('data:video/')) {
+                containerFoto.innerHTML = `<video src="${primeiraMidia}" autoplay muted loop style="width:100%; height:100%; object-fit:cover;"></video>`;
             } else {
-                containerFoto.innerHTML = `<img src="${arvore.foto}" style="width:100%; height:100%; object-fit:cover;">`;
+                containerFoto.innerHTML = `<img src="${primeiraMidia}" style="width:100%; height:100%; object-fit:cover;">`;
             }
         } else {
-            containerFoto.innerHTML = `<div class="sem-foto-texto">Sem registro fotográfico</div>`;
+            containerFoto.innerHTML = '<div class="sem-foto-texto">Sem registro fotográfico</div>';
         }
 
-        const qrContainer = document.getElementById('qrcode');
-        qrContainer.innerHTML = '';
-        const urlBusca = `https://maps.google.com/?q=${arvore.coord.replace(' ', '')}`;
-        new QRCode(qrContainer, {
-            text: urlBusca,
-            width: 110,
-            height: 110,
-            colorDark : "#005a2b",
-            colorLight : "#ffffff",
-            correctLevel : QRCode.CorrectLevel.H
-        });
+        const qrDiv = document.getElementById("qrcode");
+        qrDiv.innerHTML = "";
+        const urlMaps = `https://www.google.com/maps/search/?api=1&query=${arvore.coord.replace(' ', '')}`;
+        new QRCode(qrDiv, { text: urlMaps, width: 110, height: 110, correctLevel: QRCode.CorrectLevel.H });
     }
 
     function inicializarPontosCarrossel() {
         const container = document.getElementById('container-pontinhos');
-        if (!container) return;
+        if(!container) return;
         container.innerHTML = '';
         fotosArray.forEach((_, index) => {
-            const ponto = document.createElement('span');
-            ponto.className = 'ponto';
-            ponto.onclick = () => currentSlide(index + 1);
-            container.appendChild(ponto);
+            const p = document.createElement('span');
+            p.className = 'ponto';
+            p.onclick = () => atual Slide(index + 1);
+            container.appendChild(p);
         });
     }
 
     function mudarSlide(n) { mostrarSlides(slideIndex += n); }
-    function currentSlide(n) { mostrarSlides(slideIndex = n); }
+    function atualSlide(n) { mostrarSlides(slideIndex = n); }
 
     function mostrarSlides(n) {
         const slides = document.getElementsByClassName("meu-slide");
         const pontos = document.getElementsByClassName("ponto");
-        if (!slides.length) return;
+        if (!slides || slides.length === 0) return;
         if (n > slides.length) { slideIndex = 1; }
         if (n < 1) { slideIndex = slides.length; }
         for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
         for (let i = 0; i < pontos.length; i++) { pontos[i].className = pontos[i].className.replace(" active", ""); }
         slides[slideIndex - 1].style.display = "block";
-        if (pontos[slideIndex - 1]) pontos[slideIndex - 1].className += " active";
+        if(pontos[slideIndex - 1]) pontos[slideIndex - 1].className += " active";
     }
 
     function abrirLightboxCinema(index) {
         lightboxIndex = index;
-        document.getElementById('lb-img').src = fotosArray[lightboxIndex];
-        document.getElementById('lb-legenda').innerText = legendasArray[lightboxIndex];
+        document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
+        document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
         document.getElementById('lb-modal').style.display = "flex";
     }
 
     function fecharLightboxCinema() { document.getElementById('lb-modal').style.display = "none"; }
+    
     function navegarLightbox(n) {
         lightboxIndex += n;
         if (lightboxIndex >= fotosArray.length) lightboxIndex = 0;
         if (lightboxIndex < 0) lightboxIndex = fotosArray.length - 1;
-        document.getElementById('lb-img').src = fotosArray[lightboxIndex];
-        document.getElementById('lb-legenda').innerText = legendasArray[lightboxIndex];
+        document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
+        document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
     }
-
-    function dispararColetaCampo() {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const lat = position.coords.latitude.toFixed(5);
-                    const lng = position.coords.longitude.toFixed(5);
-                    definirCoordenadasFormulario(lat, lng);
-                    mapaCadastro.setView([lat, lng], 19);
-                    document.getElementById('input-camera').click();
-                },
-                (error) => {
-                    alert("Erro ao obter GPS. Por favor, marque o ponto diretamente clicando no mapa.");
-                    document.getElementById('input-camera').click();
-                },
-                { enableHighAccuracy: true, timeout: 10000 }
-            );
-        } else {
-            document.getElementById('input-camera').click();
-        }
-    }
-
-    function processarMidiaDispositivo(e) {
-        const arquivo = e.target.files[0];
-        if (!arquivo) return;
-
-        const leitor = new FileReader();
-        leitor.onload = function(event) {
-            fotoBase64Temporaria = event.target.result;
-            const espacoPreview = document.getElementById('espaco-preview');
-            
-            if (arquivo.type.startsWith('video/')) {
-                espacoPreview.innerHTML = `<video src="${fotoBase64Temporaria}" class="preview-media-capturada" controls muted loop></video>`;
-            } else {
-                espacoPreview.innerHTML = `<img src="${fotoBase64Temporaria}" class="preview-media-capturada">`;
-            }
-            document.getElementById('container-evidencia').style.display = 'block';
-        };
-        leitor.readAsDataURL(arquivo);
-    }
-
-    window.mudarAba = mudarAba;
-    window.mudarSlide = mudarSlide;
-    window.abrirLightboxCinema = abrirLightboxCinema;
-    window.fecharLightboxCinema = fecharLightboxCinema;
-    window.navegarLightbox = navegarLightbox;
-    window.dispararColetaCampo = dispararColetaCampo;
-    window.salvarItemArboreto = salvarItemArboreto;
-    window.atualizarLaudo = atualizarLaudo;
 </script>
+
 </body>
 </html>
-
-```
