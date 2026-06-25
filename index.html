@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BioBosque Catalogdigital - IFPA Campus Itaituba</title>
+    <title>BIOBOSQUE - IFPA Campus Itaituba</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -23,8 +23,8 @@
         * { box-sizing: border-box; margin: 0; padding: 0; }
         body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background-color: #f1f3f5; color: var(--texto-escuro); min-height: 100vh; display: flex; flex-direction: column; }
         header { background: linear-gradient(135deg, var(--verde-institucional), var(--verde-escuro)); color: var(--branco); text-align: center; padding: 15px 20px; box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
-        header h1 { font-size: 22px; font-weight: 700; }
-        header p { font-size: 13px; opacity: 0.9; margin-top: 2px; }
+        header h1 { font-size: 24px; font-weight: 700; letter-spacing: 1px; }
+        header p { font-size: 14px; opacity: 0.9; margin-top: 4px; }
 
         .container { flex: 1; padding: 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
         
@@ -62,12 +62,17 @@
 
         .canais-comunidade { margin-top: 20px; background: #fff; padding: 20px; border-radius: 8px; box-shadow: var(--sombra-padrao); text-align: center; }
         .botoes-canais { display: flex; gap: 15px; margin-top: 12px; flex-wrap: wrap; }
-        .btn-canal { flex: 1; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; text-align: center; min-width: 120px; }
+        .btn-canal { flex: 1; padding: 12px; border-radius: 6px; text-decoration: none; color: white; font-weight: bold; font-size: 14px; text-align: center; min-width: 120px; transition: opacity 0.2s; }
+        .btn-canal:hover { opacity: 0.9; }
         .btn-portal { background-color: #008744; }
         .btn-web { background-color: #005a2b; }
         .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
+        .btn-ifpa { background-color: #1b4d3e; border: 1px solid #2e7d32; }
 
         #map-principal, #map-cadastro { width: 100%; height: 470px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); background-color: #e5e3df; }
+
+        .secao-preservacao { background-color: #f1f8e9; border-left: 5px solid #558b2f; padding: 15px; border-radius: 4px; font-size: 14px; line-height: 1.6; color: #2e7d32; box-shadow: var(--sombra-padrao); }
+        .secao-preservacao h3 { font-size: 16px; margin-bottom: 8px; color: #33691e; display: flex; align-items: center; gap: 6px; }
 
         .formulario-grupo { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
         .formulario-grupo label { font-size: 14px; font-weight: 600; color: #333; }
@@ -108,7 +113,7 @@
 
         @media print {
             body { background: white; color: black; }
-            header, .abas-menu, .btn-acao, #map-principal, #map-cadastro, .canais-comunidade, .carrossel-container, .secao-card h2, #titulo-formulario, .formulario-grupo, #btn-salvar, table th { display: none !important; }
+            header, .abas-menu, .btn-acao, #map-principal, #map-cadastro, .canais-comunidade, .carrossel-container, .secao-card h2, #titulo-formulario, .formulario-grupo, #btn-salvar, table th, .secao-preservacao { display: none !important; }
             .container { padding: 0; margin: 0; }
             .conteudo-aba { display: none !important; }
             #emissao { display: block !important; }
@@ -120,7 +125,7 @@
 
 <header>
     <h1>BIOBOSQUE</h1>
-    <p>Monitoramento Florestal e de Educaçao Ambiental — Bosque do IFPA Campus Itaituba</p>
+    <p>Monitoramento Florestal e de Educação Ambiental — Bosque do IFPA Campus Itaituba</p>
 </header>
 
 <div class="container">
@@ -136,7 +141,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>Sobre o Projeto</h2>
-                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
+                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma initiative voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
                     
                     <h3 style="color: var(--verde-institucional); font-size: 15px; margin-top: 15px;">Objetivos do Projeto:</h3>
                     <ul class="lista-objetivos">
@@ -163,8 +168,15 @@
                     <div class="pontinhos-container" id="container-pontinhos"></div>
                 </div>
             </div>
+            
             <div class="coluna-flex">
                 <div id="map-principal"></div>
+                
+                <div class="secao-preservacao">
+                    <h3>🌱 Preservação e Sustentabilidade no Bosque</h3>
+                    <p>O Bosque da Ciência do IFPA Campus Itaituba configura-se como um fragmento florestal urbano de vital importância para a microregião do Tapajós. A sua preservação e o monitoramento sistemático de suas espécies arbóreas atuam diretamente na manutenção de microclimas locais, proteção do solo contra erosões hídricas e abrigo para a avifauna regional.</p>
+                    <p style="margin-top: 8px;"><b>Compromisso Ecológico:</b> Mais do que um laboratório vivo para estudos biológicos e taxonômicos, salvaguardar este patrimônio natural fortalece a educação ambiental comunitária, mitigando os impactos da fragmentação de habitats e promovendo o desenvolvimento sustentável na Amazônia.</p>
+                </div>
             </div>
         </div>
         
@@ -173,7 +185,8 @@
             <div class="botoes-canais">
                 <a href="https://itaituba.ifpa.edu.br" target="_blank" class="btn-canal btn-portal">PORTAL</a>
                 <a href="https://biotech-bit.github.io/biobosque/" target="_blank" class="btn-canal btn-web">WEB</a>
-                <a href="https://www.instagram.com/biobosque_22" target="_blank" class="btn-canal btn-instagram">INSTAGRAM</a>
+                <a href="https://www.instagram.com/biobosque_22" target="_blank" class="btn-canal btn-instagram">INSTAGRAM PROJETO</a>
+                <a href="https://www.instagram.com/ifpaitaitubaoficial" target="_blank" class="btn-canal btn-instagram btn-ifpa">INSTAGRAM IFPA CAMPUS</a>
             </div>
         </div>
     </div>
@@ -304,7 +317,6 @@
         }, 200);
     }
 
-    // MODIFICAÇÃO OFFLINE: Verifica conexão e carrega mapa alternativo se offline
     function inicializarMapasSatellites() {
         mapaPrincipal = L.map('map-principal').setView([-4.22100, -55.99900], 17);
         mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
@@ -315,7 +327,6 @@
             L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaPrincipal);
             L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
         } else {
-            // Modo offline robusto: Exibe apenas o grid numérico de apoio para evitar erros de rede
             L.tileLayer('', { maxZoom: 20, attribution: 'Modo Offline Ativo — Grid de Coleta' }).addTo(mapaPrincipal);
             L.tileLayer('', { maxZoom: 20, attribution: 'Modo Offline Ativo — Grid de Coleta' }).addTo(mapaCadastro);
         }
