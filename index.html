@@ -295,11 +295,19 @@
 
 <script>
     const listaInicialBase = [
-        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, utilizada para recuperação de solos degradados.", foto: [] },
-        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso, antecessora silvestre do cacau comercial.", foto: [] },
-        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial.", foto: [] },
-        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical com pseudofruto rico em Vitamina C.", foto: [] },
-        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei.", foto: [] }
+        { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, indicada para recuperação de áreas degradadas e proteção do solo.", foto: [] },
+        { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa de sub-bosque, antecessora silvestre do cacau comercial, vital para conservação local.", foto: [] },
+        { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Frutífera nativa de grande relevância ecológica, com potencial comercial para agroindústrias.", foto: [] },
+        { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22110, -55.99890", notas: "Espécie amplamente adaptada, fornecedora de pseudofruto rico em vitamina C e amêndoa de alto valor comercial. (Área de cultivo comum)", foto: [] },
+        { id: 5, nome: "Castanheira (Beira Rio)", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22150, -55.99881", notas: "Espécie protegida por lei. Considerada um gigante da Amazônia, com sementes de alto valor nutritivo e socioeconômico. [Ponto 1 - Beira Rio]", foto: [] },
+        { id: 6, nome: "Castanheira (Ponto 2)", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Espécie protegida por lei. Considerada um gigante da Amazônia, com sementes de alto valor nutritivo e socioeconômico. [Ponto 2]", foto: [] },
+        { id: 7, nome: "Cupuaçu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Frutífera amazônica emblemática, cuja polpa e sementes possuem ampla aplicação culinária e na indústria de cosméticos.", foto: [] },
+        { id: 8, nome: "Embaúba", cientifico: "Cecropia leucomela", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Planta pioneira de crescimento acelerado, fundamental em processos pioneiros de regeneração florestal espontânea.", foto: [] },
+        { id: 9, nome: "Inajá", cientifico: "Maximiliana maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Palmeira nativa de frutos oleaginosos e folhas largamente utilizadas em coberturas e artesanato tradicional.", foto: [] },
+        { id: 10, nome: "Ipê", cientifico: "Handroanthus chrysanthus", familia: "Bignoniaceae", coord: "-4.22120, -55.99920", notas: "Espécie ornamental de madeira densa, com flores de alta expressividade estética e potencial terapêutico. (Área interna do bosque)", foto: [] },
+        { id: 11, nome: "Mangueira", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore exótica amplamente cultivada na região urbana e institucional pela oferta de sombra e frutos.", foto: [] },
+        { id: 12, nome: "Mogno Africano", cientifico: "Khaya senegalensis", familia: "Meliaceae", coord: "-4.22140, -55.99950", notas: "Árvore introduzida de elevado valor comercial madeireiro, utilizada em modelos de reflorestamento produtivo comercial. (Área de transição)", foto: [] },
+        { id: 13, nome: "Sumaúma", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Considerada a 'árvore da vida' ou 'rainha da floresta', possui imenso valor cultural e ecológico na Amazônia, atuando na retenção de água do solo.", foto: [] }
     ];
 
     let dadosArvores = [];
@@ -310,7 +318,7 @@
     let lightboxIndex = 0;
     let mapaPrincipal, mapaCadastro, marcadorCadastro;
     let camadaMarcadores;
-    let fotoBase64Temporaria = []; // Mudado para Array para armazenar várias mídias
+    let fotoBase64Temporaria = [];
 
     document.addEventListener("DOMContentLoaded", function() {
         inicializarPontosCarrossel();
@@ -420,7 +428,6 @@
         document.getElementById('input-camera').click();
     }
 
-    // Processa múltiplos arquivos e comprime fotos via Canvas
     async function processarMidiaDispositivo(event) {
         const arquivos = event.target.files;
         if (!arquivos || arquivos.length === 0) return;
@@ -440,51 +447,43 @@
                         img.src = e.target.result;
                         img.onload = () => {
                             const canvas = document.createElement('canvas');
+                            const MAX_WIDTH = 600;
+                            const scale = MAX_WIDTH / img.width;
+                            canvas.width = MAX_WIDTH;
+                            canvas.height = img.height * scale;
+                            
                             const ctx = canvas.getContext('2d');
-                            const MAX_WIDTH = 800;
-                            let width = img.width;
-                            let height = img.height;
+                            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
                             
-                            if (width > MAX_WIDTH) {
-                                height *= MAX_WIDTH / width;
-                                width = MAX_WIDTH;
-                            }
-                            canvas.width = width;
-                            canvas.height = height;
-                            ctx.drawImage(img, 0, 0, width, height);
+                            const base64Comprimida = canvas.toDataURL('image/jpeg', 0.7);
+                            fotoBase64Temporaria.push(base64Comprimida);
                             
-                            const dataUrl = canvas.toDataURL('image/jpeg', 0.6);
-                            
-                            const previewImg = document.createElement('img');
-                            previewImg.src = dataUrl;
-                            previewImg.className = 'preview-media-capturada';
-                            espacoPreview.appendChild(previewImg);
-                            
-                            resolve(dataUrl);
+                            const preview = document.createElement('img');
+                            preview.src = base64Comprimida;
+                            preview.className = 'preview-media-capturada';
+                            espacoPreview.appendChild(preview);
+                            resolve();
                         };
                     };
                 } else if (file.type.startsWith('video/')) {
                     reader.readAsDataURL(file);
                     reader.onload = (e) => {
-                        const dataUrl = e.target.result;
-                        
-                        const previewVideo = document.createElement('video');
-                        previewVideo.src = dataUrl;
-                        previewVideo.className = 'preview-media-capturada';
-                        previewVideo.controls = true;
-                        previewVideo.muted = true;
-                        espacoPreview.appendChild(previewVideo);
-                        
-                        resolve(dataUrl);
+                        fotoBase64Temporaria.push(e.target.result);
+                        const preview = document.createElement('video');
+                        preview.src = e.target.result;
+                        preview.className = 'preview-media-capturada';
+                        preview.controls = true;
+                        preview.muted = true;
+                        espacoPreview.appendChild(preview);
+                        resolve();
                     };
                 } else {
-                    resolve(null);
+                    resolve();
                 }
             });
         });
 
-        const resultados = await Promise.all(promessas);
-        fotoBase64Temporaria = resultados.filter(item => item !== null);
+        await Promise.all(promessas);
         document.getElementById('container-evidencia').style.display = 'block';
     }
 
@@ -496,15 +495,13 @@
         document.getElementById('reg-nome').value = arvore.nome;
         document.getElementById('reg-cientifico').value = arvore.cientifico;
         document.getElementById('reg-familia').value = arvore.familia;
-        document.getElementById('reg-caract').value = arvore.notes || arvore.notas;
+        document.getElementById('reg-caract').value = arvore.notas;
         document.getElementById('reg-coords').value = arvore.coord;
         
-        // Garante que foto seja um array
         fotoBase64Temporaria = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
-        
         const espacoPreview = document.getElementById('espaco-preview');
         espacoPreview.innerHTML = '';
-        
+
         if(fotoBase64Temporaria.length > 0) {
             fotoBase64Temporaria.forEach(midia => {
                 if(midia.startsWith('data:video/')) {
@@ -545,148 +542,151 @@
                 dadosArvores[index].nome = nome;
                 dadosArvores[index].cientifico = cie;
                 dadosArvores[index].familia = fam;
-                dadosArvores[index].notes = carat;
                 dadosArvores[index].notas = carat;
                 dadosArvores[index].coord = coords;
                 dadosArvores[index].foto = fotoBase64Temporaria;
             }
         } else {
-            const proximoId = dadosArvores.length > 0 ? Math.max(...dadosArvores.map(a => a.id)) + 1 : 1;
-            dadosArvores.push({
-                id: proximoId,
-                nome: nome,
-                cientifico: cie,
-                familia: fam,
-                coord: coords,
-                notes: carat,
-                notas: carat,
-                foto: fotoBase64Temporaria
-            });
+            const novoId = dadosArvores.length > 0 ? Math.max(...dadosArvores.map(a => a.id)) + 1 : 1;
+            const novoItem = {
+                id: novoId, nome: nome, cientifico: cie, familia: fam, notas: carat, coord: coords, foto: fotoBase64Temporaria
+            };
+            dadosArvores.push(novoItem);
         }
 
         sincronizarTudoParaFirebase();
         limparFormularioCadastro();
-        alert("Ficha Botânica compilada com sucesso no Firebase!");
+        alert("Registro processado e sincronizado com sucesso na nuvem!");
         mudarAba('catalogo');
     }
 
     function limparFormularioCadastro() {
-        document.getElementById('reg-id').value = '';
-        document.getElementById('reg-nome').value = '';
-        document.getElementById('reg-cientifico').value = '';
-        document.getElementById('reg-familia').value = '';
-        document.getElementById('reg-caract').value = '';
-        document.getElementById('reg-coords').value = '';
-        document.getElementById('input-camera').value = '';
-        document.getElementById('espaco-preview').innerHTML = '';
-        document.getElementById('container-evidencia').style.display = 'none';
+        document.getElementById('reg-id').value = "";
+        document.getElementById('reg-nome').value = "";
+        document.getElementById('reg-cientifico').value = "";
+        document.getElementById('reg-familia').value = "";
+        document.getElementById('reg-caract').value = "";
+        document.getElementById('reg-coords').value = "";
         fotoBase64Temporaria = [];
-        if (marcadorCadastro) { mapaCadastro.removeLayer(marcadorCadastro); marcadorCadastro = null; }
-        document.getElementById('titulo-formulario').innerHTML = `📋 Dados de Inventário`;
+        document.getElementById('container-evidencia').style.display = 'none';
+        document.getElementById('espaco-preview').innerHTML = '';
+        document.getElementById('titulo-formulario').innerHTML = "📋 Dados de Inventário";
         document.getElementById('btn-salvar').innerHTML = "💾 COMPILAR REGISTRO NO ARBORETO";
+        if (marcadorCadastro) { mapaCadastro.removeLayer(marcadorCadastro); marcadorCadastro = null; }
     }
 
     function atualizarInterface() {
-        const corpo = document.getElementById('corpo-tabela');
+        const corpoTabela = document.getElementById('corpo-tabela');
         const seletor = document.getElementById('seletor-laudos');
+        if (!corpoTabela) return;
         
-        if(!corpo || !seletor) return;
-        
-        corpo.innerHTML = '';
-        seletor.innerHTML = '';
+        corpoTabela.innerHTML = '';
+        let opcoesSeletor = '';
 
         dadosArvores.forEach(arvore => {
-            const tr = document.createElement('tr');
-            tr.onclick = () => editarArvore(arvore.id);
-            tr.innerHTML = `<td>${String(arvore.id).padStart(2,'0')}</td><td><b>${arvore.nome}</b></td><td><i>${arvore.cientifico}</i></td><td>${arvore.familia || '-'}</td><td style="font-size:12px; max-width:400px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">${arvore.notes || arvore.notas || '-'}</td><td><code style="font-size:11px;">${arvore.coord}</code></td>`;
-            corpo.appendChild(tr);
-
-            const opt = document.createElement('option');
-            opt.value = arvore.id;
-            opt.textContent = `ID ${String(arvore.id).padStart(2,'0')} - ${arvore.nome} (${arvore.cientifico})`;
-            seletor.appendChild(opt);
+            const linha = document.createElement('tr');
+            linha.onclick = () => editarArvore(arvore.id);
+            linha.innerHTML = `
+                <td><b>${arvore.id}</b></td>
+                <td>${arvore.nome}</td>
+                <td style="font-style: italic;">${arvore.cientifico}</td>
+                <td>${arvore.familia}</td>
+                <td>${arvore.notas}</td>
+                <td><small>${arvore.coord}</small></td>
+            `;
+            corpoTabela.appendChild(linha);
+            opcoesSeletor += `<option value="${arvore.id}">${arvore.nome} [${arvore.cientifico}]</option>`;
         });
 
-        if (dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
+        if (seletor) {
+            seletor.innerHTML = opcoesSeletor;
+            if (dadosArvores.length > 0) atualizarLaudo(dadosArvores[0].id);
+        }
     }
 
     function atualizarLaudo(id) {
         const arvore = dadosArvores.find(a => a.id == id);
         if (!arvore) return;
 
-        document.getElementById('ld-nome').textContent = arvore.nome;
-        document.getElementById('ld-cie').textContent = arvore.cientifico;
-        document.getElementById('ld-fam').textContent = arvore.familia || 'Não informada';
-        document.getElementById('ld-coord').textContent = arvore.coord;
-        document.getElementById('ld-notes').textContent = arvore.notes || arvore.notas || 'Sem observações taxonômicas.';
+        document.getElementById('ld-nome').innerText = arvore.nome;
+        document.getElementById('ld-cie').innerText = arvore.cientifico;
+        document.getElementById('ld-fam').innerText = arvore.familia;
+        document.getElementById('ld-coord').innerText = arvore.coord;
+        document.getElementById('ld-notes').innerText = arvore.notas;
 
         const containerFoto = document.getElementById('ld-container-foto');
-        containerFoto.innerHTML = '';
+        const fotosValidas = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
         
-        const arrayFotos = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
-        
-        if (arrayFotos.length > 0) {
-            // Mostra a primeira evidência no espaço do laudo impresso
-            const primeiraMidia = arrayFotos[0];
-            if (primeiraMidia.startsWith('data:video/')) {
-                containerFoto.innerHTML = `<video src="${primeiraMidia}" autoplay muted loop style="width:100%; height:100%; object-fit:cover;"></video>`;
+        if (fotosValidas.length > 0) {
+            const midiaPrincipal = fotosValidas[0];
+            if (midiaPrincipal.startsWith('data:video/')) {
+                containerFoto.innerHTML = `<video src="${midiaPrincipal}" style="width:100%; height:100%; object-fit:cover;" autoplay muted loop></video>`;
             } else {
-                containerFoto.innerHTML = `<img src="${primeiraMidia}" style="width:100%; height:100%; object-fit:cover;">`;
+                containerFoto.innerHTML = `<img src="${midiaPrincipal}" style="width:100%; height:100%; object-fit:cover;">`;
             }
         } else {
-            containerFoto.innerHTML = '<div class="sem-foto-texto">Sem registro fotográfico</div>';
+            containerFoto.innerHTML = `<div class="sem-foto-texto">Sem registro fotográfico</div>`;
         }
 
-        const qrDiv = document.getElementById("qrcode");
-        qrDiv.innerHTML = "";
-        const urlMaps = `https://www.google.com/maps/search/?api=1&query=${arvore.coord.replace(' ', '')}`;
-        new QRCode(qrDiv, { text: urlMaps, width: 110, height: 110, correctLevel: QRCode.CorrectLevel.H });
+        const qrContainer = document.getElementById('qrcode');
+        qrContainer.innerHTML = '';
+        const urlBusca = `https://www.google.com/maps/search/?api=1&query=${arvore.coord.replace(' ', '')}`;
+        new QRCode(qrContainer, {
+            text: urlBusca, width: 110, height: 110, colorDark : "#005a2b", colorLight : "#ffffff", correctLevel : QRCode.CorrectLevel.H
+        });
     }
 
     function inicializarPontosCarrossel() {
         const container = document.getElementById('container-pontinhos');
-        if(!container) return;
+        if (!container) return;
         container.innerHTML = '';
         fotosArray.forEach((_, index) => {
-            const p = document.createElement('span');
-            p.className = 'ponto';
-            p.onclick = () => atual Slide(index + 1);
-            container.appendChild(p);
+            const ponto = document.createElement('span');
+            ponto.className = 'ponto';
+            ponto.onclick = () => currentSlide(index + 1);
+            container.appendChild(ponto);
         });
     }
 
     function mudarSlide(n) { mostrarSlides(slideIndex += n); }
-    function atualSlide(n) { mostrarSlides(slideIndex = n); }
+    function currentSlide(n) { mostrarSlides(slideIndex = n); }
 
     function mostrarSlides(n) {
         const slides = document.getElementsByClassName("meu-slide");
         const pontos = document.getElementsByClassName("ponto");
-        if (!slides || slides.length === 0) return;
+        if (!slides.length) return;
         if (n > slides.length) { slideIndex = 1; }
         if (n < 1) { slideIndex = slides.length; }
         for (let i = 0; i < slides.length; i++) { slides[i].style.display = "none"; }
         for (let i = 0; i < pontos.length; i++) { pontos[i].className = pontos[i].className.replace(" active", ""); }
         slides[slideIndex - 1].style.display = "block";
-        if(pontos[slideIndex - 1]) pontos[slideIndex - 1].className += " active";
+        if (pontos[slideIndex - 1]) pontos[slideIndex - 1].className += " active";
     }
 
     function abrirLightboxCinema(index) {
         lightboxIndex = index;
-        document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
-        document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
+        document.getElementById('lb-img').src = fotosArray[lightboxIndex];
+        document.getElementById('lb-legenda').innerText = legendasArray[lightboxIndex];
         document.getElementById('lb-modal').style.display = "flex";
     }
 
     function fecharLightboxCinema() { document.getElementById('lb-modal').style.display = "none"; }
-    
     function navegarLightbox(n) {
         lightboxIndex += n;
         if (lightboxIndex >= fotosArray.length) lightboxIndex = 0;
         if (lightboxIndex < 0) lightboxIndex = fotosArray.length - 1;
-        document.getElementById('lb-img').src = decodeURIComponent(fotosArray[lightboxIndex]);
-        document.getElementById('lb-legenda').textContent = legendasArray[lightboxIndex];
+        document.getElementById('lb-img').src = fotosArray[lightboxIndex];
+        document.getElementById('lb-legenda').innerText = legendasArray[lightboxIndex];
     }
-</script>
 
+    window.mudarAba = mudarAba;
+    window.mudarSlide = mudarSlide;
+    window.abrirLightboxCinema = abrirLightboxCinema;
+    window.fecharLightboxCinema = fecharLightboxCinema;
+    window.navegarLightbox = navegarLightbox;
+    window.dispararColetaCampo = dispararColetaCampo;
+    window.salvarItemArboreto = salvarItemArboreto;
+    window.atualizarLaudo = atualizarLaudo;
+</script>
 </body>
 </html>
