@@ -306,7 +306,7 @@
         { id: 9, nome: "Embaúba", cientifico: "Cecropia leucomela", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Planta pioneira de crescimento acelerado, fundamental em processos pioneiros de regeneração florestal espontânea.", foto: [] },
         { id: 10, nome: "Inajá", cientifico: "Maximiliana maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Palmeira nativa de frutos oleaginosos e folhas largamente utilizadas em coberturas e artesanato tradicional.", foto: [] },
         { id: 11, nome: "Ipê", cientifico: "Handroanthus chrysanthus", familia: "Bignoniaceae", coord: "-4.22120, -55.99920", notas: "Espécie ornamental de madeira densa, com flores de alta expressividade estética e potencial terapêutico. (Área interna do bosque)", foto: [] },
-        { id: 12, nome: "Mangueira", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore exótica amplamente cultivada na região urbana e institucional pela oferta de sombra e frutos.", foto: [] },
+        { id: 12, nome: "Mangueira", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Árvore exótica amplamente cultivada na região urbana e institutional pela oferta de sombra e frutos.", foto: [] },
         { id: 13, nome: "Mogno Africano", cientifico: "Khaya senegalensis", familia: "Meliaceae", coord: "-4.22140, -55.99950", notas: "Árvore introduzida de elevado valor comercial madeireiro, utilizada em modelos de reflorestamento produtivo comercial. (Área de transição)", foto: [] },
         { id: 14, nome: "Sumaúma", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Considerada a 'árvore da vida' ou 'rainha da floresta', possui imenso valor cultural e ecológico na Amazônia, atuando na retenção de água do solo.", foto: [] }
     ];
@@ -338,8 +338,19 @@
                 const arvoresRef = window.refFirebase(window.dbFirebase, 'arvores');
                 window.onValueFirebase(arvoresRef, (snapshot) => {
                     const dados = snapshot.val();
+                    
+                    // LÓGICA AUTOMÁTICA DE CORREÇÃO SENSÍVEL AO TAMANHO DA MATRIZ (IGNORA RESÍDUOS ANTIGOS DO BANCO)
                     if (dados) {
-                        dadosArvores = Object.keys(dados).map(key => dados[key]);
+                        const listaTmp = Object.keys(dados).map(key => dados[key]);
+                        // Se o banco na nuvem tiver menos que as 14 espécies oficiais, ou o ID 14 estiver ausente, força o reset automático
+                        const temSumauma = listaTmp.some(a => a.id == 14);
+                        if (listaTmp.length < 14 || !temSumauma) {
+                            console.log("Detectada assincronia ou dados antigos no Firebase. Forçando sobreposição automática...");
+                            dadosArvores = listaInicialBase;
+                            sincronizarTudoParaFirebase();
+                        } else {
+                            dadosArvores = listaTmp;
+                        }
                     } else {
                         dadosArvores = listaInicialBase;
                         sincronizarTudoParaFirebase();
@@ -592,7 +603,7 @@
                 <td>${arvore.nome}</td>
                 <td style="font-style: italic;">${arvore.cientifico}</td>
                 <td>${arvore.familia}</td>
-                <td>${arvore.notas}</td>
+                <td>${arvore.notas || ""}</td>
                 <td><small>${arvore.coord}</small></td>
             `;
             corpoTabela.appendChild(linha);
@@ -613,7 +624,7 @@
         document.getElementById('ld-cie').innerText = arvore.cientifico;
         document.getElementById('ld-fam').innerText = arvore.familia;
         document.getElementById('ld-coord').innerText = arvore.coord;
-        document.getElementById('ld-notes').innerText = arvore.notas;
+        document.getElementById('ld-notes').innerText = arvore.notas || "";
 
         const containerFoto = document.getElementById('ld-container-foto');
         const fotosValidas = Array.isArray(arvore.foto) ? arvore.foto : (arvore.foto ? [arvore.foto] : []);
