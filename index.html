@@ -120,6 +120,31 @@
             .bloco-laudo { border: none; padding: 0; margin: 0; }
         }
     </style>
+    
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+        // CONFIGURAÇÃO EXTRAÍDA DA SUA IMAGEM OFICIAL
+        const firebaseConfig = {
+            apiKey: "AIzaSyAsxF_fKIhOmSr8SsuFxZbXwiCgj5c7qxg",
+            authDomain: "biobosque-oficial.firebaseapp.com",
+            projectId: "biobosque-oficial",
+            storageBucket: "biobosque-oficial.appspot.com",
+            messagingSenderId: "888631935429",
+            appId: "1:888631935429:web:a1ad2714da26c233cacbac",
+            measurementId: "G-TP1ZB9ZXMK"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+
+        // Exportando referências essenciais globalmente para manter compatibilidade com o resto do script
+        window.dbFirebase = db;
+        window.refFirebase = ref;
+        window.setFirebase = set;
+        window.onValueFirebase = onValue;
+    </script>
 </head>
 <body>
 
@@ -157,7 +182,7 @@
                         <div class="meu-slide fade"><img src="final%20da%20trilha.jpeg" onclick="abrirLightboxCinema(1)"><div class="legenda-slide">Final da Trilha</div></div>
                         <div class="meu-slide fade"><img src="In%C3%ADcio%20da%20Trilha.jpeg" onclick="abrirLightboxCinema(2)"><div class="legenda-slide">Início da Trilha</div></div>
                         <div class="meu-slide fade"><img src="mapa%20da%20trilha.png" onclick="abrirLightboxCinema(3)"><div class="legenda-slide">Mapa da Trilha</div></div>
-                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guiada</div></div>
+                        <div class="meu-slide fade"><img src="Trilha%20guiada.jpg" onclick="abrirLightboxCinema(4)"><div class="legenda-slide">Trilha Guided</div></div>
                         <div class="meu-slide fade"><img src="acompanhamento%20tecnico.jpg" onclick="abrirLightboxCinema(5)"><div class="legenda-slide">Acompanhamento Técnico</div></div>
                         <div class="meu-slide fade"><img src="ambienta%C3%A7ao.jpg" onclick="abrirLightboxCinema(6)"><div class="legenda-slide">Ambientação</div></div>
                         <div class="meu-slide fade"><img src="conhecendo%20o%20bosque.jpg" onclick="abrirLightboxCinema(7)"><div class="legenda-slide">Conhecendo o Bosque</div></div>
@@ -246,7 +271,7 @@
                         <p><strong>Família:</strong> <span id="ld-fam"></span></p>
                         <p><strong>Localização:</strong> <span id="ld-coord"></span></p>
                         <p><strong>Notas de Pesquisa:</strong> <span id="ld-notes"></span></p>
-                        <span class="aviso-qr">💡 Escaneie o QR Code ao lado para abrir a localização exata via satélite no Google Maps.</span>
+                        <span class="aviso-qr">💡 Escaneie o QR Code ao lado para abrir a localização e ficha completa via internet.</span>
                     </div>
                     
                     <div style="display: flex; flex-direction: column; gap: 10px; align-items: center;">
@@ -271,20 +296,16 @@
 </div>
 
 <script>
+    // LISTA DE BACKUP CASO A NUVEM ESTEJA TOTALMENTE VAZIA NO PRIMEIRO ACESSO
     const listaInicialBase = [
         { id: 1, nome: "Acácia", cientifico: "Acacia mangium", familia: "Fabaceae", coord: "-4.22100, -55.99964", notas: "Árvore de rápido crescimento, amplamente utilizada para recuperação de solos degradados, fixação de nitrogênio e proteção de encostas.", foto: "" },
         { id: 2, nome: "Cacau Selvagem", cientifico: "Theobroma speciosum", familia: "Malvaceae", coord: "-4.22033, -55.99903", notas: "Espécie nativa do sub-bosque denso. Antecessora silvestre do cacau comercial, possui altíssimo valor para a preservação da biodiversidade genética regional.", foto: "" },
         { id: 3, nome: "Cajá", cientifico: "Spondias mombin", familia: "Anacardiaceae", coord: "-4.22086, -55.99900", notas: "Espécie frutífera de grande porte com alto potencial agroindustrial (polpas, sucos e geleias), além de alimentar a fauna local.", foto: "" },
         { id: 4, nome: "Cajueiro", cientifico: "Anacardium occidentale", familia: "Anacardiaceae", coord: "-4.22100, -55.99892", notas: "Frutífera nativa tropical. Apresenta pseudofruto rico em Vitamina C e castanha de elevado valor comercial e nutricional no mercado nacional.", foto: "" },
-        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei cuja semente possui extraordinário valor nutricional, comercial e ecológico.", foto: "" },
-        { id: 6, nome: "Cupuaçu", cientifico: "Theobroma grandiflorum", familia: "Malvaceae", coord: "-4.22100, -55.99892", notas: "Fruta clássica da Amazônia com polpa extremamente aromática. Usada intensivamente na culinária regional e pela indústria de cosméticos.", foto: "" },
-        { id: 7, nome: "Embaúba", cientifico: "Cecropia peltata", familia: "Urticaceae", coord: "-4.22181, -56.00067", notas: "Espécie pioneira de rápido crescimento, vital para o início da regeneração natural de clareiras e áreas degradadas. Possui forte associação com formigas.", foto: "" },
-        { id: 8, nome: "Palmeira Inajá", cientifico: "Attalea maripa", familia: "Arecaceae", coord: "-4.22139, -55.99881", notas: "Espécime característico do estrato inferior e sub-bosque amazônico. Seus frutos são intensamente consumidos pela fauna nativa.", foto: "" },
-        { id: 9, nome: "Sumaúba", cientifico: "Ceiba pentandra", familia: "Malvaceae", coord: "-4.22019, -55.99903", notas: "Gigante imponente da floresta com sapopemas (raízes tabulares) proeminentes. Funciona como verdadeiro reservatório de água no ecossistema.", foto: "" },
-        { id: 10, nome: "Manga", cientifico: "Mangifera indica", familia: "Anacardiaceae", coord: "-4.22150, -55.99881", notas: "Árvore frutífera introduzida e amplamente consolidada na região, oferecendo sombreamento denso e excelente produção de frutos.", foto: "" }
+        { id: 5, nome: "Castanheira", cientifico: "Bertholletia excelsa", familia: "Lecythidaceae", coord: "-4.22097, -55.99967", notas: "Conhecida como a 'Gigante da Amazônia'. Espécie protegida por lei cuja semente possui extraordinário valor nutricional, comercial e ecológico.", foto: "" }
     ];
 
-    let dadosArvores = JSON.parse(localStorage.getItem('dadosArvores')) || listaInicialBase;
+    let dadosArvores = [];
 
     const fotosArray = ["Equipe%20de%20Campo.jpeg","final%20da%20trilha.jpeg","In%C3%ADcio%20da%20Trilha.jpeg","mapa%20da%20trilha.png","Trilha%20guiada.jpg","acompanhamento%20tecnico.jpg","ambienta%C3%A7ao.jpg","conhecendo%20o%20bosque.jpg","Dentro%20do%20bosque.jpg","Entrada%20do%20Bosque.jpeg"];
     const legendasArray = ["Equipe de Campo", "Final da Trilha", "Início da Trilha", "Mapa da Trilha", "Trilha Guiada", "Acompanhamento Técnico", "Ambientação", "Conhecendo o Bosque", "Dentro do Bosque", "Entrada ao Bosque"];
@@ -299,11 +320,43 @@
         inicializarPontosCarrossel();
         mostrarSlides(slideIndex);
         inicializarMapasSatellites();
-        atualizarInterface();
+        conectarEouvirFirebase();
         
         document.getElementById('input-camera').addEventListener('change', processarMidiaDispositivo);
         setInterval(() => mudarSlide(1), 5000);
     });
+
+    // FUNÇÃO QUE CONECTA COM A SUA NUVEM DO FIREBASE E FAZ ATUALIZAÇÃO EM TEMPO REAL
+    function conectarEouvirFirebase() {
+        const checarConexao = setInterval(() => {
+            if (window.dbFirebase && window.refFirebase && window.onValueFirebase) {
+                clearInterval(checarConexao);
+                
+                const arvoresRef = window.refFirebase(window.dbFirebase, 'arvores');
+                window.onValueFirebase(arvoresRef, (snapshot) => {
+                    const dados = snapshot.val();
+                    if (dados) {
+                        // Converte o objeto vindo do Firebase de volta para o array do sistema
+                        dadosArvores = Object.keys(dados).map(key => dados[key]);
+                    } else {
+                        // Se a nuvem estiver vazia, faz o primeiro envio da base padrão
+                        dadosArvores = listaInicialBase;
+                        sincronizarTudoParaFirebase();
+                    }
+                    plotarMarcadores();
+                    atualizarInterface();
+                });
+            }
+        }, 300);
+    }
+
+    function sincronizarTudoParaFirebase() {
+        if (window.dbFirebase && window.refFirebase && window.setFirebase) {
+            const dadosObjeto = {};
+            dadosArvores.forEach(a => { dadosObjeto['id_' + a.id] = a; });
+            window.setFirebase(window.refFirebase(window.dbFirebase, 'arvores'), dadosObjeto);
+        }
+    }
 
     function mudarAba(abaId) {
         document.querySelectorAll('.conteudo-aba').forEach(a => a.classList.remove('ativa'));
@@ -321,15 +374,10 @@
         mapaPrincipal = L.map('map-principal').setView([-4.22100, -55.99900], 17);
         mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
 
-        if (navigator.onLine) {
-            const urlSat = 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
-            const subdomains = ['mt0','mt1','mt2','mt3'];
-            L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaPrincipal);
-            L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
-        } else {
-            L.tileLayer('', { maxZoom: 20, attribution: 'Modo Offline Ativo — Grid de Coleta' }).addTo(mapaPrincipal);
-            L.tileLayer('', { maxZoom: 20, attribution: 'Modo Offline Ativo — Grid de Coleta' }).addTo(mapaCadastro);
-        }
+        const urlSat = 'https://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
+        const subdomains = ['mt0','mt1','mt2','mt3'];
+        L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaPrincipal);
+        L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
         
         camadaMarcadores = L.layerGroup().addTo(mapaPrincipal);
 
@@ -338,13 +386,13 @@
             const lng = e.latlng.lng.toFixed(5);
             definirCoordenadasFormulario(lat, lng);
         });
-
-        plotarMarcadores();
     }
 
     function plotarMarcadores() {
+        if (!camadaMarcadores) return;
         camadaMarcadores.clearLayers();
         dadosArvores.forEach(arvore => {
+            if(!arvore.coord) return;
             const m = L.marker(arvore.coord.split(', ').map(Number)).addTo(camadaMarcadores);
             m.bindPopup(`
                 <b>${arvore.nome}</b><br><i>${arvore.cientifico}</i><br><br>
@@ -416,6 +464,7 @@
         if (!nome || !cie) { alert("Preencha o Nome Popular e o Científico!"); return; }
         if (!coords) { alert("Por favor, selecione um ponto no mapa ou use o GPS antes de compilar!"); return; }
 
+        let novoItem;
         if (idExistente) {
             const index = dadosArvores.findIndex(a => a.id == idExistente);
             if (index !== -1) {
@@ -425,10 +474,11 @@
                 dadosArvores[index].coord = coords;
                 dadosArvores[index].notas = carat;
                 dadosArvores[index].foto = fotoBase64Temporaria;
+                novoItem = dadosArvores[index];
             }
         } else {
             const maiorId = dadosArvores.reduce((max, item) => item.id > max ? item.id : max, 0);
-            dadosArvores.push({ 
+            novoItem = { 
                 id: maiorId + 1, 
                 nome: nome, 
                 cientifico: cie, 
@@ -436,11 +486,18 @@
                 coord: coords, 
                 notas: carat,
                 foto: fotoBase64Temporaria
-            });
+            };
+            dadosArvores.push(novoItem);
         }
         
-        localStorage.setItem('dadosArvores', JSON.stringify(dadosArvores));
-        alert("Registro sincronizado com foto e salvo com sucesso!");
+        // SALVAMENTO IMEDIATO NA NUVEM DO FIREBASE
+        if (window.dbFirebase && window.refFirebase && window.setFirebase) {
+            const idItem = idExistente ? idExistente : novoItem.id;
+            window.setFirebase(window.refFirebase(window.dbFirebase, 'arvores/id_' + idItem), novoItem);
+            alert("Sincronizado com a nuvem do Firebase com sucesso!");
+        } else {
+            alert("Erro na conexão com a nuvem. Salvando localmente.");
+        }
 
         document.getElementById('reg-id').value = "";
         document.getElementById('reg-nome').value = "";
@@ -459,14 +516,13 @@
             mapaCadastro.removeLayer(marcadorCadastro);
             marcadorCadastro = null;
         }
-
-        plotarMarcadores();
-        atualizarInterface();
     }
 
     function atualizarInterface() {
         const corpo = document.getElementById('corpo-tabela');
         const seletor = document.getElementById('seletor-laudos');
+        if(!corpo || !seletor) return;
+        
         corpo.innerHTML = ""; seletor.innerHTML = "";
 
         dadosArvores.forEach(a => {
@@ -498,17 +554,14 @@
             containerFotoLaudo.innerHTML = `<div class="sem-foto-texto">Sem registro fotográfico</div>`;
         }
 
-        const partCoords = item.coord.split(', ');
-        const lat = partCoords[0].trim();
-        const lng = partCoords[1].trim();
-        
-        const googleMapsUrl = "https://maps.google.com/?q=" + lat + "," + lng + "&t=k&z=19";
+        // REDIRECIONAMENTO DINÂMICO DO QR CODE PARA EXIBIR A FICHA COMPLETA NO GITHUB PAGES
+        const linkFichaPublica = `https://biotech-bit.github.io/biobosque/?id=${item.id}`;
 
         const containerQr = document.getElementById('qrcode');
         containerQr.innerHTML = "";
         
         new QRCode(containerQr, { 
-            text: googleMapsUrl, 
+            text: linkFichaPublica, 
             width: 110, 
             height: 110,
             correctLevel: QRCode.CorrectLevel.H
@@ -517,6 +570,7 @@
 
     function inicializarPontosCarrossel() {
         const container = document.getElementById('container-pontinhos');
+        if(!container) return;
         container.innerHTML = "";
         for(let i = 1; i <= fotosArray.length; i++) {
             container.innerHTML += `<span class="ponto" onclick="slideAtual(${i})"></span>`;
@@ -571,7 +625,7 @@
                 definirCoordenadasFormulario(lat, lng);
                 mapaCadastro.setView([lat, lng], 19);
             }, () => {
-                console.log("Aviso: GPS indisponível ou bloqueado. Use a marcação manual por clique direto no mapa.");
+                console.log("GPS indisponível. Use a marcação manual por clique.");
             }, { enableHighAccuracy: true, timeout: 5000 });
         }
     }
