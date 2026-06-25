@@ -67,7 +67,7 @@
         .btn-web { background-color: #005a2b; }
         .btn-instagram { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
 
-        #map-principal, #map-cadastro { width: 100%; height: 470px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); }
+        #map-principal, #map-cadastro { width: 100%; height: 470px; border-radius: 8px; border: 1px solid var(--cinza-borda); box-shadow: var(--sombra-padrao); background-color: #e5e3df; }
 
         .formulario-grupo { margin-bottom: 14px; display: flex; flex-direction: column; gap: 6px; }
         .formulario-grupo label { font-size: 14px; font-weight: 600; color: #333; }
@@ -102,12 +102,10 @@
         .aviso-qr { font-size: 11px; color: #555; margin-top: 8px; display: block; font-style: italic; line-height: 1.4; }
         #qrcode { min-width: 110px; min-height: 110px; background: #fff; padding: 5px; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; }
         
-        /* Espaço para Foto no Relatório */
         .bloco-foto-laudo { width: 140px; height: 140px; border: 1px solid #ccc; border-radius: 6px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         .bloco-foto-laudo img, .bloco-foto-laudo video { width: 100%; height: 100%; object-fit: cover; }
         .sem-foto-texto { font-size: 11px; color: #999; text-align: center; padding: 5px; font-style: italic; }
 
-        /* Estilos de Impressão Otimizados */
         @media print {
             body { background: white; color: black; }
             header, .abas-menu, .btn-acao, #map-principal, #map-cadastro, .canais-comunidade, .carrossel-container, .secao-card h2, #titulo-formulario, .formulario-grupo, #btn-salvar, table th { display: none !important; }
@@ -138,7 +136,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>Sobre o Projeto</h2>
-                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambientação e pesquisa científica.</p>
+                    <p style="font-size: 14px; line-height: 1.6; color: #333;">O <b>BioCatálogo Digital</b> nasceu como uma iniciativa voltada para o inventariamento dinâmico botânico e monitoramento geoespacial de longo prazo. O objetivo central é dar <b>total visibilidade ao Bosque da Ciência do IFPA Campus Itaituba</b>, transformando-o em uma vitrine viva de educação ambiental e pesquisa científica.</p>
                     
                     <h3 style="color: var(--verde-institucional); font-size: 15px; margin-top: 15px;">Objetivos do Projeto:</h3>
                     <ul class="lista-objetivos">
@@ -185,7 +183,7 @@
             <div class="coluna-flex">
                 <div class="secao-card">
                     <h2>📍 Captura Georreferenciada</h2>
-                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque abaixo para registrar a evidência ou <b>clique direto no mapa satélite</b> para fixar as coordenadas manuais.</p>
+                    <p style="font-size:12px; color:#666; margin-bottom:8px;">Toque abaixo para registrar a evidência ou <b>clique direto no mapa</b> para fixar as coordenadas manuais.</p>
                     <button class="btn-acao btn-gps-camera" onclick="dispararColetaCampo()">📸 COLETAR EVIDÊNCIA & GPS</button>
                     
                     <input type="file" id="input-camera" accept="image/*,video/*" style="position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0; overflow: hidden; pointer-events: none;">
@@ -282,8 +280,6 @@
     let lightboxIndex = 0;
     let mapaPrincipal, mapaCadastro, marcadorCadastro;
     let camadaMarcadores;
-    
-    // Variável temporária para segurar a string Base64 da foto capturada
     let fotoBase64Temporaria = "";
 
     document.addEventListener("DOMContentLoaded", function() {
@@ -308,17 +304,23 @@
         }, 200);
     }
 
+    // MODIFICAÇÃO OFFLINE: Verifica conexão e carrega mapa alternativo se offline
     function inicializarMapasSatellites() {
-        const urlSat = 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
-        const subdomains = ['mt0','mt1','mt2','mt3'];
-
         mapaPrincipal = L.map('map-principal').setView([-4.22100, -55.99900], 17);
-        L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaPrincipal);
+        mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
+
+        if (navigator.onLine) {
+            const urlSat = 'http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}';
+            const subdomains = ['mt0','mt1','mt2','mt3'];
+            L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaPrincipal);
+            L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
+        } else {
+            // Modo offline robusto: Exibe apenas o grid numérico de apoio para evitar erros de rede
+            L.tileLayer('', { maxZoom: 20, attribution: 'Modo Offline Ativo — Grid de Coleta' }).addTo(mapaPrincipal);
+            L.tileLayer('', { maxZoom: 20, attribution: 'Modo Offline Ativo — Grid de Coleta' }).addTo(mapaCadastro);
+        }
         
         camadaMarcadores = L.layerGroup().addTo(mapaPrincipal);
-
-        mapaCadastro = L.map('map-cadastro').setView([-4.22100, -55.99900], 17);
-        L.tileLayer(urlSat, { subdomains: subdomains, maxZoom: 20 }).addTo(mapaCadastro);
 
         mapaCadastro.on('click', function(e) {
             const lat = e.latlng.lat.toFixed(5);
@@ -366,7 +368,6 @@
         document.getElementById('reg-caract').value = arvore.notes || arvore.notas;
         document.getElementById('reg-coords').value = arvore.coord;
         
-        // Carrega a foto existente se houver
         fotoBase64Temporaria = arvore.foto || "";
         const espacoPreview = document.getElementById('espaco-preview');
         if(fotoBase64Temporaria) {
@@ -412,7 +413,7 @@
                 dadosArvores[index].familia = fam;
                 dadosArvores[index].coord = coords;
                 dadosArvores[index].notas = carat;
-                dadosArvores[index].foto = fotoBase64Temporaria; // Vincula a foto
+                dadosArvores[index].foto = fotoBase64Temporaria;
             }
         } else {
             const maiorId = dadosArvores.reduce((max, item) => item.id > max ? item.id : max, 0);
@@ -423,14 +424,13 @@
                 familia: fam, 
                 coord: coords, 
                 notas: carat,
-                foto: fotoBase64Temporaria // Vincula a foto
+                foto: fotoBase64Temporaria
             });
         }
         
         localStorage.setItem('dadosArvores', JSON.stringify(dadosArvores));
         alert("Registro sincronizado com foto e salvo com sucesso!");
 
-        // Reseta tudo
         document.getElementById('reg-id').value = "";
         document.getElementById('reg-nome').value = "";
         document.getElementById('reg-cientifico').value = "";
@@ -475,7 +475,6 @@
         document.getElementById('ld-coord').textContent = item.coord;
         document.getElementById('ld-notes').textContent = item.notas;
 
-        // NOVIDADE: Atualiza o bloco de mídia no laudo
         const containerFotoLaudo = document.getElementById('ld-container-foto');
         containerFotoLaudo.innerHTML = "";
         if (item.foto) {
@@ -571,9 +570,7 @@
         if(arquivo) {
             const reader = new FileReader();
             reader.onload = function() {
-                // Guarda a string Base64 de forma persistente
                 fotoBase64Temporaria = reader.result;
-                
                 const espacoPreview = document.getElementById('espaco-preview');
                 espacoPreview.innerHTML = "";
                 
